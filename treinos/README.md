@@ -6,6 +6,7 @@
 | [`programa_ppl.json`](programa_ppl.json) | Os mesmos treinos em dados, usados pelo app e pelos vídeos |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
+| [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
 | [`videos/`](videos/) | Um vídeo vertical por treino (1080×1920, ~1 min) |
@@ -43,7 +44,25 @@ python3 -m http.server -d treinos 8000
 # abra http://localhost:8000
 ```
 
-Para publicar de graça no GitHub Pages: em **Settings → Pages**, escolha **Deploy from a branch**, a branch com estes arquivos e a pasta **/ (root)**. O app fica em `https://mattheusmatos.github.io/exercise/treinos/`.
+## Publicar como site (GitHub Pages)
+
+O app é um site estático: não precisa de servidor, banco de dados nem login.
+
+1. No GitHub, abra o repositório e vá em **Settings → Pages**.
+2. Em **Build and deployment**, escolha **Deploy from a branch**.
+3. Escolha a branch com estes arquivos e a pasta **/ (root)**, e clique em **Save**.
+4. Em um ou dois minutos o site fica no ar em `https://mattheusmatos.github.io/exercise/` (a raiz leva direto ao app).
+
+Cada push nessa branch atualiza o site sozinho.
+
+## Instalar no celular
+
+- **Android (Chrome):** abra o link e toque em **Instalar como app**, na tela inicial do app, ou em **Instalar app** no menu do Chrome.
+- **iPhone (Safari):** abra o link, toque em **Compartilhar** e depois em **Adicionar à Tela de Início**.
+
+Instalado, ele abre em tela cheia pelo ícone e funciona sem internet depois da primeira abertura (`sw.js` guarda o app e as fotos do programa; os vídeos precisam de internet). O progresso fica no aparelho: no iPhone, o app instalado e o Safari guardam o progresso separado, então instale antes de começar a usar.
+
+Ao trocar fotos ou a biblioteca, mude `VERSAO` em `sw.js` para os celulares baixarem tudo de novo. Mudanças em código e no programa chegam sozinhas na próxima abertura com internet.
 
 ## Como gerar os vídeos e as fotos
 
