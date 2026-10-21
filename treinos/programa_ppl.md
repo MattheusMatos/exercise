@@ -29,7 +29,7 @@ Push, Pull e Legs, cada um em duas versões (A e B), com cada músculo treinado 
 | 2 | Supino inclinado com halteres (~30°) | 3 × 8–12 | 30° enfatiza o peito superior (Rodríguez-Ridao et al., 2020) |
 | 3 | Crucifixo no cabo ou peck deck | 2 × 12–15 | Tensão com o peito alongado |
 | 4 | Elevação lateral no cabo | 4 × 12–20 | O cabo mantém a tensão embaixo |
-| 5 | Tríceps acima da cabeça no cabo | 3 × 10–15 | Cabeça longa alongada (Maeo et al., 2023) |
+| 5 | Tríceps acima da cabeça no cabo | 3 × 10–15 | Cresceu ~1,4 vez mais que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023) |
 
 ### Pull A: dorsal, puxadas verticais (17 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê |
@@ -58,8 +58,8 @@ Push, Pull e Legs, cada um em duas versões (A e B), com cada músculo treinado 
 | 2 | Desenvolvimento com halteres, sentado | 3 × 8–12 | Único trabalho direto de deltoide anterior; os supinos já o trabalham bastante |
 | 3 | Paralelas com tronco inclinado (ou supino máquina) | 2 × 8–12 | Peito inferior com alongamento profundo |
 | 4 | Elevação lateral com halteres | 4 × 12–20 | Tensão no topo, complementa o cabo |
-| 5 | Tríceps testa com barra W, descendo atrás da cabeça | 3 × 8–12 | Cabeça longa alongada |
-| 6 | Tríceps na polia | 2 × 10–15 | Cabeças lateral e medial |
+| 5 | Tríceps testa com barra W, descendo atrás da cabeça | 3 × 8–12 | Braço elevado: a cabeça longa trabalha alongada |
+| 6 | Tríceps na polia | 2 × 10–15 | Volume extra com pouca fadiga, fácil de levar perto da falha |
 
 ### Pull B: espessura, remadas (16 séries, ~50 min)
 | # | Exercício | Séries × reps | Por quê |
@@ -136,6 +136,14 @@ Não é porque 6–8 repetições geram mais músculo. Entre ~6 e ~30 repetiçõ
 - **Repetições de 0,5 a 8 s geram hipertrofia parecida** (Schoenfeld, Ogborn & Krieger, 2015). Repetições muito lentas, acima de ~10 s, parecem piores, porque obrigam a usar pouca carga.
 - **Não precisa contar tempos rígidos** como "3-1-2". Desça controlando, em ~1–3 s, sem deixar o peso cair, e suba com intenção, o mais rápido que a técnica permitir. Subir na velocidade máxima intencional rendeu mais força que subir na metade da velocidade (Pareja-Blanco et al., 2014).
 - **Pausa na posição alongada** ajuda onde dá para "quicar", como na panturrilha: sem a pausa, o tendão devolve energia e faz parte do trabalho que deveria ser do músculo.
+
+### O tríceps acima da cabeça só trabalha a cabeça longa?
+
+Não. As três cabeças do tríceps estendem o cotovelo, então todas trabalham em qualquer exercício de tríceps. A posição do braço muda só a cabeça longa, a única que também cruza o ombro: com o braço acima da cabeça, ela trabalha mais alongada.
+
+Em Maeo et al. (2023), cada pessoa treinou um braço acima da cabeça e o outro ao lado do corpo, como na polia, por 12 semanas. O tríceps inteiro cresceu cerca de 1,4 vez mais no braço acima da cabeça, e não só a cabeça longa: as cabeças lateral e medial também cresceram mais. Os autores esperavam que essas duas crescessem igual nas duas posições.
+
+Os supinos, o desenvolvimento e as paralelas também trabalham o tríceps e contam como meia série no volume. Por isso o Push A não precisa de um segundo exercício de tríceps. A polia aparece no Push B e como extra opcional para quem quer mais volume, não para completar cabeças.
 
 ## Referências
 

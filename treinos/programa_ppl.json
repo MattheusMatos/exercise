@@ -12,7 +12,7 @@
       "extras": [
         {"imagem": "Dips_-_Chest_Version", "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min", "motivo": "Os supinos de hoje pegam pouco a parte de baixo do peito. As paralelas trabalham essa região com o músculo bem alongado."},
         {"imagem": "Incline_Dumbbell_Flyes", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "Mais trabalho com o peito alongado, agora no banco inclinado, que enfatiza a parte de cima (Rodríguez-Ridao et al., 2020)."},
-        {"imagem": "Triceps_Pushdown", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "Hoje o tríceps é feito acima da cabeça, que prioriza a cabeça longa (Maeo et al., 2023). A polia completa com as outras duas cabeças."},
+        {"imagem": "Triceps_Pushdown", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "Mais volume de tríceps. O de hoje, acima da cabeça, já trabalha as três cabeças e fez todas crescerem mais que a polia (Maeo et al., 2023). A polia varia o estímulo e é fácil de levar perto da falha."},
         {"imagem": "Reverse_Machine_Flyes", "series": 2, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min", "motivo": "Hoje só tem empurrar. O deltoide posterior quase não trabalha nos supinos e ganha um estímulo extra."}
       ],
       "titulo": "PUSH A",
@@ -55,7 +55,7 @@
           "nome": "Tríceps acima da cabeça no cabo",
           "imagem": "Triceps_Overhead_Extension_with_Rope",
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
-          "primarios": ["Tríceps (cabeça longa)"],
+          "primarios": ["Tríceps"],
           "secundarios": [],
           "dicas": ["Cotovelos apontados para a frente", "Desça até alongar bem atrás da cabeça", "Estenda totalmente sem mexer os ombros"]
         }
@@ -117,7 +117,7 @@
           "nome": "Rosca inclinada com halteres",
           "imagem": "Incline_Dumbbell_Curl",
           "series": 3, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
-          "primarios": ["Bíceps (cabeça longa)"],
+          "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
         }
@@ -232,7 +232,7 @@
           "nome": "Tríceps testa com barra W",
           "imagem": "EZ-Bar_Skullcrusher",
           "series": 3, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
-          "primarios": ["Tríceps (cabeça longa)"],
+          "primarios": ["Tríceps"],
           "secundarios": [],
           "dicas": ["Leve a barra para trás da cabeça", "Cotovelos apontados para o teto", "Estenda sem abrir os cotovelos"]
         },
@@ -240,7 +240,7 @@
           "nome": "Tríceps na polia",
           "imagem": "Triceps_Pushdown",
           "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
-          "primarios": ["Tríceps (lateral e medial)"],
+          "primarios": ["Tríceps"],
           "secundarios": [],
           "dicas": ["Cotovelos colados ao corpo", "Estenda totalmente embaixo", "Volte controlando"]
         }
