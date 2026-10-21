@@ -7,8 +7,8 @@
 | [`programa_feminino.md`](programa_feminino.md), [`programa_feminino.json`](programa_feminino.json) | Versão com foco em pernas e glúteo, explicada e em dados |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
-| [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível de força e o humor do avatar |
-| [`avatar.js`](avatar.js) | Desenha os avatares e o fogo da ofensiva em SVG |
+| [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
+| [`avatar.js`](avatar.js), [`personagens/`](personagens/) | Os 11 personagens, com uma imagem por fase, e o fogo da ofensiva |
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
@@ -29,16 +29,16 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Não testado** (anatomia ou estudos com exercícios parecidos);
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
 
-### Avatar, ofensiva e versão feminina
+### Personagem, ofensiva e treino
 
-Na tela inicial fica o avatar com a **ofensiva**, os dias seguidos de treino, como no Duolingo:
+Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos de treino, como no Duolingo:
 
 - cada dia com treino soma 1, e dia de descanso não apaga;
 - a ofensiva apaga quando não dá mais para bater a meta da semana (semana sem meta pede 1 treino). No dia em que é preciso treinar para não apagar, o fogo pisca e o app avisa;
-- o avatar fica mais forte com 3, 7, 15, 30 e 50 dias de ofensiva (níveis 1 a 5);
-- sem treinar, ele fica triste e cabisbaixo depois de 4 dias, perde músculo depois de 8 e fica sedentário, de barriga e celular na mão, depois de 15.
+- são 11 personagens ([`personagens/`](personagens/)), cada um com 4 imagens: **começando**, **no auge** (15 dias de ofensiva ou mais), **afastado** (4 dias ou mais sem treinar) e **de volta** (até uma semana depois de voltar). A fase vem de `fase()` em `ofensiva.js`;
+- o personagem aparece também no topo do treino e no cronômetro de descanso.
 
-Toque no avatar para escolher entre duas meninas e dois meninos. **Menina** usa o treino com foco em pernas e glúteo ([`programa_feminino.md`](programa_feminino.md)), e **menino**, o PPL. Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
+Toque no personagem para trocar. Na mesma tela se escolhe o treino, separado do personagem: **Treino PPL** ou **Pernas e glúteo** ([`programa_feminino.md`](programa_feminino.md)). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
 
 ### Semana
 

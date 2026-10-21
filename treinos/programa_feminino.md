@@ -1,6 +1,6 @@
 # Programa com foco em pernas e glúteo
 
-Versão do app para quem escolhe um avatar de menina. São seis treinos, quatro de pernas e glúteo e dois de parte de cima: o glúteo aparece nos quatro dias de perna. Os vídeos de cada treino estão em [`videos/`](videos/).
+Uma das duas opções de treino do app, escolhida junto com o personagem. São seis treinos, quatro de pernas e glúteo e dois de parte de cima: o glúteo aparece nos quatro dias de perna. Os vídeos de cada treino estão em [`videos/`](videos/).
 
 ## Por que uma versão com foco em pernas e glúteo
 
@@ -126,7 +126,7 @@ Para o glúteo médio e o mínimo, na lateral do quadril. Agachamento e hip thru
 
 ### Posso usar o programa PPL sendo mulher, ou este sendo homem?
 
-Pode. Os dois programas seguem as mesmas regras; a diferença é só onde está o volume. No app, a versão acompanha o avatar: toque no avatar e escolha uma menina para este programa ou um menino para o PPL.
+Pode. Os dois programas seguem as mesmas regras; a diferença é só onde está o volume. No app, toque no personagem e escolha o treino: Pernas e glúteo ou PPL, com qualquer personagem.
 
 ## Referências
 

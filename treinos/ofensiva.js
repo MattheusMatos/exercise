@@ -52,7 +52,16 @@
     const metaDaSemana = (semana) => Math.max(1, (planos[semana] || []).filter(Boolean).length);
     const ultimo = [...treinou].sort().pop() || null;
     const diasSemTreinar = ultimo ? diasEntre(ultimo, hoje) : null;
-    const base = { recorde: 0, diasSemTreinar, humor: humor(diasSemTreinar) };
+    // Dias desde a volta: o primeiro treino depois de 4 dias ou mais parado.
+    const datas = [...treinou].sort();
+    let voltouHa = null;
+    for (let i = datas.length - 1; i > 0; i--) {
+      if (diasEntre(datas[i - 1], datas[i]) >= 4) {
+        voltouHa = diasEntre(datas[i], hoje);
+        break;
+      }
+    }
+    const base = { recorde: 0, diasSemTreinar, voltouHa, humor: humor(diasSemTreinar) };
     if (!ultimo) return { ...base, dias: 0, nivel: 0, treinouHoje: false, risco: false, metaSemana: null, feitosSemana: 0 };
 
     let atual = 0;
@@ -93,7 +102,15 @@
     return n + 1 < NIVEIS.length ? NIVEIS[n + 1] - dias : null;
   };
 
-  const api = { calcular, nivel, humor, faltamParaSubir, NIVEIS };
+  // Qual das 4 imagens do personagem mostrar: afastado, no auge, de volta ou começando.
+  function fase(of) {
+    if (of.diasSemTreinar !== null && of.diasSemTreinar >= 4) return 'afastado';
+    if (of.nivel >= 3) return 'auge';
+    if (of.voltouHa !== null && of.voltouHa <= 6) return 'volta';
+    return 'comecando';
+  }
+
+  const api = { calcular, nivel, humor, fase, faltamParaSubir, NIVEIS };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Ofensiva = api;
 })(typeof window !== 'undefined' ? window : globalThis);

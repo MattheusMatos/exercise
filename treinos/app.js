@@ -54,7 +54,7 @@
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    perfil: { avatar: 'menino-1' }, atualizado: 0,
+    perfil: { personagem: 'brutus', programa: 'masculino' }, atualizado: 0,
   };
   let tela = 'inicio';
   let selecionado = 0;
@@ -151,7 +151,6 @@
   }
 
   const semanaAtual = () => dataLocal(diasDaSemanaAtual()[0]);
-  const programaDoAvatar = (avatar) => (window.Avatar.generoDe(avatar) === 'f' ? 'feminino' : 'masculino');
   const todosOsTreinos = () => Object.values(programas).flatMap((p) => p.treinos);
   // O histórico guarda treinos dos dois programas.
   const tituloDoTreino = (id) => (todosOsTreinos().find((t) => t.id === id) || { titulo: '' }).titulo;
@@ -200,11 +199,15 @@
 
   function estadoValido(bruto) {
     const e = bruto && typeof bruto === 'object' ? JSON.parse(JSON.stringify(bruto)) : {};
-    const avatar = e.perfil && window.Avatar.AVATARES.includes(e.perfil.avatar) ? e.perfil.avatar : 'menino-1';
-    const prog = programas[programaDoAvatar(avatar)];
+    // Versão anterior: avatares desenhados, e o treino seguia o gênero do avatar.
+    const ANTIGOS = { 'menino-1': 'brutus', 'menino-2': 'ravi', 'menina-1': 'nina', 'menina-2': 'duda' };
+    const p = e.perfil || {};
+    const personagem = window.Avatar.PERSONAGENS.some((x) => x.id === p.personagem) ? p.personagem : ANTIGOS[p.avatar] || 'brutus';
+    const nomePrograma = programas[p.programa] ? p.programa : /^menina/.test(p.avatar || '') ? 'feminino' : 'masculino';
+    const prog = programas[nomePrograma];
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-      perfil: { avatar }, atualizado: Number(e.atualizado) || 0,
+      perfil: { personagem, programa: nomePrograma }, atualizado: Number(e.atualizado) || 0,
     };
     if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < prog.treinos.length) limpo.proximo = e.proximo;
     // Próximo treino do outro programa, guardado para quando trocar de avatar.
@@ -948,12 +951,13 @@
     modal.querySelector('.botao').focus();
   }
 
-  // ---------- ofensiva e avatar ----------
+  // ---------- ofensiva e personagem ----------
 
-  function desenhoDoAvatar(avatar, ofensiva, humor) {
-    const el = h('span', { class: 'avatar-desenho', 'aria-hidden': 'true' });
-    el.innerHTML = window.Avatar.desenhar({ avatar, forca: ofensiva.nivel, humor: humor || ofensiva.humor });
-    return el;
+  const PROGRAMAS_NOMES = { masculino: ['Treino PPL', 'Push, pull e legs: volume distribuído no corpo todo'], feminino: ['Pernas e glúteo', 'Quatro de seis treinos para pernas e glúteo'] };
+
+  function imagemDoPersonagem(fase, classe) {
+    const p = window.Avatar.personagem(estado.perfil.personagem);
+    return h('img', { class: classe || 'personagem-img', src: window.Avatar.imagem(p.id, fase), alt: `${p.nome}, ${window.Avatar.rotuloDaFase(p.id, fase).toLowerCase()}` });
   }
 
   function iconeChama(estadoChama) {
@@ -966,16 +970,16 @@
   const plural = (n, palavra) => `${n} ${palavra}${n === 1 ? '' : 's'}`;
 
   function fraseDoHumor(of) {
-    const pronome = window.Avatar.generoDe(estado.perfil.avatar) === 'f' ? 'Ela' : 'Ele';
+    const nome = window.Avatar.personagem(estado.perfil.personagem).nome;
     const dias = of.diasSemTreinar;
-    if (of.humor === 'novo') return 'Termine o primeiro treino para acender a ofensiva.';
+    if (of.humor === 'novo') return `${nome} está pronto para começar. Termine o primeiro treino para acender a ofensiva.`;
     if (of.risco) return 'Treine hoje para não apagar a ofensiva!';
     if (of.treinouHoje) return of.dias >= 3 ? 'Treino de hoje feito. A ofensiva está pegando fogo!' : 'Treino de hoje feito!';
-    if (of.humor === 'triste') return `${dias} dias sem treinar. ${pronome} está com saudade.`;
-    if (of.humor === 'magro') return `${dias} dias sem treinar: perdendo músculo.`;
-    if (of.humor === 'sedentario') return `${dias} dias parado. Que tal voltar hoje?`;
+    if (dias >= 15) return `${dias} dias parado. ${nome} está largado esperando você.`;
+    if (dias >= 4) return `${dias} dias sem treinar. ${nome} está com saudade.`;
     if (of.dias === 0) return 'A ofensiva apagou: a meta da semana não fecha mais. O próximo treino acende de novo.';
-    return of.humor === 'animado' ? 'Treinou ontem. Bora manter o ritmo?' : 'Pronto para o próximo treino.';
+    if (window.Ofensiva.fase(of) === 'volta') return `De volta! ${nome} já está pegando o ritmo.`;
+    return of.humor === 'animado' ? 'Treinou ontem. Bora manter o ritmo?' : 'Descanso faz parte. Pronto para o próximo treino.';
   }
 
   function textoDoNivel(of) {
@@ -990,74 +994,77 @@
 
   function cartaoPerfil() {
     const of = ofensivaAtual();
+    const fase = window.Ofensiva.fase(of);
+    const p = window.Avatar.personagem(estado.perfil.personagem);
     return h('section', { class: 'perfil' },
-      h('button', { class: `avatar-palco humor-${of.humor}`, 'aria-label': 'Seu avatar: toque para trocar', onclick: abrirPerfil },
-        desenhoDoAvatar(estado.perfil.avatar, of)),
+      h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: abrirPerfil },
+        imagemDoPersonagem(fase)),
       h('div', { class: 'perfil-texto' },
+        h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
         h('p', { class: 'nivel' }, textoDoNivel(of)),
-        h('button', { class: 'link', onclick: abrirPerfil }, 'Trocar avatar')));
+        h('button', { class: 'link', onclick: abrirPerfil }, 'Personagem e treino')));
   }
 
-  function trocarAvatar(avatar) {
-    const antes = programaDoAvatar(estado.perfil.avatar);
-    const depois = programaDoAvatar(avatar);
-    estado.perfil = { avatar };
-    if (antes !== depois) {
-      // Cada programa lembra o próprio próximo treino; um treino em andamento é encerrado.
-      estado.proximos = { ...estado.proximos, [antes]: estado.proximo };
-      estado.proximo = estado.proximos[depois] || 0;
-      estado.sessao = null;
-      programa = programas[depois];
-      selecionado = estado.proximo;
-      pararDescanso();
-    }
+  function trocarPrograma(depois) {
+    const antes = estado.perfil.programa;
+    if (antes === depois) return;
+    // Cada programa lembra o próprio próximo treino; um treino em andamento é encerrado.
+    estado.proximos = { ...estado.proximos, [antes]: estado.proximo };
+    estado.proximo = estado.proximos[depois] || 0;
+    estado.sessao = null;
+    estado.perfil = { ...estado.perfil, programa: depois };
+    programa = programas[depois];
+    selecionado = estado.proximo;
+    pararDescanso();
     salvar();
     renderInicio();
-    if (antes !== depois) avisar(depois === 'feminino' ? 'Treino com foco em pernas e glúteo' : 'Treino PPL');
+    avisar(PROGRAMAS_NOMES[depois][0]);
   }
 
   function abrirPerfil() {
     const of = ofensivaAtual();
-    let confirmando = null; // avatar do outro programa esperando confirmação
+    const fase = window.Ofensiva.fase(of);
+    let confirmando = null; // programa esperando confirmação, com treino em andamento
     const fechar = () => modal.remove();
     const caixa = h('div', { class: 'modal-caixa folha perfil-folha' });
     const modal = h('div', {
       class: 'modal',
       role: 'dialog',
       'aria-modal': 'true',
-      'aria-label': 'Seu avatar',
+      'aria-label': 'Personagem e treino',
       onclick: (e) => {
         if (e.target === modal) fechar();
       },
     }, caixa);
-    const escolher = (avatar) => {
-      if (programaDoAvatar(avatar) !== programaDoAvatar(estado.perfil.avatar) && estado.sessao) {
-        confirmando = avatar;
+    const escolherPersonagem = (id) => {
+      estado.perfil = { ...estado.perfil, personagem: id };
+      salvar();
+      desenhar();
+      renderInicio();
+    };
+    const escolherPrograma = (nome) => {
+      if (nome === estado.perfil.programa) return;
+      if (estado.sessao) {
+        confirmando = nome;
         desenhar();
-        caixa.querySelector('.confirmar-troca .botao').focus();
         return;
       }
       fechar();
-      trocarAvatar(avatar);
+      trocarPrograma(nome);
     };
-    const grupo = (titulo, descricao, avatares) => h('section', { class: 'grupo-avatar' },
-      h('p', { class: 'rotulo' }, titulo),
-      h('p', { class: 'grupo-descricao' }, descricao),
-      h('div', { class: 'opcoes-avatar' }, avatares.map((avatar, i) => h('button', {
-        class: 'opcao-avatar',
-        'aria-pressed': String(avatar === estado.perfil.avatar),
-        'aria-label': `${titulo} ${i + 1}`,
-        onclick: () => escolher(avatar),
-      }, desenhoDoAvatar(avatar, of)))));
     function desenhar() {
       caixa.replaceChildren(...[
-        h('h2', null, 'Seu avatar'),
+        h('h2', null, 'Personagem e treino'),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
-        grupo('Menina', 'Treino com foco em pernas e glúteo', ['menina-1', 'menina-2']),
-        grupo('Menino', 'Treino PPL: push, pull e legs', ['menino-1', 'menino-2']),
+        h('p', { class: 'rotulo' }, 'Seu treino'),
+        h('div', { class: 'opcoes-programa' }, Object.entries(PROGRAMAS_NOMES).map(([nome, [titulo, descricao]]) => h('button', {
+          class: 'opcao-programa',
+          'aria-pressed': String(nome === estado.perfil.programa),
+          onclick: () => escolherPrograma(nome),
+        }, h('strong', null, titulo), h('span', null, descricao)))),
         confirmando
           ? h('div', { class: 'confirmar-troca' },
             h('p', null, `Trocar de treino encerra o ${programa.treinos[estado.sessao.treino].titulo} em andamento.`),
@@ -1065,7 +1072,7 @@
               class: 'botao primario',
               onclick: () => {
                 fechar();
-                trocarAvatar(confirmando);
+                trocarPrograma(confirmando);
               },
             }, 'Trocar mesmo assim'),
             h('button', {
@@ -1076,20 +1083,26 @@
               },
             }, 'Cancelar'))
           : null,
-        h('p', { class: 'aviso' }, 'Trocar de avatar mantém a ofensiva, o histórico e a semana planejada.'),
+        h('p', { class: 'rotulo' }, 'Seu personagem'),
+        h('p', { class: 'grupo-descricao' }, 'Qualquer personagem combina com qualquer treino. Ele muda de pose conforme a ofensiva: começando, no auge, afastado ou de volta.'),
+        h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((p) => h('button', {
+          class: 'opcao-personagem',
+          'aria-pressed': String(p.id === estado.perfil.personagem),
+          onclick: () => escolherPersonagem(p.id),
+        }, h('img', { src: window.Avatar.imagem(p.id, p.id === estado.perfil.personagem ? fase : 'comecando'), alt: '', loading: 'lazy' }), h('span', null, p.nome)))),
         h('details', { class: 'regras-ofensiva' },
           h('summary', null, 'Como funciona a ofensiva'),
           h('ul', null,
             h('li', null, 'Cada dia com treino soma 1 dia de ofensiva. Dia de descanso não apaga.'),
             h('li', null, 'Ela apaga quando não dá mais para bater a meta da semana. Semana sem meta pede 1 treino.'),
-            h('li', null, 'O avatar fica mais forte com 3, 7, 15, 30 e 50 dias de ofensiva.'),
-            h('li', null, 'Sem treinar, ele fica triste depois de 4 dias, perde músculo depois de 8 e fica sedentário depois de 15.'))),
+            h('li', null, 'Com 15 dias de ofensiva, o personagem chega no auge.'),
+            h('li', null, 'Com 4 dias ou mais sem treinar, ele aparece afastado; no primeiro treino depois disso, fica "de volta" por uma semana.'))),
         h('button', { class: 'link', onclick: fechar }, 'Fechar'),
       ].filter(Boolean));
     }
     desenhar();
     document.body.append(modal);
-    caixa.querySelector('.opcao-avatar[aria-pressed="true"]').focus();
+    caixa.querySelector('.opcao-programa[aria-pressed="true"]').focus();
   }
 
   // ---------- telas ----------
@@ -1232,6 +1245,7 @@
     app.replaceChildren(h('section', { class: 'treino' },
       h('header', { class: 'barra' },
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar ao início', onclick: voltarInicio }),
+        h('span', { class: 'personagem-mini' }, imagemDoPersonagem(window.Ofensiva.fase(ofensivaAtual()))),
         h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo), h('span', { class: 'contador' })),
         h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) }),
         h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(estado.sessao.treino) })),
@@ -1326,7 +1340,7 @@
     const subiu = of.nivel > resumoFinal.nivelAntes;
     app.replaceChildren(h('section', { class: 'fim' },
       h('div', { class: 'fim-avatar' },
-        h('div', { class: `avatar-palco humor-animado${subiu ? ' subiu' : ''}` }, desenhoDoAvatar(estado.perfil.avatar, of, 'animado')),
+        h('div', { class: `personagem-palco fase-${window.Ofensiva.fase(of)}${subiu ? ' subiu' : ''}` }, imagemDoPersonagem(window.Ofensiva.fase(of))),
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
           h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)))),
@@ -1618,6 +1632,7 @@
     }
     if (!caixa.firstChild) {
       caixa.append(
+        h('span', { class: 'descanso-personagem' }),
         h('span', { class: 'relogio', role: 'timer', 'aria-label': 'Tempo de descanso' }),
         h('div', { class: 'descanso-info' },
           h('span', { class: 'rotulo descanso-rotulo' }),
@@ -1632,6 +1647,13 @@
     caixa.classList.toggle('pronto', pronto);
     caixa.querySelector('.relogio').textContent = relogio(restante);
     caixa.querySelector('.descanso-rotulo').textContent = pronto ? 'Bora!' : 'Descanso';
+    // Durante o descanso o personagem relaxa; quando acaba, aparece no auge, pronto para a próxima série.
+    const fase = pronto ? 'auge' : 'comecando';
+    const lugar = caixa.querySelector('.descanso-personagem');
+    if (lugar.dataset.fase !== fase) {
+      lugar.dataset.fase = fase;
+      lugar.replaceChildren(imagemDoPersonagem(fase));
+    }
     const aviso = pronto ? `Descanso feito. Agora: ${descanso.proxima}.` : `Descanso de ${relogio(descanso.total)}.`;
     const elAviso = caixa.querySelector('.so-leitor');
     if (elAviso.textContent !== aviso) elAviso.textContent = aviso;
@@ -1813,7 +1835,7 @@
     .then((lista) => {
       programas = Object.fromEntries(lista);
       estado = carregarLocal();
-      programa = programas[programaDoAvatar(estado.perfil.avatar)];
+      programa = programas[estado.perfil.programa];
       selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
       carregarBiblioteca();
