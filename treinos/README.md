@@ -23,6 +23,7 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
 - toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
 - toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só para hoje ou sempre naquele treino;
+- cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Não testado** (anatomia ou estudos com exercícios parecidos);
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
 
 ### Semana
@@ -51,7 +52,7 @@ A tira **D S T Q Q S S** mostra o treino de cada dia. Tocar num dia troca entre 
 | Tipo | 10% | Multiarticular ou isolado |
 | Equipamento | 10% | Mesmo equipamento |
 
-Exemplos: leg press no lugar do agachamento dá 87%; cadeira extensora, 46%. O padrão de movimento vem do nome do exercício (`gerar_biblioteca.py`) e também separa o deltoide: a base chama todo exercício de ombro de "ombros", e o padrão diz se é anterior, lateral ou posterior. Algumas trocas têm a nota reduzida com base em estudos: tríceps na polia no lugar do tríceps acima da cabeça (Maeo et al., 2023) e mesa flexora deitada no lugar da sentada (Maeo et al., 2021).
+Exemplos: leg press no lugar do agachamento dá 87%; cadeira extensora, 46%. O padrão de movimento vem do nome do exercício (`gerar_biblioteca.py`) e também separa o deltoide: a base chama todo exercício de ombro de "ombros", e o padrão diz se é anterior, lateral ou posterior. Algumas trocas têm a nota reduzida com base em estudos: tríceps na polia no lugar do tríceps acima da cabeça (Maeo et al., 2023), mesa flexora deitada no lugar da sentada (Maeo et al., 2021) e panturrilha sentada no lugar da em pé (Kinoshita et al., 2023). Nessas trocas, e entre cabo e halteres na elevação lateral (Larsen et al., 2025) ou entre máquina e peso livre (Haugen et al., 2023), a tela da troca mostra o que o estudo encontrou (`estudo()` em `semelhanca.js`).
 
 Para testar no computador:
 

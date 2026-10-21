@@ -40,6 +40,12 @@
     'bola-de-exercicio': 'Bola suíça', 'rolo-de-espuma': 'Rolo de espuma', outros: 'Outros',
   };
   const NIVEIS = { iniciante: 'Iniciante', intermediario: 'Intermediário', avancado: 'Avançado' };
+  // O que sustenta cada motivo do programa (campo "evidencia" de programa_ppl.json).
+  const EVIDENCIAS = {
+    crescimento: ['Estudo de crescimento', 'um estudo mediu o músculo crescendo'],
+    ativacao: ['Estudo de ativação', 'só mediu o quanto o músculo trabalha no exercício'],
+    'nao-testado': ['Não testado', 'vem da anatomia ou de estudos com exercícios parecidos'],
+  };
 
   let programa = null;
   let biblioteca = null; // { itens, porId }
@@ -107,6 +113,15 @@
     const selo = h('span', { class: `selo ${classe || ''}`, title: 'Semelhança com o exercício original' }, `${porcentagem}%`);
     selo.style.backgroundColor = corSemelhanca(porcentagem);
     return selo;
+  }
+
+  function seloEvidencia(tipo) {
+    return EVIDENCIAS[tipo] ? h('span', { class: `evidencia ${tipo}` }, EVIDENCIAS[tipo][0]) : null;
+  }
+
+  function legendaEvidencias() {
+    return h('ul', { class: 'legenda-evidencia' },
+      Object.entries(EVIDENCIAS).map(([tipo, [, descricao]]) => h('li', null, seloEvidencia(tipo), descricao)));
   }
 
   function segundosDescanso(texto) {
@@ -233,15 +248,21 @@
       primarios: item.musculos.map(rotuloMusculo),
       secundarios: item.auxiliares.map(rotuloMusculo),
       dicas: item.passos,
+      porque: null, // o motivo do programa vale para o exercício original, não para o trocado
+      evidencia: null,
       trocado: true,
       k: item.k,
       semelhanca: original && window.Semelhanca ? window.Semelhanca.comparar(original, item).porcentagem : null,
     };
   }
 
-  function extraComoExercicio(x) {
+  // Com o treino, um extra que veio dos recomendados traz o motivo junto.
+  function extraComoExercicio(x, treinoIdx) {
     const item = biblioteca ? biblioteca.porId.get(x.id) : null;
     if (!item) return null;
+    const recomendacao = treinoIdx === undefined
+      ? null
+      : (programa.treinos[treinoIdx].extras || []).find((r) => r.imagem === x.id);
     return {
       nome: item.nome,
       imagem: item.id,
@@ -252,6 +273,8 @@
       primarios: item.musculos.map(rotuloMusculo),
       secundarios: item.auxiliares.map(rotuloMusculo),
       dicas: item.passos,
+      porque: recomendacao ? recomendacao.motivo : null,
+      evidencia: recomendacao ? recomendacao.evidencia : null,
       trocado: false,
       extra: true,
       k: item.k,
@@ -263,7 +286,7 @@
   function exercicioDaSessao(i) {
     const sessao = estado.sessao;
     const base = programa.treinos[sessao.treino].exercicios.length;
-    return i < base ? exercicio(sessao.treino, i) : extraComoExercicio(sessao.extras[i - base]);
+    return i < base ? exercicio(sessao.treino, i) : extraComoExercicio(sessao.extras[i - base], sessao.treino);
   }
 
   // Índices que contam na sessão; um extra tirado do treino de hoje sai da conta.
@@ -300,6 +323,8 @@
     itens.push(nota.equipamento === 1
       ? `Mesmo equipamento: ${rotuloEquipamento(outro.equipamento)}`
       : `Outro equipamento: ${rotuloEquipamento(outro.equipamento)}`);
+    const estudo = window.Semelhanca.estudo(original, outro);
+    if (estudo) itens.push(h('strong', null, estudo));
     return itens;
   }
 
@@ -442,7 +467,8 @@
       h('header', { class: 'bib-topo' },
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Fechar', onclick: fecharBiblioteca }),
         h('h2', null, `Adicionar ao ${treino.titulo}`)),
-      h('p', { class: 'aviso' }, 'O treino já tem volume suficiente para a maioria das pessoas. Mais séries ainda podem render um pouco, mas cada série extra rende menos que a anterior (Pelland et al., 2024).'),
+      h('p', { class: 'aviso' }, 'Extras são opcionais. Mais séries ainda rendem crescimento, mas cada série extra rende menos que a anterior (Pelland et al., 2026).'),
+      legendaEvidencias(),
       h('p', { class: 'rotulo' }, 'Recomendados para este treino'),
       lista.length
         ? h('ul', { class: 'resultados' }, lista.map((x) => {
@@ -459,6 +485,7 @@
             h('span', { class: 'item-texto' },
               h('span', { class: 'item-nome' }, item.nome),
               h('span', { class: 'item-meta' }, `${x.series} × ${x.reps} · ${item.musculos.map(rotuloMusculo).join(', ')}`),
+              seloEvidencia(x.evidencia),
               h('span', { class: 'motivo' }, x.motivo))));
         }))
         : h('p', { class: 'vazio' }, 'Os recomendados já estão no treino. Escolha outro na biblioteca.'),
@@ -692,7 +719,9 @@
         h('h2', null, e.nome)),
       h('div', { class: 'detalhe-foto' }, figura(ex, null, null)),
       recomendacao
-        ? h('section', { class: 'semelhanca' }, h('p', { class: 'rotulo' }, 'Por que adicionar'), h('p', { class: 'motivo' }, recomendacao.motivo))
+        ? h('section', { class: 'semelhanca' },
+          h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, 'Por que adicionar'), seloEvidencia(recomendacao.evidencia)),
+          h('p', { class: 'motivo' }, recomendacao.motivo))
         : null,
       nota
         ? h('section', { class: 'semelhanca' },
@@ -1090,6 +1119,10 @@
         h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
           ex.primarios.map((m) => h('li', { class: 'principal' }, m)),
           ex.secundarios.map((m) => h('li', { class: 'auxiliar' }, m))),
+        ex.porque
+          ? [h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, 'Por quê'), seloEvidencia(ex.evidencia)),
+            h('p', { class: 'porque' }, ex.porque)]
+          : null,
         h('p', { class: 'rotulo' }, daBiblioteca(ex) ? 'Passo a passo' : 'Execução'),
         daBiblioteca(ex)
           ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d)))

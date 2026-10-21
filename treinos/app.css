@@ -441,6 +441,23 @@ svg { width: 22px; height: 22px; flex: none; }
 .dicas, .passos { margin: -6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 .passos { gap: 8px; }
 .dicas li::marker, .passos li::marker { color: var(--laranja); font-weight: 700; }
+.porque-topo { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.porque { margin: -6px 0 0; font-size: 15px; line-height: 1.4; }
+
+/* Base de cada motivo: estudo de crescimento, de ativação ou não testado. */
+.evidencia {
+  align-self: flex-start;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.evidencia.crescimento { color: var(--sem-alta); }
+.evidencia.ativacao { color: var(--sem-media); }
+.evidencia.nao-testado { color: var(--apagado); }
 
 .series {
   flex: none;
@@ -696,6 +713,22 @@ svg { width: 22px; height: 22px; flex: none; }
 .semelhanca .motivo { font-size: 15px; }
 .recomendacao { align-items: flex-start; }
 .recomendacao .mini { margin-top: 2px; }
+.recomendacao .evidencia { margin-top: 4px; }
+.legenda-evidencia {
+  list-style: none;
+  margin: 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--linha);
+  border-radius: 14px;
+  color: var(--apagado);
+  font-size: 14px;
+  line-height: 1.3;
+}
+.legenda-evidencia li { display: flex; align-items: center; gap: 10px; }
+.legenda-evidencia .evidencia { flex: none; min-width: 13em; text-align: center; }
 
 .toast {
   position: fixed;

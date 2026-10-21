@@ -46,7 +46,7 @@
     'rosca|rosca-inversa': 0.6,
     'rosca-martelo|rosca-inversa': 0.7,
     'rosca|punho': 0.2,
-    'panturrilha|panturrilha-sentada': 0.6,
+    'panturrilha|panturrilha-sentada': 0.3, // sentado, o gastrocnêmio quase não cresceu (Kinoshita et al., 2023)
     'abdomen-flexao|abdomen-infra': 0.75,
     'abdomen-infra|abdomen-estabilidade': 0.5,
     'abdomen-infra|abdomen-rotacao': 0.4,
@@ -150,7 +150,32 @@
 
   const rotuloMovimento = (padrao) => MOVIMENTOS[padrao] || 'outro movimento';
 
-  const api = { comparar, relacao, rotuloMovimento, PESOS };
+  // Trocas que estudos de crescimento compararam; cada texto vale nos dois sentidos.
+  const ESTUDOS = {
+    'triceps-acima|triceps-polia': 'Num estudo, o tríceps cresceu cerca de 40% mais com o braço acima da cabeça do que ao lado do corpo (Maeo et al., 2023).',
+    'flexora|flexora-sentada': 'Num estudo, a mesa flexora sentada fez o posterior crescer mais que a deitada (Maeo et al., 2021).',
+    'panturrilha|panturrilha-sentada': 'Num estudo, a panturrilha cresceu bem mais com o joelho estendido do que sentado (Kinoshita et al., 2023).',
+  };
+  const PESO_LIVRE = ['barra', 'barra-w', 'halteres', 'kettlebell'];
+
+  /** O que estudos de crescimento dizem sobre trocar o original pelo outro, ou null. */
+  function estudo(original, outro) {
+    const a = original.padrao;
+    const b = outro.padrao;
+    const doPar = ESTUDOS[`${a}|${b}`] || ESTUDOS[`${b}|${a}`];
+    if (doPar) return doPar;
+    if (a !== b) return null;
+    const equipamentos = [original.equipamento, outro.equipamento];
+    if (a === 'elevacao-lateral' && equipamentos.includes('cabo') && equipamentos.includes('halteres')) {
+      return 'Num estudo, cabo e halteres fizeram o deltoide lateral crescer igual (Larsen et al., 2025).';
+    }
+    if (equipamentos.includes('maquina') && equipamentos.some((e) => PESO_LIVRE.includes(e))) {
+      return 'Numa revisão de estudos, máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023).';
+    }
+    return null;
+  }
+
+  const api = { comparar, relacao, rotuloMovimento, estudo, PESOS };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Semelhanca = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v1';
+const VERSAO = 'treino-ppl-v2';
 const ESSENCIAIS = [
   './',
   'index.html',
