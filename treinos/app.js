@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  const CHAVE_PROXIMO = 'ppl:proximo';
-  const CHAVE_SESSAO = 'ppl:sessao';
+  const CHAVE_ESTADO = 'ppl:estado';
   const LIMIAR_ARRASTE = 110; // px para o cartão sair
+  const LIMITE_LISTA = 60; // resultados por página na biblioteca
   const app = document.getElementById('app');
   const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -13,16 +13,35 @@
     desfazer: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5L4 9l4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10a5 5 0 0 1 0 10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
     depois: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     feito: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    trocar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
 
+  const MUSCULOS = {
+    peito: 'Peito', ombros: 'Ombros', triceps: 'Tríceps', dorsais: 'Dorsais', 'meio-das-costas': 'Meio das costas',
+    trapezio: 'Trapézio', biceps: 'Bíceps', antebracos: 'Antebraços', quadriceps: 'Quadríceps',
+    isquiotibiais: 'Posteriores de coxa', gluteos: 'Glúteos', adutores: 'Adutores', abdutores: 'Abdutores',
+    panturrilhas: 'Panturrilhas', abdominais: 'Abdômen', 'inferior-das-costas': 'Lombar', pescoco: 'Pescoço',
+  };
+  const EQUIPAMENTOS = {
+    barra: 'Barra', 'barra-w': 'Barra W', halteres: 'Halteres', cabo: 'Cabo', maquina: 'Máquina',
+    'peso-do-corpo': 'Peso do corpo', kettlebell: 'Kettlebell', faixas: 'Elástico', 'bola-medicinal': 'Bola medicinal',
+    'bola-de-exercicio': 'Bola suíça', 'rolo-de-espuma': 'Rolo de espuma', outros: 'Outros',
+  };
+  const NIVEIS = { iniciante: 'Iniciante', intermediario: 'Intermediário', avancado: 'Avançado' };
+
   let programa = null;
+  let biblioteca = null; // { itens, porId }
+  let estado = { proximo: 0, sessao: null, trocas: {}, atualizado: 0 };
   let tela = 'inicio';
   let selecionado = 0;
-  let sessao = null; // { treino, fila, feitos, series, historico, inicio }
   let resumoFinal = null;
-  let descanso = null; // { fim, total, proxima, fimDoExercicio, avisado, intervalo, esconder }
+  let descanso = null; // { fim, total, proxima, avisado, intervalo, esconder }
   let audio = null;
   let travaTela = null;
+  let perfil = null; // { nome, avatar } quando o claude.ai diz quem está vendo
+  let bib = null; // estado da tela da biblioteca enquanto aberta
+  let esperaAviso = null;
+  const nuvem = { ref: null, ativa: false, gravando: false, pendente: false, falhas: 0, espera: null };
 
   // ---------- utilidades ----------
 
@@ -60,9 +79,12 @@
     return el;
   }
 
-  const foto = (ex, k) => `fotos/${ex.imagem}-${k}.jpg`;
   const totalSeries = (treino) => treino.exercicios.reduce((soma, ex) => soma + ex.series, 0);
   const doisDigitos = (n) => String(n).padStart(2, '0');
+  const semAcento = (texto) => texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const rotuloMusculo = (m) => MUSCULOS[m] || m;
+  const rotuloEquipamento = (e) => EQUIPAMENTOS[e] || 'Sem equipamento';
+  const primeiroNome = (nome) => nome.trim().split(/\s+/)[0] || '';
 
   function segundosDescanso(texto) {
     const numeros = (String(texto).match(/\d+/g) || []).map(Number);
@@ -76,10 +98,21 @@
     return `${Math.floor(s / 60)}:${doisDigitos(s % 60)}`;
   }
 
-  function indiceProximo() {
-    const p = ler(CHAVE_PROXIMO, 0);
-    return Number.isInteger(p) && p >= 0 && p < programa.treinos.length ? p : 0;
+  function avisar(texto) {
+    let el = document.querySelector('.toast');
+    if (!el) {
+      el = h('div', { class: 'toast', role: 'status' });
+      document.body.append(el);
+    }
+    el.textContent = texto;
+    el.hidden = false;
+    clearTimeout(esperaAviso);
+    esperaAviso = setTimeout(() => {
+      el.hidden = true;
+    }, 2200);
   }
+
+  // ---------- estado: no aparelho e, quando dá, na conta ----------
 
   function sessaoValida(s) {
     if (!s || typeof s !== 'object') return null;
@@ -87,18 +120,372 @@
     if (!treino || !Array.isArray(s.fila) || !Array.isArray(s.feitos) || !s.fila.length) return null;
     const valido = (i) => Number.isInteger(i) && i >= 0 && i < treino.exercicios.length;
     if (!s.fila.every(valido) || !s.feitos.every(valido)) return null;
-    s.series = s.series && typeof s.series === 'object' ? s.series : {};
-    s.historico = Array.isArray(s.historico) ? s.historico : [];
-    s.inicio = Number(s.inicio) || Date.now();
-    return s;
+    return {
+      treino: s.treino,
+      fila: s.fila,
+      feitos: s.feitos,
+      series: s.series && typeof s.series === 'object' ? s.series : {},
+      historico: Array.isArray(s.historico) ? s.historico : [],
+      inicio: Number(s.inicio) || Date.now(),
+    };
   }
 
-  const salvarSessao = () => gravar(CHAVE_SESSAO, sessao);
+  function estadoValido(bruto) {
+    const e = bruto && typeof bruto === 'object' ? JSON.parse(JSON.stringify(bruto)) : {};
+    const limpo = { proximo: 0, sessao: sessaoValida(e.sessao), trocas: {}, atualizado: Number(e.atualizado) || 0 };
+    if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < programa.treinos.length) limpo.proximo = e.proximo;
+    for (const treino of programa.treinos) {
+      const trocas = e.trocas && e.trocas[treino.id];
+      if (!trocas || typeof trocas !== 'object') continue;
+      const validas = {};
+      for (const [slot, id] of Object.entries(trocas)) {
+        if (Number(slot) >= 0 && Number(slot) < treino.exercicios.length && typeof id === 'string') validas[slot] = id;
+      }
+      if (Object.keys(validas).length) limpo.trocas[treino.id] = validas;
+    }
+    return limpo;
+  }
+
+  function carregarLocal() {
+    const salvo = ler(CHAVE_ESTADO, null);
+    // Versão anterior do app guardava em duas chaves separadas.
+    return estadoValido(salvo || { proximo: ler('ppl:proximo', 0), sessao: ler('ppl:sessao', null) });
+  }
+
+  function salvar() {
+    estado.atualizado = Date.now();
+    gravar(CHAVE_ESTADO, estado);
+    agendarNuvem();
+  }
+
+  async function conectarConta() {
+    const claude = window.claude;
+    if (!claude || typeof claude.use !== 'function') return; // fora do claude.ai (ex.: GitHub Pages)
+    let user = null;
+    let db = null;
+    try {
+      [user, db] = await Promise.all([claude.use('user'), claude.use('db')]);
+    } catch (e) {
+      return;
+    }
+    if (user) {
+      const eu = await user.me();
+      if (eu.name) {
+        perfil = { nome: eu.name, avatar: eu.avatarUrl };
+        if (tela === 'inicio') renderInicio();
+      }
+    }
+    if (!user || !db) return;
+    const uid = await user.id();
+    if (!uid) return;
+    try {
+      const ref = db.doc(`data/users/${uid}/estado`);
+      const foto = await ref.get();
+      const remoto = foto.exists ? estadoValido(foto.data()) : null;
+      if (remoto && remoto.atualizado > estado.atualizado && tela !== 'treino') {
+        estado = remoto;
+        gravar(CHAVE_ESTADO, estado);
+        selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
+      }
+      // Gravar confirma que esta pessoa pode salvar na conta; quem só pode ver cai no catch.
+      const versao = estado.atualizado;
+      await ref.set(JSON.parse(JSON.stringify(estado)));
+      nuvem.ref = ref;
+      nuvem.ativa = true;
+      if (estado.atualizado !== versao) agendarNuvem();
+    } catch (e) {
+      nuvem.ativa = false;
+    }
+    if (tela === 'inicio') renderInicio();
+  }
+
+  function agendarNuvem(atraso = 1200) {
+    if (!nuvem.ativa) return;
+    clearTimeout(nuvem.espera);
+    nuvem.espera = setTimeout(gravarNuvem, atraso);
+  }
+
+  async function gravarNuvem() {
+    if (!nuvem.ativa) return;
+    if (nuvem.gravando) {
+      nuvem.pendente = true;
+      return;
+    }
+    nuvem.gravando = true;
+    try {
+      await nuvem.ref.set(JSON.parse(JSON.stringify(estado)));
+      nuvem.falhas = 0;
+    } catch (e) {
+      if (e && e.code === 'unavailable' && nuvem.falhas === 0) {
+        nuvem.falhas += 1;
+        nuvem.pendente = true;
+      } else if (!e || e.code !== 'unavailable') {
+        // Sem permissão de gravar (por exemplo, quem só pode ver): fica salvo no aparelho.
+        nuvem.ativa = false;
+        if (tela === 'inicio') renderInicio();
+      }
+    } finally {
+      nuvem.gravando = false;
+      if (nuvem.pendente && nuvem.ativa) {
+        nuvem.pendente = false;
+        agendarNuvem(1500 + Math.random() * 2000);
+      }
+    }
+  }
+
+  // ---------- exercícios e biblioteca ----------
+
+  function exercicio(treinoIdx, slot) {
+    const treino = programa.treinos[treinoIdx];
+    const base = treino.exercicios[slot];
+    const id = estado.trocas[treino.id] && estado.trocas[treino.id][slot];
+    const item = id && biblioteca ? biblioteca.porId.get(id) : null;
+    if (!item) return { ...base, trocado: false, k: null };
+    return {
+      ...base,
+      nome: item.nome,
+      imagem: item.id,
+      primarios: item.musculos.map(rotuloMusculo),
+      secundarios: item.auxiliares.map(rotuloMusculo),
+      dicas: item.passos,
+      trocado: true,
+      k: item.k,
+    };
+  }
+
+  function sprite(k, classe, quadro, rotulo) {
+    const pos = k % 25;
+    const el = h('div', rotulo
+      ? { class: `sprite ${classe}`, role: 'img', 'aria-label': rotulo }
+      : { class: `sprite ${classe}`, 'aria-hidden': 'true' });
+    el.style.backgroundImage = `url("biblioteca/fotos-${quadro ? 'b' : 'a'}-${Math.floor(k / 25)}.jpg")`;
+    el.style.backgroundPosition = `${(pos % 5) * 25}% ${Math.floor(pos / 5) * 25}%`;
+    return el;
+  }
+
+  function miniatura(ex) {
+    if (!ex.trocado) return h('img', { class: 'mini', src: `fotos/${ex.imagem}-0.jpg`, alt: '', loading: 'lazy' });
+    const pos = ex.k % 100;
+    const el = h('span', { class: 'mini mini-folha', 'aria-hidden': 'true' });
+    el.style.backgroundImage = `url("biblioteca/miniaturas-${Math.floor(ex.k / 100)}.jpg")`;
+    el.style.backgroundPosition = `${((pos % 10) * 100) / 9}% ${(Math.floor(pos / 10) * 100) / 9}%`;
+    return el;
+  }
+
+  function figura(ex, numero, botao) {
+    const fig = h('figure', { class: 'foto' });
+    if (ex.trocado) {
+      fig.append(
+        sprite(ex.k, 'fundo', 0, ''),
+        h('div', { class: 'quadro' },
+          sprite(ex.k, 'pose pose-a', 0, `${ex.nome}: posição inicial`),
+          sprite(ex.k, 'pose pose-b', 1, `${ex.nome}: posição final`)));
+    } else {
+      fig.append(
+        h('img', { class: 'fundo', src: `fotos/${ex.imagem}-0.jpg`, alt: '', draggable: 'false' }),
+        h('img', { class: 'pose pose-a', src: `fotos/${ex.imagem}-0.jpg`, alt: `${ex.nome}: posição inicial`, draggable: 'false' }),
+        h('img', { class: 'pose pose-b', src: `fotos/${ex.imagem}-1.jpg`, alt: `${ex.nome}: posição final`, draggable: 'false' }));
+    }
+    if (numero) fig.append(h('span', { class: 'numero' }, numero));
+    if (botao) fig.append(botao);
+    return fig;
+  }
+
+  function carregarBiblioteca() {
+    fetch('biblioteca/exercicios.json')
+      .then((resposta) => {
+        if (!resposta.ok) throw new Error(String(resposta.status));
+        return resposta.json();
+      })
+      .then((dados) => {
+        const itens = dados.exercicios.map((e, k) => ({
+          ...e,
+          k,
+          busca: semAcento(`${e.nome} ${e.id.replace(/[_-]+/g, ' ')}`),
+        }));
+        biblioteca = { itens, porId: new Map(itens.map((e) => [e.id, e])) };
+        if (tela === 'inicio') renderInicio();
+        else if (tela === 'treino' && estado.sessao) montarPilha(app.querySelector('.pilha'), false);
+      })
+      .catch(() => {
+        biblioteca = null; // o treino segue normal, só sem a troca de exercícios
+      });
+  }
+
+  function abrirBiblioteca(treinoIdx, slot) {
+    if (!biblioteca) {
+      avisar('A biblioteca ainda está carregando');
+      return;
+    }
+    const trocando = slot !== undefined;
+    let musculo = 'todos';
+    if (trocando) {
+      const original = biblioteca.porId.get(programa.treinos[treinoIdx].exercicios[slot].imagem);
+      if (original && original.musculos[0]) musculo = original.musculos[0];
+    }
+    bib = { trocando, treinoIdx, slot, musculo, equipamento: 'todos', busca: '', limite: LIMITE_LISTA, detalhe: null, rolagem: 0 };
+    document.body.append(h('div', { class: 'camada biblioteca', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Biblioteca de exercícios' }));
+    renderBiblioteca();
+  }
+
+  function fecharBiblioteca() {
+    const camada = document.querySelector('.biblioteca');
+    if (camada) camada.remove();
+    bib = null;
+  }
+
+  function renderBiblioteca() {
+    const camada = document.querySelector('.biblioteca');
+    if (!camada || !bib) return;
+    if (bib.detalhe !== null) {
+      camada.replaceChildren(detalheBiblioteca(biblioteca.itens[bib.detalhe]));
+      camada.scrollTop = 0;
+      return;
+    }
+
+    const titulo = bib.trocando ? `Trocar: ${exercicio(bib.treinoIdx, bib.slot).nome}` : 'Biblioteca de exercícios';
+    const busca = h('input', {
+      type: 'search', id: 'busca-exercicio', class: 'campo', value: bib.busca, autocomplete: 'off',
+      placeholder: 'Buscar: supino, rosca, agachamento…', 'aria-label': 'Buscar exercício',
+    });
+    busca.addEventListener('input', () => {
+      bib.busca = busca.value;
+      bib.limite = LIMITE_LISTA;
+      atualizarResultados();
+    });
+    const opcoesMusculo = [['todos', 'Todos'], ...Object.entries(MUSCULOS)];
+    const chips = h('div', { class: 'filtro-musculos', role: 'group', 'aria-label': 'Filtrar por músculo' },
+      opcoesMusculo.map(([valor, rotulo]) => h('button', {
+        class: 'chip-filtro',
+        'aria-pressed': String(bib.musculo === valor),
+        onclick: () => {
+          bib.musculo = valor;
+          bib.limite = LIMITE_LISTA;
+          renderBiblioteca();
+        },
+      }, rotulo)));
+    const equipamento = h('select', {
+      id: 'filtro-equipamento', class: 'campo', 'aria-label': 'Filtrar por equipamento',
+      onchange: (e) => {
+        bib.equipamento = e.target.value;
+        bib.limite = LIMITE_LISTA;
+        atualizarResultados();
+      },
+    },
+      h('option', { value: 'todos' }, 'Qualquer equipamento'),
+      Object.entries(EQUIPAMENTOS).map(([valor, rotulo]) => h('option', { value: valor, selected: bib.equipamento === valor }, rotulo)));
+
+    const extras = [];
+    if (bib.trocando) {
+      extras.push(h('p', { class: 'aviso' }, 'Séries, repetições e descanso continuam os do treino.'));
+      if (exercicio(bib.treinoIdx, bib.slot).trocado) {
+        const original = programa.treinos[bib.treinoIdx].exercicios[bib.slot];
+        extras.push(h('button', { class: 'botao secundario', onclick: () => trocar(bib.treinoIdx, bib.slot, null) },
+          `Voltar para ${original.nome}`));
+      }
+    }
+
+    camada.replaceChildren(h('div', { class: 'bib-conteudo' },
+      h('header', { class: 'bib-topo' },
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Fechar biblioteca', onclick: fecharBiblioteca }),
+        h('h2', null, titulo)),
+      extras,
+      busca,
+      chips,
+      equipamento,
+      h('p', { class: 'contagem' }),
+      h('ul', { class: 'resultados' }),
+      h('button', {
+        class: 'botao secundario mais-resultados',
+        onclick: () => {
+          bib.limite += LIMITE_LISTA;
+          atualizarResultados();
+        },
+      }, 'Mostrar mais')));
+    atualizarResultados();
+    const ativo = camada.querySelector('.chip-filtro[aria-pressed="true"]');
+    if (ativo) ativo.scrollIntoView({ block: 'nearest', inline: 'center' });
+    camada.scrollTop = bib.rolagem;
+  }
+
+  function atualizarResultados() {
+    const camada = document.querySelector('.biblioteca');
+    if (!camada || !bib) return;
+    const termos = semAcento(bib.busca).split(/\s+/).filter(Boolean);
+    const lista = biblioteca.itens.filter((e) =>
+      (bib.musculo === 'todos' || e.musculos.includes(bib.musculo)) &&
+      (bib.equipamento === 'todos' || e.equipamento === bib.equipamento) &&
+      termos.every((t) => e.busca.includes(t)));
+    const atual = bib.trocando ? exercicio(bib.treinoIdx, bib.slot).imagem : null;
+    const posAtual = atual ? lista.findIndex((e) => e.id === atual) : -1;
+    if (posAtual > 0) lista.unshift(lista.splice(posAtual, 1)[0]);
+    camada.querySelector('.contagem').textContent = lista.length === 1 ? '1 exercício' : `${lista.length} exercícios`;
+    const ul = camada.querySelector('.resultados');
+    ul.replaceChildren(...lista.slice(0, bib.limite).map((e) => h('li', null, h('button', {
+      class: 'item-bib',
+      'aria-current': e.id === atual ? 'true' : null,
+      onclick: () => {
+        bib.rolagem = camada.scrollTop;
+        bib.detalhe = e.k;
+        renderBiblioteca();
+      },
+    },
+      miniatura({ trocado: true, k: e.k }),
+      h('span', { class: 'item-texto' },
+        h('span', { class: 'item-nome' }, e.nome),
+        h('span', { class: 'item-meta' }, `${e.musculos.map(rotuloMusculo).join(', ')} · ${rotuloEquipamento(e.equipamento)}`),
+        e.id === atual ? h('span', { class: 'item-atual' }, 'No treino agora') : null)))));
+    if (!lista.length) ul.append(h('li', { class: 'vazio' }, 'Nenhum exercício encontrado. Tente outra palavra ou tire um filtro.'));
+    camada.querySelector('.mais-resultados').hidden = lista.length <= bib.limite;
+  }
+
+  function detalheBiblioteca(e) {
+    const ex = { nome: e.nome, trocado: true, k: e.k };
+    const meta = [
+      rotuloEquipamento(e.equipamento),
+      NIVEIS[e.nivel],
+      e.mecanica === 'composto' ? 'Multiarticular' : e.mecanica === 'isolado' ? 'Isolado' : null,
+    ].filter(Boolean).join(' · ');
+    const voltar = () => {
+      bib.detalhe = null;
+      renderBiblioteca();
+    };
+    return h('div', { class: 'bib-conteudo' },
+      h('header', { class: 'bib-topo' },
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar para a lista', onclick: voltar }),
+        h('h2', null, e.nome)),
+      h('div', { class: 'detalhe-foto' }, figura(ex, null, null)),
+      h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
+        e.musculos.map((m) => h('li', { class: 'principal' }, rotuloMusculo(m))),
+        e.auxiliares.map((m) => h('li', { class: 'auxiliar' }, rotuloMusculo(m)))),
+      h('p', { class: 'item-meta' }, meta),
+      h('p', { class: 'rotulo' }, 'Passo a passo'),
+      h('ol', { class: 'passos' }, e.passos.map((passo) => h('li', null, passo))),
+      bib.trocando
+        ? h('div', { class: 'bib-acoes' },
+          h('button', { class: 'botao primario', onclick: () => trocar(bib.treinoIdx, bib.slot, e.id) }, 'Usar este exercício'))
+        : null);
+  }
+
+  function trocar(treinoIdx, slot, id) {
+    const treino = programa.treinos[treinoIdx];
+    const original = treino.exercicios[slot].imagem;
+    const trocas = { ...(estado.trocas[treino.id] || {}) };
+    if (!id || id === original) delete trocas[slot];
+    else trocas[slot] = id;
+    if (Object.keys(trocas).length) estado.trocas[treino.id] = trocas;
+    else delete estado.trocas[treino.id];
+    salvar();
+    fecharBiblioteca();
+    if (tela === 'treino' && estado.sessao) montarPilha(app.querySelector('.pilha'), false);
+    else render();
+    avisar(id && id !== original ? 'Exercício trocado' : 'Exercício original de volta');
+  }
 
   // ---------- telas ----------
 
   function render() {
-    if (tela === 'treino' && sessao) renderTreino();
+    if (tela === 'treino' && estado.sessao) renderTreino();
     else if (tela === 'fim' && resumoFinal) renderFim();
     else {
       tela = 'inicio';
@@ -107,11 +494,10 @@
   }
 
   function renderInicio() {
-    const proximo = indiceProximo();
     const lista = h('ul', { class: 'lista' }, programa.treinos.map((treino, i) => {
       let tag = null;
-      if (sessao && sessao.treino === i) tag = h('span', { class: 'tag andamento' }, 'Em andamento');
-      else if (i === proximo) tag = h('span', { class: 'tag' }, 'Próximo');
+      if (estado.sessao && estado.sessao.treino === i) tag = h('span', { class: 'tag andamento' }, 'Em andamento');
+      else if (i === estado.proximo) tag = h('span', { class: 'tag' }, 'Próximo');
       return h('li', null, h('button', {
         class: 'linha-treino',
         'aria-pressed': String(i === selecionado),
@@ -125,9 +511,17 @@
         h('span', { class: 'linha-foco' }, `${treino.foco} · ${treino.exercicios.length} exercícios · ${treino.duracao}`)));
     }));
 
+    const ola = perfil ? `Olá, ${primeiroNome(perfil.nome)}. ` : '';
+    const ondeSalva = nuvem.ativa ? 'Seu progresso fica salvo na sua conta.' : 'Seu progresso fica salvo neste aparelho.';
+
     app.replaceChildren(h('section', { class: 'inicio' },
-      h('header', { class: 'marca' }, h('h1', null, 'Treino PPL'), h('span', null, 'Push · Pull · Legs')),
-      heroTreino(selecionado, proximo),
+      h('header', { class: 'marca' },
+        h('h1', null, 'Treino PPL'),
+        perfil
+          ? h('span', { class: 'perfil' }, h('img', { src: perfil.avatar, alt: '' }), primeiroNome(perfil.nome))
+          : h('span', null, 'Push · Pull · Legs')),
+      h('p', { class: 'status-salvo' }, ola + ondeSalva),
+      heroTreino(selecionado),
       h('p', { class: 'como-usar' },
         h('strong', null, 'Como usar: '),
         'toque numa anilha ao terminar cada série e o descanso começa sozinho. Acabou o exercício? ',
@@ -135,16 +529,18 @@
         ' Aparelho ocupado? Arraste para a esquerda e ele volta no fim.'),
       h('h2', { class: 'rotulo' }, 'Todos os treinos'),
       lista,
+      biblioteca
+        ? h('button', { class: 'botao secundario', icone: 'trocar', onclick: () => abrirBiblioteca() },
+          `Biblioteca com ${biblioteca.itens.length} exercícios`)
+        : null,
       h('p', { class: 'credito' }, 'Fotos: free-exercise-db (domínio público)')));
   }
 
-  function heroTreino(i, proximo) {
+  function heroTreino(i) {
     const treino = programa.treinos[i];
+    const sessao = estado.sessao;
     const emAndamento = sessao && sessao.treino === i;
-    const etiqueta = emAndamento ? 'Em andamento' : i === proximo ? 'Próximo treino' : 'Treino escolhido';
-    const miniaturas = h('div', { class: 'miniaturas' },
-      treino.exercicios.map((ex) => h('img', { src: foto(ex, 0), alt: ex.nome, loading: 'lazy' })));
-    miniaturas.style.setProperty('--colunas', treino.exercicios.length);
+    const etiqueta = emAndamento ? 'Em andamento' : i === estado.proximo ? 'Próximo treino' : 'Treino escolhido';
 
     const extras = [];
     if (sessao && !emAndamento) {
@@ -152,6 +548,18 @@
         `Começar este treino encerra o ${programa.treinos[sessao.treino].titulo} em andamento.`));
     }
     if (emAndamento) extras.push(botaoRecomecar(i));
+
+    const exercicios = h('ol', { class: 'exercicios-treino' }, treino.exercicios.map((_, slot) => {
+      const ex = exercicio(i, slot);
+      return h('li', null,
+        miniatura(ex),
+        h('span', { class: 'ex-texto' },
+          h('span', { class: 'ex-nome' }, ex.nome),
+          h('span', { class: 'ex-meta' }, `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`)),
+        biblioteca
+          ? h('button', { class: 'trocar-linha', 'aria-label': `Trocar ${ex.nome}`, onclick: () => abrirBiblioteca(i, slot) }, 'Trocar')
+          : null);
+    }));
 
     return h('article', { class: 'hero' },
       h('p', { class: 'etiqueta' }, etiqueta),
@@ -161,12 +569,13 @@
         h('li', null, h('strong', null, treino.exercicios.length), 'exercícios'),
         h('li', null, h('strong', null, totalSeries(treino)), 'séries'),
         h('li', null, h('strong', null, treino.duracao.replace(' min', '')), 'min')),
-      miniaturas,
       h('div', { class: 'hero-acoes' },
         h('button', { class: 'botao primario', onclick: () => (emAndamento ? abrirTreino() : comecar(i)) },
           emAndamento ? `Continuar (${sessao.feitos.length + 1} de ${treino.exercicios.length})` : 'Começar treino'),
         h('button', { class: 'botao secundario', icone: 'play', onclick: () => abrirVideo(i) }, 'Vídeo')),
-      extras);
+      extras,
+      h('p', { class: 'rotulo' }, 'Exercícios'),
+      exercicios);
   }
 
   function botaoRecomecar(i) {
@@ -192,13 +601,13 @@
   }
 
   function renderTreino() {
-    const treino = programa.treinos[sessao.treino];
+    const treino = programa.treinos[estado.sessao.treino];
     const pilha = h('div', { class: 'pilha' });
     app.replaceChildren(h('section', { class: 'treino' },
       h('header', { class: 'barra' },
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar ao início', onclick: voltarInicio }),
         h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo), h('span', { class: 'contador' })),
-        h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(sessao.treino) })),
+        h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(estado.sessao.treino) })),
       h('div', { class: 'segmentos', 'aria-hidden': 'true' }, treino.exercicios.map(() => h('span'))),
       pilha,
       h('div', { class: 'descanso', hidden: true }),
@@ -212,6 +621,7 @@
   }
 
   function atualizarCabecalho() {
+    const sessao = estado.sessao;
     const n = programa.treinos[sessao.treino].exercicios.length;
     app.querySelector('.contador').textContent = `Exercício ${Math.min(sessao.feitos.length + 1, n)} de ${n}`;
     app.querySelectorAll('.segmentos span').forEach((seg, k) => {
@@ -221,7 +631,8 @@
   }
 
   function montarPilha(pilha, animar) {
-    const [primeiro, segundo] = sessao.fila;
+    if (!pilha) return;
+    const [primeiro, segundo] = estado.sessao.fila;
     pilha.replaceChildren();
     if (segundo !== undefined) pilha.append(cartao(segundo, 'atras'));
     if (primeiro === undefined) return;
@@ -232,17 +643,18 @@
   }
 
   function cartao(i, posicao) {
-    const ex = programa.treinos[sessao.treino].exercicios[i];
-    const feitas = sessao.series[i] || 0;
+    const treinoIdx = estado.sessao.treino;
+    const ex = exercicio(treinoIdx, i);
+    const feitas = estado.sessao.series[i] || 0;
     const completo = feitas >= ex.series;
+    const botaoTrocar = biblioteca
+      ? h('button', { class: ex.trocado ? 'trocar ativo' : 'trocar', icone: 'trocar', onclick: () => abrirBiblioteca(treinoIdx, i) },
+        ex.trocado ? 'Trocado' : 'Trocar')
+      : null;
     return h('article', { class: `cartao ${posicao}`, 'data-i': i, 'aria-label': ex.nome },
       h('span', { class: 'carimbo carimbo-feito', 'aria-hidden': 'true' }, 'Feito'),
       h('span', { class: 'carimbo carimbo-depois', 'aria-hidden': 'true' }, 'Depois'),
-      h('figure', { class: 'foto' },
-        h('img', { class: 'fundo', src: foto(ex, 0), alt: '', draggable: 'false' }),
-        h('img', { class: 'pose pose-a', src: foto(ex, 0), alt: `${ex.nome}: posição inicial`, draggable: 'false' }),
-        h('img', { class: 'pose pose-b', src: foto(ex, 1), alt: `${ex.nome}: posição final`, draggable: 'false' }),
-        h('span', { class: 'numero' }, doisDigitos(i + 1))),
+      figura(ex, doisDigitos(i + 1), botaoTrocar),
       h('div', { class: 'corpo' },
         h('h2', null, ex.nome),
         h('div', { class: 'numeros' },
@@ -252,8 +664,10 @@
         h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
           ex.primarios.map((m) => h('li', { class: 'principal' }, m)),
           ex.secundarios.map((m) => h('li', { class: 'auxiliar' }, m))),
-        h('p', { class: 'rotulo' }, 'Execução'),
-        h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d)))),
+        h('p', { class: 'rotulo' }, ex.trocado ? 'Passo a passo' : 'Execução'),
+        ex.trocado
+          ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d)))
+          : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d)))),
       h('footer', { class: 'series' },
         h('div', { class: 'anilhas', role: 'group', 'aria-label': 'Séries feitas' },
           Array.from({ length: ex.series }, (_, k) => h('button', {
@@ -294,10 +708,10 @@
 
   function comecar(i) {
     const treino = programa.treinos[i];
-    sessao = { treino: i, fila: treino.exercicios.map((_, k) => k), feitos: [], series: {}, historico: [], inicio: Date.now() };
+    estado.sessao = { treino: i, fila: treino.exercicios.map((_, k) => k), feitos: [], series: {}, historico: [], inicio: Date.now() };
     selecionado = i;
     pararDescanso();
-    salvarSessao();
+    salvar();
     abrirTreino();
   }
 
@@ -309,18 +723,19 @@
 
   function voltarInicio() {
     tela = 'inicio';
-    if (sessao) selecionado = sessao.treino;
+    if (estado.sessao) selecionado = estado.sessao.treino;
     soltarTravaTela();
     render();
   }
 
   function marcarSerie(i, k) {
     prepararAudio();
-    const ex = programa.treinos[sessao.treino].exercicios[i];
+    const sessao = estado.sessao;
+    const ex = exercicio(sessao.treino, i);
     const antes = sessao.series[i] || 0;
     const agora = k < antes ? k : k + 1; // tocar numa anilha cheia desmarca dela em diante
     sessao.series[i] = agora;
-    salvarSessao();
+    salvar();
 
     const topo = app.querySelector(`.cartao.topo[data-i="${i}"]`);
     if (topo) {
@@ -336,7 +751,7 @@
 
     if (agora > antes) {
       const ultima = agora >= ex.series;
-      iniciarDescanso(segundosDescanso(ex.descanso), ultima ? 'próximo exercício' : `série ${agora + 1} de ${ex.series}`, ultima);
+      iniciarDescanso(segundosDescanso(ex.descanso), ultima ? 'próximo exercício' : `série ${agora + 1} de ${ex.series}`);
     }
   }
 
@@ -361,11 +776,12 @@
   }
 
   function concluir(direcao) {
+    const sessao = estado.sessao;
     const i = sessao.fila.shift();
     if (direcao === 'feito') sessao.feitos.push(i);
     else sessao.fila.push(i);
     sessao.historico.push({ tipo: direcao, i });
-    salvarSessao();
+    salvar();
     if (!sessao.fila.length) {
       terminar();
       return;
@@ -375,18 +791,20 @@
   }
 
   function desfazer() {
+    const sessao = estado.sessao;
     const ultimo = sessao.historico.pop();
     if (!ultimo) return;
     const lista = ultimo.tipo === 'feito' ? sessao.feitos : sessao.fila;
     const pos = lista.lastIndexOf(ultimo.i);
     if (pos >= 0) lista.splice(pos, 1);
     sessao.fila.unshift(ultimo.i);
-    salvarSessao();
+    salvar();
     montarPilha(app.querySelector('.pilha'), false);
     atualizarCabecalho();
   }
 
   function terminar() {
+    const sessao = estado.sessao;
     const treino = programa.treinos[sessao.treino];
     const minutos = Math.round((Date.now() - sessao.inicio) / 60000);
     const feitas = Object.values(sessao.series).reduce((soma, n) => soma + (Number(n) || 0), 0);
@@ -397,11 +815,10 @@
       totalSeries: totalSeries(treino),
       exercicios: treino.exercicios.length,
     };
-    const proximo = (sessao.treino + 1) % programa.treinos.length;
-    gravar(CHAVE_PROXIMO, proximo);
-    selecionado = proximo;
-    sessao = null;
-    salvarSessao();
+    estado.proximo = (sessao.treino + 1) % programa.treinos.length;
+    estado.sessao = null;
+    selecionado = estado.proximo;
+    salvar();
     pararDescanso();
     soltarTravaTela();
     tela = 'fim';
@@ -476,7 +893,7 @@
       voltarAoLugar();
     });
 
-    // Depois de arrastar, o soltar não deve contar como toque numa anilha.
+    // Depois de arrastar, o soltar não deve contar como toque num botão do cartão.
     el.addEventListener('click', (e) => {
       if (!ignorarClique) return;
       ignorarClique = false;
@@ -487,13 +904,12 @@
 
   // ---------- descanso ----------
 
-  function iniciarDescanso(segundos, proxima, fimDoExercicio) {
+  function iniciarDescanso(segundos, proxima) {
     pararDescanso();
     descanso = {
       fim: Date.now() + segundos * 1000,
       total: segundos,
       proxima,
-      fimDoExercicio,
       avisado: false,
       intervalo: setInterval(tique, 250),
       esconder: null,
@@ -640,6 +1056,7 @@
       },
     }, h('div', { class: 'modal-caixa' },
       video,
+      h('p', { class: 'aviso' }, 'O vídeo mostra o treino original, sem as trocas.'),
       h('button', { class: 'botao secundario', onclick: fechar }, 'Fechar vídeo')));
     document.body.append(modal);
     modal.querySelector('.botao').focus();
@@ -655,7 +1072,18 @@
       }
       return;
     }
-    if (tela !== 'treino' || !sessao) return;
+    if (bib) {
+      if (e.key === 'Escape') {
+        if (bib.detalhe !== null) {
+          bib.detalhe = null;
+          renderBiblioteca();
+        } else {
+          fecharBiblioteca();
+        }
+      }
+      return;
+    }
+    if (tela !== 'treino' || !estado.sessao) return;
     if (e.key === 'ArrowRight') {
       e.preventDefault();
       acaoBotao('feito');
@@ -683,9 +1111,11 @@
     })
     .then((dados) => {
       programa = dados;
-      sessao = sessaoValida(ler(CHAVE_SESSAO, null));
-      selecionado = sessao ? sessao.treino : indiceProximo();
+      estado = carregarLocal();
+      selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
+      carregarBiblioteca();
+      conectarConta();
     })
     .catch(() => {
       app.replaceChildren(h('section', { class: 'erro' },
