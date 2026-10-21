@@ -4,8 +4,11 @@
 |---|---|
 | [`programa_ppl.md`](programa_ppl.md) | O programa PPL explicado, com as referências científicas |
 | [`programa_ppl.json`](programa_ppl.json) | Os mesmos treinos em dados, usados pelo app e pelos vídeos |
+| [`programa_feminino.md`](programa_feminino.md), [`programa_feminino.json`](programa_feminino.json) | Versão com foco em pernas e glúteo, explicada e em dados |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
+| [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível de força e o humor do avatar |
+| [`avatar.js`](avatar.js) | Desenha os avatares e o fogo da ofensiva em SVG |
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
@@ -25,6 +28,17 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só para hoje ou sempre naquele treino;
 - cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Não testado** (anatomia ou estudos com exercícios parecidos);
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
+
+### Avatar, ofensiva e versão feminina
+
+Na tela inicial fica o avatar com a **ofensiva**, os dias seguidos de treino, como no Duolingo:
+
+- cada dia com treino soma 1, e dia de descanso não apaga;
+- a ofensiva apaga quando não dá mais para bater a meta da semana (semana sem meta pede 1 treino). No dia em que é preciso treinar para não apagar, o fogo pisca e o app avisa;
+- o avatar fica mais forte com 3, 7, 15, 30 e 50 dias de ofensiva (níveis 1 a 5);
+- sem treinar, ele fica triste e cabisbaixo depois de 4 dias, perde músculo depois de 8 e fica sedentário, de barriga e celular na mão, depois de 15.
+
+Toque no avatar para escolher entre duas meninas e dois meninos. **Menina** usa o treino com foco em pernas e glúteo ([`programa_feminino.md`](programa_feminino.md)), e **menino**, o PPL. Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
 
 ### Semana
 
@@ -90,11 +104,12 @@ git clone --depth 1 https://github.com/MattheusMatos/free-exercise-db ../free-ex
 python3 treinos/gerar_videos.py --fotos ../free-exercise-db           # todos os vídeos
 python3 treinos/gerar_videos.py --fotos ../free-exercise-db pull_b    # só um
 python3 treinos/copiar_fotos.py --fotos ../free-exercise-db           # fotos do app
+# versão feminina: os mesmos comandos com --programa treinos/programa_feminino.json
 
 git clone --depth 1 https://github.com/MattheusMatos/exercicios-bd-ptbr ../exercicios-bd-ptbr
 python3 treinos/gerar_biblioteca.py --fotos ../free-exercise-db --ptbr ../exercicios-bd-ptbr
 ```
 
-Para mudar um exercício do programa, edite `programa_ppl.json` e rode `gerar_videos.py` e `copiar_fotos.py` de novo. O campo `imagem` é o nome da pasta do exercício em `free-exercise-db/exercises/`; para achar pelo nome em português, procure no [`exercicios-bd-ptbr`](https://github.com/MattheusMatos/exercicios-bd-ptbr), que usa os mesmos ids.
+Para mudar um exercício do programa, edite `programa_ppl.json` (ou `programa_feminino.json`) e rode `gerar_videos.py` e `copiar_fotos.py` de novo. O campo `imagem` é o nome da pasta do exercício em `free-exercise-db/exercises/`; para achar pelo nome em português, procure no [`exercicios-bd-ptbr`](https://github.com/MattheusMatos/exercicios-bd-ptbr), que usa os mesmos ids.
 
 As fotos são do [free-exercise-db](https://github.com/yuhonas/free-exercise-db), em domínio público (Unlicense).

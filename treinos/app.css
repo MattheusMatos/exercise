@@ -106,7 +106,7 @@ svg { width: 22px; height: 22px; flex: none; }
   gap: 18px;
   padding-block: 20px 32px;
 }
-.marca { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.marca { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
 .marca h1 {
   margin: 0;
   font: 800 30px/1 var(--fonte-titulo);
@@ -128,6 +128,7 @@ svg { width: 22px; height: 22px; flex: none; }
   font: 800 clamp(64px, 20vw, 92px)/0.86 var(--fonte-titulo);
   letter-spacing: 0.01em;
 }
+.hero h2.longo { font-size: clamp(52px, 15.5vw, 78px); }
 .foco { margin: -4px 0 0; color: var(--apagado); font-size: 18px; }
 .meta {
   list-style: none;
@@ -592,6 +593,66 @@ svg { width: 22px; height: 22px; flex: none; }
 .folha .botao { align-self: stretch; text-decoration: none; }
 .folha .link { align-self: center; }
 
+/* Avatar e ofensiva */
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px 12px 10px;
+  border-radius: var(--raio);
+  background: var(--superficie);
+}
+.avatar-palco {
+  flex: none;
+  width: 104px;
+  aspect-ratio: 120 / 164;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 42%, var(--superficie-2) 0 55%, transparent 72%);
+  cursor: pointer;
+}
+.avatar-desenho, .avatar-desenho svg { display: block; width: 100%; height: 100%; }
+.perfil-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.ofensiva { margin: 0; display: flex; align-items: center; gap: 6px; }
+.ofensiva strong { font: 800 42px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.ofensiva > span:last-child { color: var(--apagado); font-size: 14px; font-weight: 600; line-height: 1.15; }
+.ofensiva.apagada strong { color: var(--apagado); }
+.ofensiva.risco strong { color: var(--laranja); }
+.chama-icone { flex: none; display: inline-flex; width: 34px; height: 34px; transform-origin: 50% 90%; }
+.chama-icone svg { width: 100%; height: 100%; }
+.ofensiva.acesa .chama-icone { filter: drop-shadow(0 0 6px rgba(255, 120, 40, 0.55)); animation: chama 1.6s ease-in-out infinite; }
+.ofensiva.risco .chama-icone { animation: risco 0.9s ease-in-out infinite; }
+.humor-texto { margin: 0; font-size: 15px; line-height: 1.35; }
+.nivel { margin: 0; color: var(--apagado); font-size: 13px; }
+.perfil .link { align-self: flex-start; padding: 2px 0; }
+.avatar-palco.humor-animado .avatar-svg { animation: pulinho 1.4s ease-in-out infinite; transform-origin: 50% 100%; }
+.avatar-palco:is(.humor-triste, .humor-magro, .humor-sedentario) .avatar-svg { animation: balanco 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
+.avatar-palco.subiu { animation: subiu 0.8s ease-out 2; }
+@keyframes chama { 0%, 100% { transform: scale(1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
+@keyframes risco { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes pulinho { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3%); } }
+@keyframes balanco { 0%, 100% { transform: rotate(-1.2deg); } 50% { transform: rotate(1.2deg); } }
+@keyframes subiu { 40% { transform: scale(1.14); } }
+
+.perfil-folha { overflow-y: auto; gap: 12px; }
+.perfil-folha .ofensiva strong { font-size: 34px; }
+.grupo-avatar { display: flex; flex-direction: column; gap: 2px; }
+.grupo-descricao { margin: 0; color: var(--apagado); font-size: 14px; }
+.opcoes-avatar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+.opcao-avatar { padding: 6px 0 2px; border: 2px solid var(--linha); border-radius: 16px; background: var(--fundo); cursor: pointer; }
+.opcao-avatar .avatar-desenho { width: 74%; margin: 0 auto; aspect-ratio: 120 / 164; }
+.opcao-avatar[aria-pressed="true"] { border-color: var(--laranja); background: var(--superficie-2); }
+.confirmar-troca { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; background: var(--superficie-2); }
+.confirmar-troca p { color: var(--texto); }
+.regras-ofensiva summary { cursor: pointer; font-weight: 600; }
+.regras-ofensiva ul { margin: 8px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; color: var(--apagado); font-size: 14px; }
+
+.fim-avatar { display: flex; align-items: center; gap: 14px; }
+.fim-avatar .avatar-palco { width: 96px; cursor: default; }
+.fim-ofensiva { display: flex; flex-direction: column; gap: 4px; }
+.subiu-texto { margin: 0; color: var(--laranja); font-weight: 700; }
+
 /* Biblioteca */
 .camada {
   position: fixed;
@@ -754,6 +815,7 @@ svg { width: 22px; height: 22px; flex: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .cartao, .cartao.saindo, .barra-tempo i, .anilha { transition: none; }
+  .chama-icone, .avatar-svg, .avatar-palco { animation: none !important; }
   .pose-b { animation: none; opacity: 1; }
   .foto .pose { width: 50%; }
   .foto .pose-b { left: 50%; }

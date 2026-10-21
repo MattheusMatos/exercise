@@ -142,10 +142,10 @@ def barras(img, total, atual, progresso):
             d.rounded_rectangle((x0, 34, x0 + larg * progresso, 42), radius=4, fill=ACCENT)
 
 
-def slide_intro(treino, fotos, regras):
+def slide_intro(treino, fotos, regras, titulo):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    cabecalho(d, "TREINO PPL · HIPERTROFIA")
+    cabecalho(d, f"{titulo.upper()} · HIPERTROFIA")
     d.text((MARGEM - 6, 190), treino["titulo"], font=font("Black", 180), fill=TEXT)
     d.text((MARGEM, 420), treino["foco"], font=font("Medium", 56), fill=MUTED)
     d.rectangle((MARGEM, 520, MARGEM + 200, 532), fill=ACCENT)
@@ -324,7 +324,7 @@ def gerar(programa, indice, pasta_fotos, saida):
         fotos.append(par)
 
     proximo = treinos[indice + 1]["titulo"] if indice + 1 < len(treinos) else f"descanso e {treinos[0]['titulo']}"
-    intro = slide_intro(treino, fotos, programa["regras"])
+    intro = slide_intro(treino, fotos, programa["regras"], programa.get("titulo", "Treino PPL"))
     resumo = slide_resumo(treino, fotos, programa["progressao"], proximo)
     slides = [(DUR_INTRO, lambda t: intro)]
     for i, (ex, par) in enumerate(zip(treino["exercicios"], fotos), 1):

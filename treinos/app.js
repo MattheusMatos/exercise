@@ -47,9 +47,15 @@
     'nao-testado': ['Não testado', 'vem da anatomia ou de estudos com exercícios parecidos'],
   };
 
-  let programa = null;
+  // Avatar de menina usa o treino com foco em pernas e glúteo; o de menino, o PPL.
+  const ARQUIVOS_PROGRAMA = { masculino: 'programa_ppl.json', feminino: 'programa_feminino.json' };
+  let programas = {};
+  let programa = null; // o do avatar escolhido
   let biblioteca = null; // { itens, porId }
-  let estado = { proximo: 0, sessao: null, trocas: {}, plano: null, historico: [], extras: {}, atualizado: 0 };
+  let estado = {
+    proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
+    perfil: { avatar: 'menino-1' }, atualizado: 0,
+  };
   let tela = 'inicio';
   let selecionado = 0;
   let resumoFinal = null;
@@ -145,7 +151,12 @@
   }
 
   const semanaAtual = () => dataLocal(diasDaSemanaAtual()[0]);
-  const tituloDoTreino = (id) => (programa.treinos.find((t) => t.id === id) || { titulo: '' }).titulo;
+  const programaDoAvatar = (avatar) => (window.Avatar.generoDe(avatar) === 'f' ? 'feminino' : 'masculino');
+  const todosOsTreinos = () => Object.values(programas).flatMap((p) => p.treinos);
+  // O histórico guarda treinos dos dois programas.
+  const tituloDoTreino = (id) => (todosOsTreinos().find((t) => t.id === id) || { titulo: '' }).titulo;
+  // "PUSH A" vira "Push A".
+  const nomeDoTreino = (titulo) => titulo.split(' ').map((p) => (p.length > 1 ? p.charAt(0) + p.slice(1).toLowerCase() : p)).join(' ');
 
   function avisar(texto) {
     let el = document.querySelector('.toast');
@@ -168,9 +179,9 @@
       typeof x.reps === 'string' && typeof x.rir === 'string' && typeof x.descanso === 'string';
   }
 
-  function sessaoValida(s) {
+  function sessaoValida(s, prog) {
     if (!s || typeof s !== 'object') return null;
-    const treino = programa.treinos[s.treino];
+    const treino = prog.treinos[s.treino];
     if (!treino || !Array.isArray(s.fila) || !Array.isArray(s.feitos) || !s.fila.length) return null;
     const extras = Array.isArray(s.extras) ? s.extras : [];
     if (!extras.every(extraValido)) return null;
@@ -189,12 +200,19 @@
 
   function estadoValido(bruto) {
     const e = bruto && typeof bruto === 'object' ? JSON.parse(JSON.stringify(bruto)) : {};
+    const avatar = e.perfil && window.Avatar.AVATARES.includes(e.perfil.avatar) ? e.perfil.avatar : 'menino-1';
+    const prog = programas[programaDoAvatar(avatar)];
     const limpo = {
-      proximo: 0, sessao: sessaoValida(e.sessao), trocas: {}, plano: null, historico: [], extras: {},
-      atualizado: Number(e.atualizado) || 0,
+      proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
+      perfil: { avatar }, atualizado: Number(e.atualizado) || 0,
     };
-    if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < programa.treinos.length) limpo.proximo = e.proximo;
-    for (const treino of programa.treinos) {
+    if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < prog.treinos.length) limpo.proximo = e.proximo;
+    // Próximo treino do outro programa, guardado para quando trocar de avatar.
+    for (const [nome, p] of Object.entries(programas)) {
+      const n = e.proximos && e.proximos[nome];
+      if (Number.isInteger(n) && n >= 0 && n < p.treinos.length) limpo.proximos[nome] = n;
+    }
+    for (const treino of todosOsTreinos()) {
       const trocas = e.trocas && e.trocas[treino.id];
       if (trocas && typeof trocas === 'object') {
         const validas = {};
@@ -209,9 +227,14 @@
     if (e.plano && typeof e.plano.semana === 'string' && Array.isArray(e.plano.dias) && e.plano.dias.length === 7) {
       limpo.plano = { semana: e.plano.semana, dias: e.plano.dias.map(Boolean) };
     }
-    const ids = new Set(programa.treinos.map((t) => t.id));
+    if (e.planos && typeof e.planos === 'object') {
+      for (const [semana, dias] of Object.entries(e.planos)) {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(semana) && Array.isArray(dias) && dias.length === 7) limpo.planos[semana] = dias.map(Boolean);
+      }
+    }
+    const ids = new Set(todosOsTreinos().map((t) => t.id));
     if (Array.isArray(e.historico)) {
-      limpo.historico = e.historico.filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x.data) && ids.has(x.treino)).slice(-200);
+      limpo.historico = e.historico.filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x.data) && ids.has(x.treino)).slice(-400);
     }
     return limpo;
   }
@@ -758,13 +781,25 @@
 
   const planoDaSemana = () => (estado.plano && estado.plano.semana === semanaAtual() ? estado.plano : null);
 
+  // O plano de uma semana que passou fica guardado: a ofensiva confere a meta de cada semana.
+  function definirPlano(dias) {
+    if (estado.plano && estado.plano.semana !== semanaAtual()) {
+      const planos = { ...estado.planos, [estado.plano.semana]: estado.plano.dias };
+      estado.planos = Object.fromEntries(Object.entries(planos).sort().slice(-26));
+    }
+    estado.plano = { semana: semanaAtual(), dias };
+  }
+
+  const todosOsPlanos = () => (estado.plano ? { ...estado.planos, [estado.plano.semana]: estado.plano.dias } : estado.planos);
+  const ofensivaAtual = () => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dataLocal(new Date()));
+
   // Encaixa a meta nos dias que ainda faltam da semana, preferindo os dias sugeridos.
   function planejarSemana(meta) {
     const hoje = new Date().getDay();
     const livres = [1, 2, 3, 4, 5, 6].filter((d) => d >= hoje);
     const dias = DIAS_SUGERIDOS[meta].filter((d) => livres.includes(d));
     for (const d of livres) if (dias.length < meta && !dias.includes(d)) dias.push(d);
-    estado.plano = { semana: semanaAtual(), dias: [0, 1, 2, 3, 4, 5, 6].map((d) => dias.includes(d)) };
+    definirPlano([0, 1, 2, 3, 4, 5, 6].map((d) => dias.includes(d)));
     salvar();
     renderInicio();
     avisar(dias.length < meta
@@ -773,7 +808,7 @@
   }
 
   function pularSemana() {
-    estado.plano = { semana: semanaAtual(), dias: Array(7).fill(false) };
+    definirPlano(Array(7).fill(false));
     salvar();
     renderInicio();
   }
@@ -835,7 +870,7 @@
         'aria-label': `${n} dias`,
         onclick: () => planejarSemana(n),
       }, h('strong', null, n), h('span', null, 'dias')))),
-      h('p', { class: 'aviso' }, 'Os treinos seguem a sequência Push A, Pull A, Legs A, Push B, Pull B e Legs B. Dá para ajustar os dias depois.'),
+      h('p', { class: 'aviso' }, `Os treinos seguem a sequência ${programa.treinos.map((t) => nomeDoTreino(t.titulo)).join(', ').replace(/, ([^,]+)$/, ' e $1')}. Dá para ajustar os dias depois.`),
       h('div', { class: 'semana-rodape' },
         h('button', { class: 'link', onclick: pularSemana }, 'Agora não'),
         h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo')));
@@ -913,6 +948,150 @@
     modal.querySelector('.botao').focus();
   }
 
+  // ---------- ofensiva e avatar ----------
+
+  function desenhoDoAvatar(avatar, ofensiva, humor) {
+    const el = h('span', { class: 'avatar-desenho', 'aria-hidden': 'true' });
+    el.innerHTML = window.Avatar.desenhar({ avatar, forca: ofensiva.nivel, humor: humor || ofensiva.humor });
+    return el;
+  }
+
+  function iconeChama(estadoChama) {
+    const el = h('span', { class: 'chama-icone', 'aria-hidden': 'true' });
+    el.innerHTML = window.Avatar.chama(estadoChama);
+    return el;
+  }
+
+  const estadoDaChama = (of) => (of.dias === 0 ? 'apagada' : of.risco ? 'risco' : 'acesa');
+  const plural = (n, palavra) => `${n} ${palavra}${n === 1 ? '' : 's'}`;
+
+  function fraseDoHumor(of) {
+    const pronome = window.Avatar.generoDe(estado.perfil.avatar) === 'f' ? 'Ela' : 'Ele';
+    const dias = of.diasSemTreinar;
+    if (of.humor === 'novo') return 'Termine o primeiro treino para acender a ofensiva.';
+    if (of.risco) return 'Treine hoje para não apagar a ofensiva!';
+    if (of.treinouHoje) return of.dias >= 3 ? 'Treino de hoje feito. A ofensiva está pegando fogo!' : 'Treino de hoje feito!';
+    if (of.humor === 'triste') return `${dias} dias sem treinar. ${pronome} está com saudade.`;
+    if (of.humor === 'magro') return `${dias} dias sem treinar: perdendo músculo.`;
+    if (of.humor === 'sedentario') return `${dias} dias parado. Que tal voltar hoje?`;
+    if (of.dias === 0) return 'A ofensiva apagou: a meta da semana não fecha mais. O próximo treino acende de novo.';
+    return of.humor === 'animado' ? 'Treinou ontem. Bora manter o ritmo?' : 'Pronto para o próximo treino.';
+  }
+
+  function textoDoNivel(of) {
+    const faltam = window.Ofensiva.faltamParaSubir(of.dias);
+    return faltam === null ? `Nível ${of.nivel}, o máximo` : `Nível ${of.nivel} · faltam ${plural(faltam, 'dia')} para o nível ${of.nivel + 1}`;
+  }
+
+  function linhaOfensiva(of, estadoChama) {
+    return h('p', { class: `ofensiva ${estadoChama}` },
+      iconeChama(estadoChama), h('strong', null, of.dias), h('span', null, of.dias === 1 ? 'dia de ofensiva' : 'dias de ofensiva'));
+  }
+
+  function cartaoPerfil() {
+    const of = ofensivaAtual();
+    return h('section', { class: 'perfil' },
+      h('button', { class: `avatar-palco humor-${of.humor}`, 'aria-label': 'Seu avatar: toque para trocar', onclick: abrirPerfil },
+        desenhoDoAvatar(estado.perfil.avatar, of)),
+      h('div', { class: 'perfil-texto' },
+        linhaOfensiva(of, estadoDaChama(of)),
+        h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
+        h('p', { class: 'nivel' }, textoDoNivel(of)),
+        h('button', { class: 'link', onclick: abrirPerfil }, 'Trocar avatar')));
+  }
+
+  function trocarAvatar(avatar) {
+    const antes = programaDoAvatar(estado.perfil.avatar);
+    const depois = programaDoAvatar(avatar);
+    estado.perfil = { avatar };
+    if (antes !== depois) {
+      // Cada programa lembra o próprio próximo treino; um treino em andamento é encerrado.
+      estado.proximos = { ...estado.proximos, [antes]: estado.proximo };
+      estado.proximo = estado.proximos[depois] || 0;
+      estado.sessao = null;
+      programa = programas[depois];
+      selecionado = estado.proximo;
+      pararDescanso();
+    }
+    salvar();
+    renderInicio();
+    if (antes !== depois) avisar(depois === 'feminino' ? 'Treino com foco em pernas e glúteo' : 'Treino PPL');
+  }
+
+  function abrirPerfil() {
+    const of = ofensivaAtual();
+    let confirmando = null; // avatar do outro programa esperando confirmação
+    const fechar = () => modal.remove();
+    const caixa = h('div', { class: 'modal-caixa folha perfil-folha' });
+    const modal = h('div', {
+      class: 'modal',
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': 'Seu avatar',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, caixa);
+    const escolher = (avatar) => {
+      if (programaDoAvatar(avatar) !== programaDoAvatar(estado.perfil.avatar) && estado.sessao) {
+        confirmando = avatar;
+        desenhar();
+        caixa.querySelector('.confirmar-troca .botao').focus();
+        return;
+      }
+      fechar();
+      trocarAvatar(avatar);
+    };
+    const grupo = (titulo, descricao, avatares) => h('section', { class: 'grupo-avatar' },
+      h('p', { class: 'rotulo' }, titulo),
+      h('p', { class: 'grupo-descricao' }, descricao),
+      h('div', { class: 'opcoes-avatar' }, avatares.map((avatar, i) => h('button', {
+        class: 'opcao-avatar',
+        'aria-pressed': String(avatar === estado.perfil.avatar),
+        'aria-label': `${titulo} ${i + 1}`,
+        onclick: () => escolher(avatar),
+      }, desenhoDoAvatar(avatar, of)))));
+    function desenhar() {
+      caixa.replaceChildren(...[
+        h('h2', null, 'Seu avatar'),
+        linhaOfensiva(of, estadoDaChama(of)),
+        h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
+        grupo('Menina', 'Treino com foco em pernas e glúteo', ['menina-1', 'menina-2']),
+        grupo('Menino', 'Treino PPL: push, pull e legs', ['menino-1', 'menino-2']),
+        confirmando
+          ? h('div', { class: 'confirmar-troca' },
+            h('p', null, `Trocar de treino encerra o ${programa.treinos[estado.sessao.treino].titulo} em andamento.`),
+            h('button', {
+              class: 'botao primario',
+              onclick: () => {
+                fechar();
+                trocarAvatar(confirmando);
+              },
+            }, 'Trocar mesmo assim'),
+            h('button', {
+              class: 'link',
+              onclick: () => {
+                confirmando = null;
+                desenhar();
+              },
+            }, 'Cancelar'))
+          : null,
+        h('p', { class: 'aviso' }, 'Trocar de avatar mantém a ofensiva, o histórico e a semana planejada.'),
+        h('details', { class: 'regras-ofensiva' },
+          h('summary', null, 'Como funciona a ofensiva'),
+          h('ul', null,
+            h('li', null, 'Cada dia com treino soma 1 dia de ofensiva. Dia de descanso não apaga.'),
+            h('li', null, 'Ela apaga quando não dá mais para bater a meta da semana. Semana sem meta pede 1 treino.'),
+            h('li', null, 'O avatar fica mais forte com 3, 7, 15, 30 e 50 dias de ofensiva.'),
+            h('li', null, 'Sem treinar, ele fica triste depois de 4 dias, perde músculo depois de 8 e fica sedentário depois de 15.'))),
+        h('button', { class: 'link', onclick: fechar }, 'Fechar'),
+      ].filter(Boolean));
+    }
+    desenhar();
+    document.body.append(modal);
+    caixa.querySelector('.opcao-avatar[aria-pressed="true"]').focus();
+  }
+
   // ---------- telas ----------
 
   function render() {
@@ -943,7 +1122,8 @@
     }));
 
     app.replaceChildren(h('section', { class: 'inicio' },
-      h('header', { class: 'marca' }, h('h1', null, 'Treino PPL'), h('span', null, 'Push · Pull · Legs')),
+      h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
+      cartaoPerfil(),
       cartaoSemana(true),
       cartaoInstalar(),
       heroTreino(selecionado),
@@ -1008,7 +1188,7 @@
     const series = totalSeries(treino) + extrasFixos.reduce((soma, x) => soma + x.series, 0);
     return h('article', { class: 'hero' },
       h('p', { class: 'etiqueta' }, etiqueta),
-      h('h2', null, treino.titulo),
+      h('h2', { class: treino.titulo.length > 7 ? 'longo' : null }, treino.titulo),
       h('p', { class: 'foco' }, treino.foco),
       h('ul', { class: 'meta' },
         h('li', null, h('strong', null, totalExercicios), 'exercícios'),
@@ -1142,7 +1322,14 @@
   function renderFim() {
     const treino = programa.treinos[resumoFinal.treino];
     const proximo = programa.treinos[(resumoFinal.treino + 1) % programa.treinos.length];
+    const of = ofensivaAtual();
+    const subiu = of.nivel > resumoFinal.nivelAntes;
     app.replaceChildren(h('section', { class: 'fim' },
+      h('div', { class: 'fim-avatar' },
+        h('div', { class: `avatar-palco humor-animado${subiu ? ' subiu' : ''}` }, desenhoDoAvatar(estado.perfil.avatar, of, 'animado')),
+        h('div', { class: 'fim-ofensiva' },
+          linhaOfensiva(of, estadoDaChama(of)),
+          h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)))),
       h('p', { class: 'etiqueta' }, `${treino.titulo} concluído`),
       h('h1', null, 'Treino feito.'),
       h('dl', { class: 'resumo' },
@@ -1286,9 +1473,10 @@
       series: Math.min(feitas, total),
       totalSeries: total,
       exercicios: indices.length,
+      nivelAntes: ofensivaAtual().nivel,
     };
-    // Marca o dia na semana.
-    estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id }].slice(-200);
+    // Marca o dia na semana e soma na ofensiva.
+    estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id }].slice(-400);
     estado.proximo = (sessao.treino + 1) % programa.treinos.length;
     estado.sessao = null;
     selecionado = estado.proximo;
@@ -1616,14 +1804,16 @@
 
   // ---------- início ----------
 
-  fetch('programa_ppl.json')
+  Promise.all(Object.entries(ARQUIVOS_PROGRAMA).map(([nome, arquivo]) => fetch(arquivo)
     .then((resposta) => {
       if (!resposta.ok) throw new Error(String(resposta.status));
       return resposta.json();
     })
-    .then((dados) => {
-      programa = dados;
+    .then((dados) => [nome, dados])))
+    .then((lista) => {
+      programas = Object.fromEntries(lista);
       estado = carregarLocal();
+      programa = programas[programaDoAvatar(estado.perfil.avatar)];
       selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
       carregarBiblioteca();

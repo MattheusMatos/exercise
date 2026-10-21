@@ -1,13 +1,16 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v2';
+const VERSAO = 'treino-ppl-v3';
 const ESSENCIAIS = [
   './',
   'index.html',
   'app.css',
   'app.js',
   'semelhanca.js',
+  'ofensiva.js',
+  'avatar.js',
   'programa_ppl.json',
+  'programa_feminino.json',
   'biblioteca/exercicios.json',
   'manifest.webmanifest',
   'icones/icone-192.png',
@@ -19,10 +22,10 @@ self.addEventListener('install', (evento) => {
     const cache = await caches.open(VERSAO);
     await cache.addAll(ESSENCIAIS);
     try {
-      // Fotos do programa, para o treino abrir completo mesmo sem sinal.
-      const programa = await (await cache.match('programa_ppl.json')).json();
-      const fotos = programa.treinos.flatMap((treino) =>
-        treino.exercicios.flatMap((ex) => [`fotos/${ex.imagem}-0.jpg`, `fotos/${ex.imagem}-1.jpg`]));
+      // Fotos dos dois programas, para o treino abrir completo mesmo sem sinal.
+      const programas = await Promise.all(['programa_ppl.json', 'programa_feminino.json'].map(async (arquivo) => (await cache.match(arquivo)).json()));
+      const fotos = programas.flatMap((programa) => programa.treinos.flatMap((treino) =>
+        treino.exercicios.flatMap((ex) => [`fotos/${ex.imagem}-0.jpg`, `fotos/${ex.imagem}-1.jpg`])));
       await cache.addAll([...new Set(fotos)]);
     } catch (erro) {
       // As fotos entram no cache quando aparecerem na tela.
