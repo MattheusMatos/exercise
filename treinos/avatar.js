@@ -1,6 +1,7 @@
 /*
  * Personagens que o usuário escolhe, cada um com 4 imagens em personagens/:
- * começando, no auge, afastado e de volta (a fase vem de Ofensiva.fase).
+ * começando, no auge, afastado e de volta (a fase vem de Ofensiva.fase), e uma descrição
+ * que aparece na escolha do personagem.
  * chama(estado) devolve o fogo da ofensiva em SVG.
  * No navegador fica em window.Avatar; no Node, em module.exports.
  */
@@ -8,17 +9,28 @@
   'use strict';
 
   const PERSONAGENS = [
-    { id: 'brutus', nome: 'Brutus', genero: 'm' },
-    { id: 'otto', nome: 'Otto', genero: 'm' },
-    { id: 'capi', nome: 'Capi', genero: 'f' },
-    { id: 'zeca', nome: 'Zeca', genero: 'm' },
-    { id: 'duda', nome: 'Duda', genero: 'f' },
-    { id: 'nina', nome: 'Nina', genero: 'f' },
-    { id: 'ravi', nome: 'Ravi', genero: 'm' },
-    { id: 'bento', nome: 'Bento', genero: 'm' },
-    { id: 'bia', nome: 'Bia', genero: 'f' },
-    { id: 'joca', nome: 'Joca', genero: 'm' },
-    { id: 'nino', nome: 'Nino', genero: 'm' },
+    { id: 'brutus', nome: 'Brutus', genero: 'm',
+      descricao: 'Pit bull de coração mole. Vai com tudo no supino e comemora cada série como se fosse recorde.' },
+    { id: 'otto', nome: 'Otto', genero: 'm',
+      descricao: 'Urso grandão e bonachão. Treina sem pressa, mas não falta nunca, e sempre tem um abraço depois.' },
+    { id: 'capi', nome: 'Capi', genero: 'f',
+      descricao: 'Capivara tranquila e forte. Nada tira ela do sério, nem a última série de agachamento.' },
+    { id: 'zeca', nome: 'Zeca', genero: 'm',
+      descricao: 'Veterano de bigode e agasalho retrô. Prova que nunca é tarde para ganhar músculo.' },
+    { id: 'duda', nome: 'Duda', genero: 'f',
+      descricao: 'Pura energia: dança entre as séries e puxa a academia inteira junto.' },
+    { id: 'nina', nome: 'Nina', genero: 'f',
+      descricao: 'Fone no ouvido e foco total. Entra na playlist e só sai quando o treino acaba.' },
+    { id: 'ravi', nome: 'Ravi', genero: 'm',
+      descricao: 'Óculos, relógio e planilha: anota tudo e segue o descanso no segundo.' },
+    { id: 'bento', nome: 'Bento', genero: 'm',
+      descricao: 'Grandão de poucas palavras. Os halteres falam por ele.' },
+    { id: 'bia', nome: 'Bia', genero: 'f',
+      descricao: 'Sorriso aberto e step no pé. O dia favorito dela é o de perna.' },
+    { id: 'joca', nome: 'Joca', genero: 'm',
+      descricao: 'Jacaré brincalhão: bocão para rir alto e para pedir mais uma série.' },
+    { id: 'nino', nome: 'Nino', genero: 'm',
+      descricao: 'Gato descolado, de fone e passo leve. Parece relaxado, mas não perde um treino.' },
   ];
   const FASES = { comecando: 'Começando', auge: 'No auge', afastado: 'Afastado', volta: 'De volta' };
   const porId = new Map(PERSONAGENS.map((p) => [p.id, p]));

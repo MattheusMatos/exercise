@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v5';
+const VERSAO = 'treino-ppl-v6';
 const ESSENCIAIS = [
   './',
   'index.html',
@@ -9,6 +9,7 @@ const ESSENCIAIS = [
   'semelhanca.js',
   'ofensiva.js',
   'avatar.js',
+  'aerobico.js',
   'programa_ppl.json',
   'programa_feminino.json',
   'biblioteca/exercicios.json',
@@ -28,7 +29,8 @@ self.addEventListener('install', (evento) => {
         treino.exercicios.flatMap((ex) => [`fotos/${ex.imagem}-0.jpg`, `fotos/${ex.imagem}-1.jpg`])));
       const nomes = ['brutus', 'otto', 'capi', 'zeca', 'duda', 'nina', 'ravi', 'bento', 'bia', 'joca', 'nino'];
       const personagens = nomes.flatMap((n) => ['comecando', 'auge', 'afastado', 'volta', 'comemora', 'descanso-1', 'descanso-2'].map((f) => `personagens/${n}-${f}.webp`));
-      await cache.addAll([...new Set(fotos), ...personagens]);
+      const aerobicos = ['Walking_Treadmill', 'Running_Treadmill', 'Bicycling_Stationary', 'Elliptical_Trainer', 'Stairmaster', 'Rowing_Stationary'].map((n) => `fotos/${n}-0.jpg`);
+      await cache.addAll([...new Set(fotos), ...personagens, ...aerobicos]);
     } catch (erro) {
       // As fotos entram no cache quando aparecerem na tela.
     }

@@ -54,12 +54,13 @@
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    perfil: { personagem: 'brutus', programa: 'masculino' }, atualizado: 0,
+    aerobicos: [], peso: 70, perfil: { personagem: 'brutus', programa: 'masculino' }, atualizado: 0,
   };
   let tela = 'inicio';
   let selecionado = 0;
   let resumoFinal = null;
-  let descanso = null; // { fim, total, proxima, avisado, intervalo, esconder }
+  let descanso = null; // { fim, total, proxima, avisado, intervalo, esconder, variante }
+  let descansoMinimizado = false; // o descanso abre em tela cheia; dá para reduzir a uma barra
   let audio = null;
   let travaTela = null;
   let bib = null; // estado da tela da biblioteca enquanto aberta
@@ -208,6 +209,7 @@
     const prog = programas[nomePrograma];
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
+      aerobicos: [], peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
       perfil: { personagem, programa: nomePrograma }, atualizado: Number(e.atualizado) || 0,
     };
     if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < prog.treinos.length) limpo.proximo = e.proximo;
@@ -239,6 +241,10 @@
     const ids = new Set(todosOsTreinos().map((t) => t.id));
     if (Array.isArray(e.historico)) {
       limpo.historico = e.historico.filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x.data) && ids.has(x.treino)).slice(-400);
+    }
+    if (Array.isArray(e.aerobicos)) {
+      limpo.aerobicos = e.aerobicos.filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x.data) && window.Aerobico.modalidade(x.tipo)
+        && window.Aerobico.MINUTOS.includes(x.minutos)).slice(-400);
     }
     return limpo;
   }
@@ -980,7 +986,7 @@
   function fraseDoHumor(of) {
     const nome = window.Avatar.personagem(estado.perfil.personagem).nome;
     const dias = of.diasSemTreinar;
-    if (of.humor === 'novo') return `${nome} está pronto para começar. Termine o primeiro treino para acender a ofensiva.`;
+    if (of.humor === 'novo') return `${nome} está ${window.Avatar.personagem(estado.perfil.personagem).genero === 'f' ? 'pronta' : 'pronto'} para começar. Termine o primeiro treino para acender a ofensiva.`;
     if (of.risco) return 'Treine hoje para não apagar a ofensiva!';
     if (of.treinouHoje) return of.dias >= 3 ? 'Treino de hoje feito. A ofensiva está pegando fogo!' : 'Treino de hoje feito!';
     if (dias >= 15) return `${dias} dias parado. ${nome} está largado esperando você.`;
@@ -992,8 +998,10 @@
 
   function textoDoNivel(of) {
     const faltam = window.Ofensiva.faltamParaSubir(of.dias);
-    return faltam === null ? `Nível ${of.nivel}, o máximo` : `Nível ${of.nivel} · faltam ${plural(faltam, 'dia')} para o nível ${of.nivel + 1}`;
+    return faltam === null ? `Nível ${of.nivel}, o máximo` : `Nível ${of.nivel} · ${faltam === 1 ? 'falta' : 'faltam'} ${plural(faltam, 'dia')} para o nível ${of.nivel + 1}`;
   }
+
+  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos);
 
   function linhaOfensiva(of, estadoChama) {
     return h('p', { class: `ofensiva ${estadoChama}` },
@@ -1011,7 +1019,7 @@
         h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
-        h('p', { class: 'nivel' }, textoDoNivel(of)),
+        h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto'))),
         h('button', { class: 'link', onclick: abrirPerfil }, 'Personagem e treino')));
   }
 
@@ -1062,6 +1070,13 @@
       fechar();
       trocarPrograma(nome);
     };
+    // O escolhido aparece grande, com a descrição, acima da grade.
+    function destaquePersonagem() {
+      const p = window.Avatar.personagem(estado.perfil.personagem);
+      return h('div', { class: 'destaque-personagem', 'aria-live': 'polite' },
+        h('div', { class: `personagem-palco fase-${fase} entrando` }, h('img', { src: window.Avatar.imagem(p.id, fase), alt: '' })),
+        h('div', null, h('strong', null, p.nome), h('p', null, p.descricao)));
+    }
     function desenhar() {
       caixa.replaceChildren(...[
         h('h2', null, 'Personagem e treino'),
@@ -1093,11 +1108,13 @@
           : null,
         h('p', { class: 'rotulo' }, 'Seu personagem'),
         h('p', { class: 'grupo-descricao' }, 'Qualquer personagem combina com qualquer treino. Ele muda de pose conforme a ofensiva: começando, no auge, afastado ou de volta.'),
+        destaquePersonagem(),
         h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((p) => h('button', {
           class: 'opcao-personagem',
           'aria-pressed': String(p.id === estado.perfil.personagem),
+          'aria-label': `${p.nome}: ${p.descricao}`,
           onclick: () => escolherPersonagem(p.id),
-        }, h('img', { src: window.Avatar.imagem(p.id, p.id === estado.perfil.personagem ? fase : 'comecando'), alt: '', loading: 'lazy' }), h('span', null, p.nome)))),
+        }, h('img', { src: window.Avatar.imagem(p.id, 'auge'), alt: '', loading: 'lazy' }), h('span', null, p.nome)))),
         h('details', { class: 'regras-ofensiva' },
           h('summary', null, 'Como funciona a ofensiva'),
           h('ul', null,
@@ -1145,6 +1162,7 @@
     app.replaceChildren(h('section', { class: 'inicio' },
       h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
       cartaoPerfil(),
+      ofensivaAtual().treinouHoje ? cartaoAerobico() : null,
       cartaoSemana(true),
       cartaoInstalar(),
       heroTreino(selecionado),
@@ -1351,13 +1369,15 @@
         h('div', { class: `personagem-solto${subiu ? ' subiu' : ''}` }, imagemDoMomento('comemora')),
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
-          h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)))),
+          h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)),
+          h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje · ${plural(pontosAtuais(), 'ponto')} no total`))),
       h('p', { class: 'etiqueta' }, `${treino.titulo} concluído`),
       h('h1', null, 'Treino feito.'),
       h('dl', { class: 'resumo' },
         h('div', null, h('dt', null, 'Séries'), h('dd', null, `${resumoFinal.series}/${resumoFinal.totalSeries}`)),
         h('div', null, h('dt', null, 'Exercícios'), h('dd', null, resumoFinal.exercicios)),
         h('div', null, h('dt', null, 'Duração'), h('dd', null, resumoFinal.minutos ? `${resumoFinal.minutos} min` : '—'))),
+      cartaoAerobico(),
       cartaoSemana(false),
       h('article', { class: 'proximo' },
         h('p', { class: 'etiqueta' }, 'Próximo treino'),
@@ -1371,6 +1391,105 @@
           render();
         },
       }, 'Voltar ao início')));
+  }
+
+  // ---------- aeróbico ----------
+
+  const aerobicoDeHoje = () => estado.aerobicos.find((a) => a.data === dataLocal(new Date())) || null;
+
+  // No fim do treino: convite para somar aeróbico, ou o aeróbico já marcado hoje.
+  function cartaoAerobico() {
+    const feito = aerobicoDeHoje();
+    if (feito) {
+      const m = window.Aerobico.modalidade(feito.tipo);
+      return h('article', { class: 'aerobico-cartao feito' },
+        h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '' }),
+        h('div', null,
+          h('p', { class: 'etiqueta' }, `Aeróbico feito · +${window.Aerobico.pontosDoAerobico(feito.minutos)} pontos`),
+          h('strong', null, `${m.nome}, ${feito.minutos} min`),
+          h('span', null, `Cerca de ${window.Aerobico.calorias(m.id, feito.minutos, estado.peso)} kcal · ${plural(pontosAtuais(), 'ponto')} no total`),
+          h('button', { class: 'link', onclick: abrirAerobico }, 'Trocar')));
+    }
+    return h('button', { class: 'aerobico-cartao convite', onclick: abrirAerobico },
+      h('span', { class: 'mais-pontos', 'aria-hidden': 'true' }, '+15'),
+      h('div', null,
+        h('strong', null, 'ADD aeróbico e ganhe + pontos'),
+        h('span', null, `Até 30 min de esteira, bicicleta, elíptico, escada ou remo: +1 ponto a cada 2 min. Treino feito já valeu ${window.Aerobico.PONTOS_TREINO}.`)));
+  }
+
+  function abrirAerobico() {
+    let escolhido = (aerobicoDeHoje() || {}).tipo || null;
+    let minutos = (aerobicoDeHoje() || {}).minutos || 20;
+    const fechar = () => modal.remove();
+    const caixa = h('div', { class: 'modal-caixa folha aerobico-folha' });
+    const modal = h('div', {
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Aeróbico',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, caixa);
+    function desenhar() {
+      const lista = window.Aerobico.MODALIDADES.map((m) => {
+        const aberto = m.id === escolhido;
+        return h('div', { class: `aerobico-opcao${aberto ? ' aberta' : ''}` },
+          h('button', {
+            class: 'aerobico-linha', 'aria-expanded': String(aberto),
+            onclick: () => {
+              escolhido = aberto ? null : m.id;
+              desenhar();
+            },
+          },
+          h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '', loading: 'lazy' }),
+          h('span', { class: 'aerobico-texto' },
+            h('strong', null, m.nome),
+            h('span', { class: `impacto ${m.impacto}` }, window.Aerobico.IMPACTOS[m.impacto]),
+            h('span', { class: 'kcal' }, `~${window.Aerobico.calorias(m.id, minutos, estado.peso)} kcal em ${minutos} min`))),
+          aberto ? h('div', { class: 'aerobico-detalhe' },
+            h('p', null, h('strong', null, 'Articulações: '), m.articulacoes),
+            h('p', { class: 'aviso' }, `Ritmo da conta: ${m.ritmo} (${m.met} METs).`),
+            h('button', {
+              class: 'botao primario',
+              onclick: () => {
+                const hoje = dataLocal(new Date());
+                estado.aerobicos = [...estado.aerobicos.filter((a) => a.data !== hoje), { data: hoje, tipo: m.id, minutos }].slice(-400);
+                salvar();
+                fechar();
+                render();
+                avisar(`+${window.Aerobico.pontosDoAerobico(minutos)} pontos pelo aeróbico`);
+              },
+            }, `Fiz ${minutos} min: +${window.Aerobico.pontosDoAerobico(minutos)} pontos`)) : null);
+      });
+      caixa.replaceChildren(...[
+        h('h2', null, 'Aeróbico no fim do treino'),
+        h('p', null, 'Depois da musculação, o aeróbico não atrapalha o ganho de músculo (Schumann et al., 2022) e soma gasto calórico e saúde do coração.'),
+        h('div', { class: 'aerobico-ajustes' },
+          h('div', { class: 'opcoes-minutos', role: 'group', 'aria-label': 'Minutos' }, window.Aerobico.MINUTOS.map((n) => h('button', {
+            'aria-pressed': String(n === minutos),
+            onclick: () => {
+              minutos = n;
+              desenhar();
+            },
+          }, h('strong', null, `${n} min`), h('span', null, `+${window.Aerobico.pontosDoAerobico(n)} pts`)))),
+          h('label', { class: 'campo-peso' }, 'Seu peso',
+            h('input', {
+              type: 'number', inputmode: 'numeric', min: '30', max: '250', value: String(estado.peso),
+              onchange: (e) => {
+                const kg = Math.round(Number(e.target.value));
+                if (kg >= 30 && kg <= 250) {
+                  estado.peso = kg;
+                  salvar();
+                }
+                desenhar();
+              },
+            }), 'kg')),
+        h('div', { class: 'aerobico-lista' }, lista),
+        h('p', { class: 'aviso' }, 'Calorias: MET × peso × tempo, pelo Compendium of Physical Activities (Ainsworth et al., 2011). É uma média; o relógio ou o aparelho pode mostrar outro número.'),
+        h('button', { class: 'link', onclick: fechar }, 'Fechar'),
+      ].filter(Boolean));
+    }
+    desenhar();
+    document.body.append(modal);
+    caixa.querySelector('.opcoes-minutos button[aria-pressed="true"]').focus();
   }
 
   // ---------- ações do treino ----------
@@ -1430,7 +1549,10 @@
 
     if (agora > antes) {
       const ultima = agora >= ex.series;
-      iniciarDescanso(segundosDescanso(ex.descanso), ultima ? 'próximo exercício' : `série ${agora + 1} de ${ex.series}`);
+      const seguinte = sessao.fila.find((x) => x !== i);
+      const proxima = !ultima ? `série ${agora + 1} de ${ex.series} de ${ex.nome}`
+        : seguinte === undefined ? 'fim do treino' : exercicioDaSessao(seguinte).nome;
+      iniciarDescanso(segundosDescanso(ex.descanso), proxima);
     }
   }
 
@@ -1496,6 +1618,7 @@
       totalSeries: total,
       exercicios: indices.length,
       nivelAntes: ofensivaAtual().nivel,
+      pontosAntes: pontosAtuais(),
     };
     // Marca o dia na semana e soma na ofensiva.
     estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id }].slice(-400);
@@ -1631,31 +1754,52 @@
     atualizarDescanso();
   }
 
+  function alternarDescanso() {
+    descansoMinimizado = !descansoMinimizado;
+    atualizarDescanso();
+    const alvo = app.querySelector(descansoMinimizado ? '.descanso .expandir' : '.descanso .pular');
+    if (alvo) alvo.focus();
+  }
+
+  // O descanso abre como um cartão de tela cheia, com o personagem descansando; "Minimizar"
+  // reduz a uma barra acima dos botões para ver o cartão do exercício.
   function atualizarDescanso() {
     const caixa = app.querySelector('.descanso');
     if (!caixa) return;
     if (!descanso) {
       caixa.hidden = true;
+      caixa.className = 'descanso';
       caixa.replaceChildren();
       return;
     }
     if (!caixa.firstChild) {
       caixa.append(
-        h('span', { class: 'descanso-personagem' }),
-        h('span', { class: 'relogio', role: 'timer', 'aria-label': 'Tempo de descanso' }),
-        h('div', { class: 'descanso-info' },
+        h('div', { class: 'descanso-topo' },
           h('span', { class: 'rotulo descanso-rotulo' }),
+          h('button', { class: 'minimizar', onclick: alternarDescanso }, 'Minimizar')),
+        h('button', { class: 'expandir', 'aria-label': 'Abrir o descanso em tela cheia', onclick: alternarDescanso },
+          h('span', { class: 'descanso-personagem' }),
+          h('span', { class: 'relogio', role: 'timer', 'aria-label': 'Tempo de descanso' })),
+        h('div', { class: 'descanso-info' },
           h('span', { class: 'barra-tempo' }, h('i')),
+          h('span', { class: 'descanso-proxima' }),
           h('span', { class: 'so-leitor', 'aria-live': 'polite' })),
-        h('button', { class: 'mais', 'aria-label': 'Mais 30 segundos', onclick: maisTrintaSegundos }, '+30 s'),
-        h('button', { class: 'pular', onclick: pararDescanso }, 'Pular'));
+        h('div', { class: 'descanso-botoes' },
+          h('button', { class: 'mais', 'aria-label': 'Mais 30 segundos', onclick: maisTrintaSegundos }, '+30 s'),
+          h('button', { class: 'pular', onclick: pararDescanso }, 'Pular')));
     }
     const restante = Math.max(0, (descanso.fim - Date.now()) / 1000);
     const pronto = restante <= 0;
     caixa.hidden = false;
     caixa.classList.toggle('pronto', pronto);
+    caixa.classList.toggle('minimizado', descansoMinimizado);
+    caixa.classList.toggle('cheio', !descansoMinimizado);
+    caixa.setAttribute('role', descansoMinimizado ? 'region' : 'dialog');
+    caixa.setAttribute('aria-label', 'Descanso');
     caixa.querySelector('.relogio').textContent = relogio(restante);
     caixa.querySelector('.descanso-rotulo').textContent = pronto ? 'Bora!' : 'Descanso';
+    caixa.querySelector('.expandir').disabled = !descansoMinimizado;
+    caixa.querySelector('.descanso-proxima').textContent = `${pronto ? 'Agora' : 'A seguir'}: ${descanso.proxima}`;
     // Durante o descanso o personagem descansa (alternando as duas poses); quando acaba, comemora.
     const momento = pronto ? 'comemora' : `descanso-${descanso.variante}`;
     const lugar = caixa.querySelector('.descanso-personagem');
@@ -1771,6 +1915,10 @@
       return;
     }
     if (tela !== 'treino' || !estado.sessao) return;
+    if (descanso && !descansoMinimizado) {
+      if (e.key === 'Escape') alternarDescanso();
+      return;
+    }
     if (e.key === 'ArrowRight') {
       e.preventDefault();
       acaoBotao('feito');

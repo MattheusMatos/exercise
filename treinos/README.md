@@ -8,7 +8,8 @@
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
-| [`avatar.js`](avatar.js), [`personagens/`](personagens/) | Os 11 personagens, com uma imagem por fase, e o fogo da ofensiva |
+| [`avatar.js`](avatar.js), [`personagens/`](personagens/) | Os 11 personagens, com descrição e imagens sem fundo (fases, descanso, comemoração), e o fogo da ofensiva |
+| [`aerobico.js`](aerobico.js) | Opções de aeróbico (impacto nas articulações e calorias) e os pontos |
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
@@ -36,9 +37,25 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 - cada dia com treino soma 1, e dia de descanso não apaga;
 - a ofensiva apaga quando não dá mais para bater a meta da semana (semana sem meta pede 1 treino). No dia em que é preciso treinar para não apagar, o fogo pisca e o app avisa;
 - são 11 personagens ([`personagens/`](personagens/)), cada um com 4 imagens: **começando**, **no auge** (15 dias de ofensiva ou mais), **afastado** (4 dias ou mais sem treinar) e **de volta** (até uma semana depois de voltar). A fase vem de `fase()` em `ofensiva.js`;
-- o personagem aparece também no topo do treino e no cronômetro de descanso.
+- as imagens não têm fundo e o personagem se mexe conforme a fase: balança animado começando e de volta, estufa o peito no auge e se arrasta afastado (sem animação se o celular pedir menos movimento);
+- o personagem aparece também no topo do treino, no descanso e no fim do treino. O descanso abre num cartão de tela cheia, com o personagem descansando, o tempo, o que vem a seguir, **+30 s** e **Pular**; quando acaba, ele comemora. **Minimizar** reduz o descanso a uma barra para ver o cartão do exercício.
 
-Toque no personagem para trocar. Na mesma tela se escolhe o treino, separado do personagem: **Treino PPL** ou **Pernas e glúteo** ([`programa_feminino.md`](programa_feminino.md)). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
+### Aeróbico e pontos
+
+Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias para o tempo escolhido (10, 20 ou 30 min) e o peso da pessoa. Marcar o aeróbico soma 1 ponto a cada 2 minutos (até +15), uma vez por dia de treino.
+
+| Aeróbico | METs | Impacto |
+|---|---|---|
+| Caminhada na esteira (5,5 km/h) | 4,3 | baixo: 1 a 1,5 vez o peso do corpo por passo |
+| Corrida na esteira (8 km/h) | 8,3 | alto: 2 a 3 vezes o peso do corpo por passada |
+| Bicicleta ergométrica (moderado) | 6,8 | nenhum |
+| Elíptico (moderado) | 5,0 | baixo |
+| Escada (simulador) | 9,0 | baixo, com o joelho trabalhando dobrado |
+| Remo ergométrico (moderado) | 7,0 | nenhum |
+
+Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Activities (Ainsworth et al., 2011). Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo (Schumann et al., 2022); corrida atrapalha mais que bicicleta (Wilson et al., 2012), por isso o app sugere evitar corrida em dia de perna.
+
+Toque no personagem para trocar: o escolhido aparece grande, com uma descrição. Na mesma tela se escolhe o treino, separado do personagem: **Treino PPL** ou **Pernas e glúteo** ([`programa_feminino.md`](programa_feminino.md)). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
 
 ### Semana
 
