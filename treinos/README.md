@@ -22,7 +22,23 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - arraste o cartão para a direita quando terminar o exercício;
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
 - toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
+- toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só para hoje ou sempre naquele treino;
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
+
+### Semana
+
+A semana começa no domingo, pela data do celular. Na primeira abertura de cada semana o app pergunta quantos dias a pessoa pretende treinar (3, 4, 5 ou 6) e distribui os treinos da sequência nos dias:
+
+| Meta | Dias sugeridos |
+|---|---|
+| 3 | segunda, quarta e sexta |
+| 4 | segunda, terça, quinta e sexta |
+| 5 | segunda a sexta |
+| 6 | segunda a sábado |
+
+A tira **D S T Q Q S S** mostra o treino de cada dia. Tocar num dia troca entre treino e descanso, e terminar um treino marca o dia em verde. Um dia planejado que passou sem treino aparece como "faltou", e a sequência continua no dia seguinte.
+
+**Lembrete de domingo:** um site sem servidor não consegue mandar notificação sozinho. Por isso o botão **Lembrete todo domingo** cria um evento semanal na agenda do celular: um link para o Google Agenda (Android) e o arquivo [`lembrete-domingo.ics`](lembrete-domingo.ics) para o Calendário do iPhone, com aviso todo domingo às 9h.
 
 ### Como a semelhança é calculada
 

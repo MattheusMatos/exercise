@@ -14,7 +14,15 @@
     depois: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     feito: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     trocar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    mais: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    fechar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    sino: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15zM10 20.5h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
+
+  const LETRAS_DIAS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  const NOMES_DIAS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
+  // Dias sugeridos para cada meta semanal (0 = domingo). Com 3 ou 4, um dia de folga entre os treinos quando dá.
+  const DIAS_SUGERIDOS = { 3: [1, 3, 5], 4: [1, 2, 4, 5], 5: [1, 2, 3, 4, 5], 6: [1, 2, 3, 4, 5, 6] };
 
   // Grupos usados no filtro da biblioteca.
   const MUSCULOS = {
@@ -35,7 +43,7 @@
 
   let programa = null;
   let biblioteca = null; // { itens, porId }
-  let estado = { proximo: 0, sessao: null, trocas: {}, atualizado: 0 };
+  let estado = { proximo: 0, sessao: null, trocas: {}, plano: null, historico: [], extras: {}, atualizado: 0 };
   let tela = 'inicio';
   let selecionado = 0;
   let resumoFinal = null;
@@ -113,6 +121,17 @@
     return `${Math.floor(s / 60)}:${doisDigitos(s % 60)}`;
   }
 
+  // Datas pelo relógio do celular; a semana começa no domingo.
+  const dataLocal = (d) => `${d.getFullYear()}-${doisDigitos(d.getMonth() + 1)}-${doisDigitos(d.getDate())}`;
+
+  function diasDaSemanaAtual() {
+    const hoje = new Date();
+    return Array.from({ length: 7 }, (_, i) => new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - hoje.getDay() + i));
+  }
+
+  const semanaAtual = () => dataLocal(diasDaSemanaAtual()[0]);
+  const tituloDoTreino = (id) => (programa.treinos.find((t) => t.id === id) || { titulo: '' }).titulo;
+
   function avisar(texto) {
     let el = document.querySelector('.toast');
     if (!el) {
@@ -129,11 +148,18 @@
 
   // ---------- estado, salvo no aparelho ----------
 
+  function extraValido(x) {
+    return !!x && typeof x.id === 'string' && Number.isInteger(x.series) && x.series >= 1 && x.series <= 10 &&
+      typeof x.reps === 'string' && typeof x.rir === 'string' && typeof x.descanso === 'string';
+  }
+
   function sessaoValida(s) {
     if (!s || typeof s !== 'object') return null;
     const treino = programa.treinos[s.treino];
     if (!treino || !Array.isArray(s.fila) || !Array.isArray(s.feitos) || !s.fila.length) return null;
-    const valido = (i) => Number.isInteger(i) && i >= 0 && i < treino.exercicios.length;
+    const extras = Array.isArray(s.extras) ? s.extras : [];
+    if (!extras.every(extraValido)) return null;
+    const valido = (i) => Number.isInteger(i) && i >= 0 && i < treino.exercicios.length + extras.length;
     if (!s.fila.every(valido) || !s.feitos.every(valido)) return null;
     return {
       treino: s.treino,
@@ -142,21 +168,35 @@
       series: s.series && typeof s.series === 'object' ? s.series : {},
       historico: Array.isArray(s.historico) ? s.historico : [],
       inicio: Number(s.inicio) || Date.now(),
+      extras,
     };
   }
 
   function estadoValido(bruto) {
     const e = bruto && typeof bruto === 'object' ? JSON.parse(JSON.stringify(bruto)) : {};
-    const limpo = { proximo: 0, sessao: sessaoValida(e.sessao), trocas: {}, atualizado: Number(e.atualizado) || 0 };
+    const limpo = {
+      proximo: 0, sessao: sessaoValida(e.sessao), trocas: {}, plano: null, historico: [], extras: {},
+      atualizado: Number(e.atualizado) || 0,
+    };
     if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < programa.treinos.length) limpo.proximo = e.proximo;
     for (const treino of programa.treinos) {
       const trocas = e.trocas && e.trocas[treino.id];
-      if (!trocas || typeof trocas !== 'object') continue;
-      const validas = {};
-      for (const [slot, id] of Object.entries(trocas)) {
-        if (Number(slot) >= 0 && Number(slot) < treino.exercicios.length && typeof id === 'string') validas[slot] = id;
+      if (trocas && typeof trocas === 'object') {
+        const validas = {};
+        for (const [slot, id] of Object.entries(trocas)) {
+          if (Number(slot) >= 0 && Number(slot) < treino.exercicios.length && typeof id === 'string') validas[slot] = id;
+        }
+        if (Object.keys(validas).length) limpo.trocas[treino.id] = validas;
       }
-      if (Object.keys(validas).length) limpo.trocas[treino.id] = validas;
+      const extras = e.extras && e.extras[treino.id];
+      if (Array.isArray(extras) && extras.every(extraValido) && extras.length) limpo.extras[treino.id] = extras.slice(0, 12);
+    }
+    if (e.plano && typeof e.plano.semana === 'string' && Array.isArray(e.plano.dias) && e.plano.dias.length === 7) {
+      limpo.plano = { semana: e.plano.semana, dias: e.plano.dias.map(Boolean) };
+    }
+    const ids = new Set(programa.treinos.map((t) => t.id));
+    if (Array.isArray(e.historico)) {
+      limpo.historico = e.historico.filter((x) => x && /^\d{4}-\d{2}-\d{2}$/.test(x.data) && ids.has(x.treino)).slice(-200);
     }
     return limpo;
   }
@@ -199,6 +239,47 @@
     };
   }
 
+  function extraComoExercicio(x) {
+    const item = biblioteca ? biblioteca.porId.get(x.id) : null;
+    if (!item) return null;
+    return {
+      nome: item.nome,
+      imagem: item.id,
+      series: x.series,
+      reps: x.reps,
+      rir: x.rir,
+      descanso: x.descanso,
+      primarios: item.musculos.map(rotuloMusculo),
+      secundarios: item.auxiliares.map(rotuloMusculo),
+      dicas: item.passos,
+      trocado: false,
+      extra: true,
+      k: item.k,
+      semelhanca: null,
+    };
+  }
+
+  // Exercício i da sessão em andamento: primeiro os do programa, depois os extras.
+  function exercicioDaSessao(i) {
+    const sessao = estado.sessao;
+    const base = programa.treinos[sessao.treino].exercicios.length;
+    return i < base ? exercicio(sessao.treino, i) : extraComoExercicio(sessao.extras[i - base]);
+  }
+
+  // Índices que contam na sessão; um extra tirado do treino de hoje sai da conta.
+  function indicesDaSessao() {
+    const sessao = estado.sessao;
+    const base = programa.treinos[sessao.treino].exercicios.length;
+    const extras = sessao.extras.map((x, j) => (x.removido ? -1 : base + j)).filter((i) => i >= 0);
+    return [...Array(base).keys(), ...extras];
+  }
+
+  function seriesDaSessao(i) {
+    const sessao = estado.sessao;
+    const treino = programa.treinos[sessao.treino];
+    return i < treino.exercicios.length ? treino.exercicios[i].series : sessao.extras[i - treino.exercicios.length].series;
+  }
+
   function porQue(original, outro, nota) {
     const todos = (e) => [...e.musculos, ...e.auxiliares];
     const comuns = todos(original).filter((m) => todos(outro).includes(m));
@@ -232,8 +313,11 @@
     return el;
   }
 
+  // Exercícios do programa têm fotos próprias; os da biblioteca (trocas e extras) vêm das folhas.
+  const daBiblioteca = (ex) => ex.k !== null && ex.k !== undefined;
+
   function miniatura(ex) {
-    if (!ex.trocado) return h('img', { class: 'mini', src: `fotos/${ex.imagem}-0.jpg`, alt: '', loading: 'lazy' });
+    if (!daBiblioteca(ex)) return h('img', { class: 'mini', src: `fotos/${ex.imagem}-0.jpg`, alt: '', loading: 'lazy' });
     const pos = ex.k % 100;
     const el = h('span', { class: 'mini mini-folha', 'aria-hidden': 'true' });
     el.style.backgroundImage = `url("biblioteca/miniaturas-${Math.floor(ex.k / 100)}.jpg")`;
@@ -243,7 +327,7 @@
 
   function figura(ex, numero, botao) {
     const fig = h('figure', { class: 'foto' });
-    if (ex.trocado) {
+    if (daBiblioteca(ex)) {
       fig.append(
         sprite(ex.k, 'fundo', 0, ''),
         h('div', { class: 'quadro' },
@@ -299,10 +383,150 @@
     renderBiblioteca();
   }
 
+  // Abre nos exercícios recomendados para o treino; dali dá para escolher qualquer um da biblioteca.
+  function abrirAdicionar(treinoIdx, naSessao) {
+    if (!biblioteca) {
+      avisar('A biblioteca ainda está carregando');
+      return;
+    }
+    bib = {
+      trocando: false, adicionando: { treinoIdx, naSessao }, verTudo: false, treinoIdx, original: null, notas: null,
+      musculo: 'todos', equipamento: 'todos', busca: '', limite: LIMITE_LISTA, detalhe: null, rolagem: 0,
+    };
+    document.body.append(h('div', { class: 'camada biblioteca', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Adicionar exercício' }));
+    renderBiblioteca();
+  }
+
   function fecharBiblioteca() {
     const camada = document.querySelector('.biblioteca');
     if (camada) camada.remove();
     bib = null;
+  }
+
+  // Volta um passo: do detalhe para a lista, da biblioteca completa para os recomendados, ou fecha.
+  function voltarNaBiblioteca() {
+    if (bib.detalhe !== null) bib.detalhe = null;
+    else if (bib.adicionando && bib.verTudo) {
+      bib.verTudo = false;
+      bib.rolagem = 0;
+    } else {
+      fecharBiblioteca();
+      return;
+    }
+    renderBiblioteca();
+  }
+
+  function idsNoTreino(treinoIdx) {
+    const treino = programa.treinos[treinoIdx];
+    const ids = treino.exercicios.map((_, slot) => exercicio(treinoIdx, slot).imagem);
+    for (const x of estado.extras[treino.id] || []) ids.push(x.id);
+    if (estado.sessao && estado.sessao.treino === treinoIdx) {
+      for (const x of estado.sessao.extras) if (!x.removido) ids.push(x.id);
+    }
+    return new Set(ids);
+  }
+
+  function recomendados(treinoIdx) {
+    const presentes = idsNoTreino(treinoIdx);
+    return (programa.treinos[treinoIdx].extras || []).filter((x) => biblioteca.porId.has(x.imagem) && !presentes.has(x.imagem));
+  }
+
+  const prescricaoPadrao = (item) => (item.mecanica === 'composto'
+    ? { series: 3, reps: '8–12', rir: '1–2', descanso: '2 min' }
+    : { series: 2, reps: '10–15', rir: '0–1', descanso: '1–2 min' });
+
+  function telaRecomendados() {
+    const treino = programa.treinos[bib.adicionando.treinoIdx];
+    const lista = recomendados(bib.adicionando.treinoIdx);
+    return h('div', { class: 'bib-conteudo' },
+      h('header', { class: 'bib-topo' },
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Fechar', onclick: fecharBiblioteca }),
+        h('h2', null, `Adicionar ao ${treino.titulo}`)),
+      h('p', { class: 'aviso' }, 'O treino já tem volume suficiente para a maioria das pessoas. Mais séries ainda podem render um pouco, mas cada série extra rende menos que a anterior (Pelland et al., 2024).'),
+      h('p', { class: 'rotulo' }, 'Recomendados para este treino'),
+      lista.length
+        ? h('ul', { class: 'resultados' }, lista.map((x) => {
+          const item = biblioteca.porId.get(x.imagem);
+          return h('li', null, h('button', {
+            class: 'item-bib recomendacao',
+            onclick: () => {
+              bib.rolagem = document.querySelector('.biblioteca').scrollTop;
+              bib.detalhe = item.k;
+              renderBiblioteca();
+            },
+          },
+            miniatura({ k: item.k }),
+            h('span', { class: 'item-texto' },
+              h('span', { class: 'item-nome' }, item.nome),
+              h('span', { class: 'item-meta' }, `${x.series} × ${x.reps} · ${item.musculos.map(rotuloMusculo).join(', ')}`),
+              h('span', { class: 'motivo' }, x.motivo))));
+        }))
+        : h('p', { class: 'vazio' }, 'Os recomendados já estão no treino. Escolha outro na biblioteca.'),
+      h('button', {
+        class: 'botao secundario',
+        onclick: () => {
+          bib.verTudo = true;
+          bib.rolagem = 0;
+          renderBiblioteca();
+        },
+      }, 'Escolher outro na biblioteca'));
+  }
+
+  function botoesAdicionar(item, recomendacao) {
+    const { treinoIdx, naSessao } = bib.adicionando;
+    const treino = programa.treinos[treinoIdx];
+    if (idsNoTreino(treinoIdx).has(item.id)) {
+      return h('div', { class: 'bib-acoes' }, h('p', { class: 'aviso' }, 'Este exercício já está no treino.'));
+    }
+    const prescricao = recomendacao
+      ? { series: recomendacao.series, reps: recomendacao.reps, rir: recomendacao.rir, descanso: recomendacao.descanso }
+      : prescricaoPadrao(item);
+    const extra = { id: item.id, ...prescricao };
+    return h('div', { class: 'bib-acoes' },
+      h('p', { class: 'aviso' }, `Entra com ${prescricao.series} × ${prescricao.reps}, RIR ${prescricao.rir} e ${prescricao.descanso} de descanso.`),
+      naSessao ? h('button', { class: 'botao primario', onclick: () => adicionarExtra(treinoIdx, extra, false) }, 'Adicionar só hoje') : null,
+      h('button', { class: naSessao ? 'botao secundario' : 'botao primario', onclick: () => adicionarExtra(treinoIdx, extra, true) },
+        `Adicionar sempre no ${treino.titulo}`));
+  }
+
+  function adicionarExtra(treinoIdx, extra, sempre) {
+    const treino = programa.treinos[treinoIdx];
+    if (sempre) estado.extras[treino.id] = [...(estado.extras[treino.id] || []), extra];
+    const sessao = estado.sessao;
+    if (sessao && sessao.treino === treinoIdx) {
+      sessao.fila.push(treino.exercicios.length + sessao.extras.length);
+      sessao.extras.push({ ...extra });
+    }
+    salvar();
+    fecharBiblioteca();
+    render();
+    avisar(sempre ? `Adicionado ao ${treino.titulo}` : 'Adicionado no fim do treino de hoje');
+  }
+
+  function removerExtraFixo(treinoId, j) {
+    const lista = (estado.extras[treinoId] || []).filter((_, n) => n !== j);
+    if (lista.length) estado.extras[treinoId] = lista;
+    else delete estado.extras[treinoId];
+    salvar();
+    renderInicio();
+    avisar('Exercício tirado do treino');
+  }
+
+  function removerDaSessao(i) {
+    const sessao = estado.sessao;
+    const extra = sessao.extras[i - programa.treinos[sessao.treino].exercicios.length];
+    if (!extra) return;
+    extra.removido = true;
+    sessao.fila = sessao.fila.filter((x) => x !== i);
+    sessao.feitos = sessao.feitos.filter((x) => x !== i);
+    sessao.historico = sessao.historico.filter((x) => x.i !== i);
+    salvar();
+    if (!sessao.fila.length) {
+      terminar();
+      return;
+    }
+    renderTreino();
+    avisar('Exercício tirado do treino de hoje');
   }
 
   const nomeDoLugar = () => programa.treinos[bib.treinoIdx].exercicios[bib.slot].nome;
@@ -315,8 +539,15 @@
       camada.scrollTop = 0;
       return;
     }
+    if (bib.adicionando && !bib.verTudo) {
+      camada.replaceChildren(telaRecomendados());
+      camada.scrollTop = bib.rolagem;
+      return;
+    }
 
-    const titulo = bib.trocando ? `Trocar ${nomeDoLugar()}` : 'Biblioteca de exercícios';
+    let titulo = 'Biblioteca de exercícios';
+    if (bib.trocando) titulo = `Trocar ${nomeDoLugar()}`;
+    else if (bib.adicionando) titulo = `Adicionar ao ${programa.treinos[bib.adicionando.treinoIdx].titulo}`;
     const busca = h('input', {
       type: 'search', id: 'busca-exercicio', class: 'campo', value: bib.busca, autocomplete: 'off',
       placeholder: 'Buscar: supino, rosca, agachamento…', 'aria-label': 'Buscar exercício',
@@ -365,7 +596,7 @@
 
     camada.replaceChildren(h('div', { class: 'bib-conteudo' },
       h('header', { class: 'bib-topo' },
-        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Fechar biblioteca', onclick: fecharBiblioteca }),
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': bib.adicionando ? 'Voltar aos recomendados' : 'Fechar biblioteca', onclick: voltarNaBiblioteca }),
         h('h2', null, titulo)),
       extras,
       busca,
@@ -445,15 +676,24 @@
       MECANICAS[e.mecanica] ? maiuscula(MECANICAS[e.mecanica]) : null,
     ].filter(Boolean).join(' · ');
     const nota = bib.notas ? bib.notas.get(e.k) : null;
-    const voltar = () => {
-      bib.detalhe = null;
-      renderBiblioteca();
-    };
+    const recomendacao = bib.adicionando
+      ? (programa.treinos[bib.adicionando.treinoIdx].extras || []).find((x) => x.imagem === e.id)
+      : null;
+    let acoes = null;
+    if (bib.trocando) {
+      acoes = h('div', { class: 'bib-acoes' },
+        h('button', { class: 'botao primario', onclick: () => trocar(bib.treinoIdx, bib.slot, e.id) }, 'Usar este exercício'));
+    } else if (bib.adicionando) {
+      acoes = botoesAdicionar(e, recomendacao);
+    }
     return h('div', { class: 'bib-conteudo' },
       h('header', { class: 'bib-topo' },
-        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar para a lista', onclick: voltar }),
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar para a lista', onclick: voltarNaBiblioteca }),
         h('h2', null, e.nome)),
       h('div', { class: 'detalhe-foto' }, figura(ex, null, null)),
+      recomendacao
+        ? h('section', { class: 'semelhanca' }, h('p', { class: 'rotulo' }, 'Por que adicionar'), h('p', { class: 'motivo' }, recomendacao.motivo))
+        : null,
       nota
         ? h('section', { class: 'semelhanca' },
           h('div', { class: 'semelhanca-topo' },
@@ -467,10 +707,7 @@
       h('p', { class: 'item-meta' }, meta),
       h('p', { class: 'rotulo' }, 'Passo a passo'),
       h('ol', { class: 'passos' }, e.passos.map((passo) => h('li', null, passo))),
-      bib.trocando
-        ? h('div', { class: 'bib-acoes' },
-          h('button', { class: 'botao primario', onclick: () => trocar(bib.treinoIdx, bib.slot, e.id) }, 'Usar este exercício'))
-        : null);
+      acoes);
   }
 
   function trocar(treinoIdx, slot, id) {
@@ -486,6 +723,165 @@
     if (tela === 'treino' && estado.sessao) montarPilha(app.querySelector('.pilha'), false);
     else render();
     avisar(id && id !== original ? 'Exercício trocado' : 'Exercício original de volta');
+  }
+
+  // ---------- semana ----------
+
+  const planoDaSemana = () => (estado.plano && estado.plano.semana === semanaAtual() ? estado.plano : null);
+
+  // Encaixa a meta nos dias que ainda faltam da semana, preferindo os dias sugeridos.
+  function planejarSemana(meta) {
+    const hoje = new Date().getDay();
+    const livres = [1, 2, 3, 4, 5, 6].filter((d) => d >= hoje);
+    const dias = DIAS_SUGERIDOS[meta].filter((d) => livres.includes(d));
+    for (const d of livres) if (dias.length < meta && !dias.includes(d)) dias.push(d);
+    estado.plano = { semana: semanaAtual(), dias: [0, 1, 2, 3, 4, 5, 6].map((d) => dias.includes(d)) };
+    salvar();
+    renderInicio();
+    avisar(dias.length < meta
+      ? `Até sábado cabe${dias.length === 1 ? '' : 'm'} ${dias.length} treino${dias.length === 1 ? '' : 's'}`
+      : `Semana planejada: ${meta} treinos`);
+  }
+
+  function pularSemana() {
+    estado.plano = { semana: semanaAtual(), dias: Array(7).fill(false) };
+    salvar();
+    renderInicio();
+  }
+
+  function mudarMeta() {
+    estado.plano = null;
+    salvar();
+    renderInicio();
+  }
+
+  function alternarDia(d) {
+    const plano = planoDaSemana();
+    if (!plano) return;
+    plano.dias[d] = !plano.dias[d];
+    salvar();
+    renderInicio();
+  }
+
+  // Cada dia da semana com o que foi feito ou o treino planejado, seguindo a sequência a partir do próximo.
+  function semanaComTreinos() {
+    const plano = planoDaSemana();
+    const hoje = dataLocal(new Date());
+    const feitos = new Map();
+    for (const x of estado.historico) feitos.set(x.data, x.treino);
+    let seguinte = estado.sessao ? estado.sessao.treino : estado.proximo;
+    return diasDaSemanaAtual().map((dia, d) => {
+      const data = dataLocal(dia);
+      const planejado = !!(plano && plano.dias[d]);
+      let status = 'descanso';
+      let treino = null;
+      if (feitos.has(data)) {
+        status = 'feito';
+        treino = feitos.get(data);
+      } else if (planejado && data < hoje) {
+        status = 'faltou';
+      } else if (planejado) {
+        status = 'planejado';
+        treino = programa.treinos[seguinte].id;
+        seguinte = (seguinte + 1) % programa.treinos.length;
+      }
+      return { d, numero: dia.getDate(), hoje: data === hoje, passado: data < hoje, status, treino };
+    });
+  }
+
+  // "hoje", o nome do dia do próximo treino planejado, ou null sem plano.
+  function quandoEOProximo() {
+    const dia = semanaComTreinos().find((x) => x.status === 'planejado');
+    if (!dia) return null;
+    return dia.hoje ? 'hoje' : NOMES_DIAS[dia.d];
+  }
+
+  function perguntaSemana() {
+    return h('section', { class: 'semana-cartao' },
+      h('p', { class: 'etiqueta' }, new Date().getDay() === 0 ? 'Nova semana' : 'Esta semana'),
+      h('h2', null, 'Preparado para a semana?'),
+      h('p', { class: 'pergunta-texto' }, 'Quantos dias você pretende treinar?'),
+      h('div', { class: 'opcoes-dias' }, [3, 4, 5, 6].map((n) => h('button', {
+        class: 'opcao-dia',
+        'aria-label': `${n} dias`,
+        onclick: () => planejarSemana(n),
+      }, h('strong', null, n), h('span', null, 'dias')))),
+      h('p', { class: 'aviso' }, 'Os treinos seguem a sequência Push A, Pull A, Legs A, Push B, Pull B e Legs B. Dá para ajustar os dias depois.'),
+      h('div', { class: 'semana-rodape' },
+        h('button', { class: 'link', onclick: pularSemana }, 'Agora não'),
+        h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo')));
+  }
+
+  function cartaoSemana(interativo) {
+    const plano = planoDaSemana();
+    if (!plano && interativo) return perguntaSemana();
+    const dias = semanaComTreinos();
+    const feitos = dias.filter((x) => x.status === 'feito').length;
+    const meta = plano ? plano.dias.filter(Boolean).length : 0;
+    let resumo = 'Sem treinos planejados';
+    if (meta === 1) resumo = `${feitos} de 1 treino feito`;
+    else if (meta) resumo = `${feitos} de ${meta} treinos feitos`;
+    else if (feitos) resumo = `${feitos} treino${feitos === 1 ? ' feito' : 's feitos'}`;
+    const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso' };
+    const tira = h('ol', { class: 'semana' }, dias.map((x) => {
+      const podeMudar = interativo && !x.passado && x.status !== 'feito';
+      const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : '—';
+      const nome = `${maiuscula(NOMES_DIAS[x.d])}, dia ${x.numero}${x.hoje ? ' (hoje)' : ''}`;
+      return h('li', null, h(podeMudar ? 'button' : 'div', {
+        class: `dia ${x.status}${x.hoje ? ' hoje' : ''}`,
+        'aria-label': `${nome}: ${x.treino ? `${tituloDoTreino(x.treino)} ` : ''}${descricoes[x.status]}`,
+        onclick: podeMudar ? () => alternarDia(x.d) : null,
+      },
+        h('span', { class: 'dia-letra', 'aria-hidden': 'true' }, LETRAS_DIAS[x.d]),
+        h('span', { class: 'dia-numero', 'aria-hidden': 'true' }, x.numero),
+        h('span', { class: 'dia-treino', 'aria-hidden': 'true' }, rotulo)));
+    }));
+    return h('section', { class: 'semana-cartao' },
+      h('div', { class: 'semana-rodape' },
+        h('p', { class: 'etiqueta' }, 'Esta semana'),
+        h('span', { class: 'semana-resumo' }, resumo)),
+      tira,
+      interativo
+        ? h('div', { class: 'semana-rodape' },
+          h('span', { class: 'dica-semana' }, 'Toque num dia para trocar entre treino e descanso.'),
+          h('button', { class: 'link', onclick: mudarMeta }, 'Mudar meta'))
+        : null,
+      interativo ? h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo') : null);
+  }
+
+  // Sem servidor, o site não manda notificação sozinho; a agenda do celular avisa todo domingo.
+  function urlGoogleAgenda() {
+    const hoje = new Date();
+    const domingo = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 7 - hoje.getDay());
+    const dia = `${domingo.getFullYear()}${doisDigitos(domingo.getMonth() + 1)}${doisDigitos(domingo.getDate())}`;
+    const parametros = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: 'Treino PPL: planejar a semana',
+      details: `Preparado para a semana? Abra o app e escolha quantos dias vai treinar: ${location.href.split('#')[0]}`,
+      dates: `${dia}T090000/${dia}T091500`,
+      recur: 'RRULE:FREQ=WEEKLY;BYDAY=SU',
+    });
+    return `https://calendar.google.com/calendar/render?${parametros}`;
+  }
+
+  function abrirLembrete() {
+    const fechar = () => modal.remove();
+    const modal = h('div', {
+      class: 'modal',
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': 'Lembrete todo domingo',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, h('div', { class: 'modal-caixa folha' },
+      h('h2', null, 'Lembrete todo domingo'),
+      h('p', null, 'Um site não consegue mandar notificação sozinho, sem um servidor. Por isso o lembrete fica na agenda do celular: todo domingo às 9h ela avisa para você planejar a semana. Dá para mudar o horário depois, na própria agenda.'),
+      h('a', { class: 'botao primario', href: urlGoogleAgenda(), target: '_blank', rel: 'noopener' }, 'Google Agenda (Android)'),
+      h('a', { class: 'botao secundario', href: 'lembrete-domingo.ics' }, 'Calendário do iPhone'),
+      h('button', { class: 'link', onclick: fechar }, 'Fechar')));
+    document.body.append(modal);
+    modal.querySelector('.botao').focus();
   }
 
   // ---------- telas ----------
@@ -519,7 +915,7 @@
 
     app.replaceChildren(h('section', { class: 'inicio' },
       h('header', { class: 'marca' }, h('h1', null, 'Treino PPL'), h('span', null, 'Push · Pull · Legs')),
-      h('p', { class: 'status-salvo' }, 'Seu progresso fica salvo neste celular.'),
+      cartaoSemana(true),
       cartaoInstalar(),
       heroTreino(selecionado),
       h('p', { class: 'como-usar' },
@@ -533,14 +929,20 @@
         ? h('button', { class: 'botao secundario', icone: 'trocar', onclick: () => abrirBiblioteca() },
           `Biblioteca com ${biblioteca.itens.length} exercícios`)
         : null,
-      h('p', { class: 'credito' }, 'Fotos: free-exercise-db (domínio público)')));
+      h('p', { class: 'credito' }, 'Seu progresso fica salvo neste celular. Fotos: free-exercise-db (domínio público).')));
   }
 
   function heroTreino(i) {
     const treino = programa.treinos[i];
     const sessao = estado.sessao;
     const emAndamento = sessao && sessao.treino === i;
-    const etiqueta = emAndamento ? 'Em andamento' : i === estado.proximo ? 'Próximo treino' : 'Treino escolhido';
+    let etiqueta = emAndamento ? 'Em andamento' : i === estado.proximo ? 'Próximo treino' : 'Treino escolhido';
+    if (!sessao && i === estado.proximo) {
+      const quando = quandoEOProximo();
+      if (quando === 'hoje') etiqueta = 'Treino de hoje';
+      else if (quando) etiqueta = `Próximo treino · ${quando}`;
+    }
+    const extrasFixos = estado.extras[treino.id] || [];
 
     const extras = [];
     if (sessao && !emAndamento) {
@@ -562,22 +964,35 @@
           ? h('button', { class: 'trocar-linha', 'aria-label': `Trocar ${ex.nome}`, onclick: () => abrirBiblioteca(i, slot) }, 'Trocar')
           : null);
     }));
+    extrasFixos.forEach((x, j) => {
+      const ex = extraComoExercicio(x);
+      if (!ex) return;
+      exercicios.append(h('li', null,
+        miniatura(ex),
+        h('span', { class: 'ex-texto' },
+          h('span', { class: 'ex-nome' }, ex.nome),
+          h('span', { class: 'ex-meta' }, `${x.series} × ${x.reps} · extra`)),
+        h('button', { class: 'trocar-linha', 'aria-label': `Tirar ${ex.nome} do treino`, onclick: () => removerExtraFixo(treino.id, j) }, 'Tirar')));
+    });
 
+    const totalExercicios = treino.exercicios.length + extrasFixos.length;
+    const series = totalSeries(treino) + extrasFixos.reduce((soma, x) => soma + x.series, 0);
     return h('article', { class: 'hero' },
       h('p', { class: 'etiqueta' }, etiqueta),
       h('h2', null, treino.titulo),
       h('p', { class: 'foco' }, treino.foco),
       h('ul', { class: 'meta' },
-        h('li', null, h('strong', null, treino.exercicios.length), 'exercícios'),
-        h('li', null, h('strong', null, totalSeries(treino)), 'séries'),
+        h('li', null, h('strong', null, totalExercicios), 'exercícios'),
+        h('li', null, h('strong', null, series), 'séries'),
         h('li', null, h('strong', null, treino.duracao.replace(' min', '')), 'min')),
       h('div', { class: 'hero-acoes' },
         h('button', { class: 'botao primario', onclick: () => (emAndamento ? abrirTreino() : comecar(i)) },
-          emAndamento ? `Continuar (${sessao.feitos.length + 1} de ${treino.exercicios.length})` : 'Começar treino'),
+          emAndamento ? `Continuar (${sessao.feitos.length + 1} de ${indicesDaSessao().length})` : 'Começar treino'),
         h('button', { class: 'botao secundario', icone: 'play', onclick: () => abrirVideo(i) }, 'Vídeo')),
       extras,
       h('p', { class: 'rotulo' }, 'Exercícios'),
-      exercicios);
+      exercicios,
+      biblioteca ? h('button', { class: 'botao secundario', icone: 'mais', onclick: () => abrirAdicionar(i, false) }, 'Adicionar exercício') : null);
   }
 
   function botaoRecomecar(i) {
@@ -609,8 +1024,9 @@
       h('header', { class: 'barra' },
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar ao início', onclick: voltarInicio }),
         h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo), h('span', { class: 'contador' })),
+        h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) }),
         h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(estado.sessao.treino) })),
-      h('div', { class: 'segmentos', 'aria-hidden': 'true' }, treino.exercicios.map(() => h('span'))),
+      h('div', { class: 'segmentos', 'aria-hidden': 'true' }, indicesDaSessao().map((i) => h('span', { 'data-i': i }))),
       pilha,
       h('div', { class: 'descanso', hidden: true }),
       h('div', { class: 'acoes' },
@@ -624,10 +1040,11 @@
 
   function atualizarCabecalho() {
     const sessao = estado.sessao;
-    const n = programa.treinos[sessao.treino].exercicios.length;
+    const n = indicesDaSessao().length;
     app.querySelector('.contador').textContent = `Exercício ${Math.min(sessao.feitos.length + 1, n)} de ${n}`;
-    app.querySelectorAll('.segmentos span').forEach((seg, k) => {
-      seg.className = sessao.feitos.includes(k) ? 'feito' : k === sessao.fila[0] ? 'atual' : '';
+    app.querySelectorAll('.segmentos span').forEach((seg) => {
+      const i = Number(seg.dataset.i);
+      seg.className = sessao.feitos.includes(i) ? 'feito' : i === sessao.fila[0] ? 'atual' : '';
     });
     app.querySelector('.acao.desfazer').disabled = !sessao.historico.length;
   }
@@ -646,17 +1063,24 @@
 
   function cartao(i, posicao) {
     const treinoIdx = estado.sessao.treino;
-    const ex = exercicio(treinoIdx, i);
+    const ex = exercicioDaSessao(i);
+    if (!ex) {
+      // Extra cujas fotos e dados estão na biblioteca, que ainda não carregou: o cartão completa quando ela chegar.
+      return h('article', { class: `cartao ${posicao}`, 'data-i': i }, h('p', { class: 'carregando' }, 'Carregando exercício…'));
+    }
     const feitas = estado.sessao.series[i] || 0;
     const completo = feitas >= ex.series;
-    const botaoTrocar = biblioteca
-      ? h('button', { class: ex.trocado ? 'trocar ativo' : 'trocar', icone: 'trocar', onclick: () => abrirBiblioteca(treinoIdx, i) },
-        ex.trocado ? (ex.semelhanca !== null ? `Trocado · ${ex.semelhanca}%` : 'Trocado') : 'Trocar')
-      : null;
+    let botao = null;
+    if (ex.extra) {
+      botao = h('button', { class: 'trocar', icone: 'fechar', onclick: () => removerDaSessao(i) }, 'Tirar de hoje');
+    } else if (biblioteca) {
+      botao = h('button', { class: ex.trocado ? 'trocar ativo' : 'trocar', icone: 'trocar', onclick: () => abrirBiblioteca(treinoIdx, i) },
+        ex.trocado ? (ex.semelhanca !== null ? `Trocado · ${ex.semelhanca}%` : 'Trocado') : 'Trocar');
+    }
     return h('article', { class: `cartao ${posicao}`, 'data-i': i, 'aria-label': ex.nome },
       h('span', { class: 'carimbo carimbo-feito', 'aria-hidden': 'true' }, 'Feito'),
       h('span', { class: 'carimbo carimbo-depois', 'aria-hidden': 'true' }, 'Depois'),
-      figura(ex, doisDigitos(i + 1), botaoTrocar),
+      figura(ex, ex.extra ? 'Extra' : doisDigitos(i + 1), botao),
       h('div', { class: 'corpo' },
         h('h2', null, ex.nome),
         h('div', { class: 'numeros' },
@@ -666,8 +1090,8 @@
         h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
           ex.primarios.map((m) => h('li', { class: 'principal' }, m)),
           ex.secundarios.map((m) => h('li', { class: 'auxiliar' }, m))),
-        h('p', { class: 'rotulo' }, ex.trocado ? 'Passo a passo' : 'Execução'),
-        ex.trocado
+        h('p', { class: 'rotulo' }, daBiblioteca(ex) ? 'Passo a passo' : 'Execução'),
+        daBiblioteca(ex)
           ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d)))
           : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d)))),
       h('footer', { class: 'series' },
@@ -692,6 +1116,7 @@
         h('div', null, h('dt', null, 'Séries'), h('dd', null, `${resumoFinal.series}/${resumoFinal.totalSeries}`)),
         h('div', null, h('dt', null, 'Exercícios'), h('dd', null, resumoFinal.exercicios)),
         h('div', null, h('dt', null, 'Duração'), h('dd', null, resumoFinal.minutos ? `${resumoFinal.minutos} min` : '—'))),
+      cartaoSemana(false),
       h('article', { class: 'proximo' },
         h('p', { class: 'etiqueta' }, 'Próximo treino'),
         h('strong', null, proximo.titulo),
@@ -710,7 +1135,16 @@
 
   function comecar(i) {
     const treino = programa.treinos[i];
-    estado.sessao = { treino: i, fila: treino.exercicios.map((_, k) => k), feitos: [], series: {}, historico: [], inicio: Date.now() };
+    const extras = (estado.extras[treino.id] || []).map((x) => ({ ...x }));
+    estado.sessao = {
+      treino: i,
+      fila: [...Array(treino.exercicios.length + extras.length).keys()],
+      feitos: [],
+      series: {},
+      historico: [],
+      inicio: Date.now(),
+      extras,
+    };
     selecionado = i;
     pararDescanso();
     salvar();
@@ -733,7 +1167,8 @@
   function marcarSerie(i, k) {
     prepararAudio();
     const sessao = estado.sessao;
-    const ex = exercicio(sessao.treino, i);
+    const ex = exercicioDaSessao(i);
+    if (!ex) return;
     const antes = sessao.series[i] || 0;
     const agora = k < antes ? k : k + 1; // tocar numa anilha cheia desmarca dela em diante
     sessao.series[i] = agora;
@@ -809,14 +1244,18 @@
     const sessao = estado.sessao;
     const treino = programa.treinos[sessao.treino];
     const minutos = Math.round((Date.now() - sessao.inicio) / 60000);
-    const feitas = Object.values(sessao.series).reduce((soma, n) => soma + (Number(n) || 0), 0);
+    const indices = indicesDaSessao();
+    const total = indices.reduce((soma, i) => soma + seriesDaSessao(i), 0);
+    const feitas = indices.reduce((soma, i) => soma + (Number(sessao.series[i]) || 0), 0);
     resumoFinal = {
       treino: sessao.treino,
       minutos: minutos < 240 ? Math.max(1, minutos) : null,
-      series: Math.min(feitas, totalSeries(treino)),
-      totalSeries: totalSeries(treino),
-      exercicios: treino.exercicios.length,
+      series: Math.min(feitas, total),
+      totalSeries: total,
+      exercicios: indices.length,
     };
+    // Marca o dia na semana.
+    estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id }].slice(-200);
     estado.proximo = (sessao.treino + 1) % programa.treinos.length;
     estado.sessao = null;
     selecionado = estado.proximo;
@@ -1069,20 +1508,14 @@
     const modal = document.querySelector('.modal');
     if (modal) {
       if (e.key === 'Escape') {
-        modal.querySelector('video').pause();
+        const video = modal.querySelector('video');
+        if (video) video.pause();
         modal.remove();
       }
       return;
     }
     if (bib) {
-      if (e.key === 'Escape') {
-        if (bib.detalhe !== null) {
-          bib.detalhe = null;
-          renderBiblioteca();
-        } else {
-          fecharBiblioteca();
-        }
-      }
+      if (e.key === 'Escape') voltarNaBiblioteca();
       return;
     }
     if (tela !== 'treino' || !estado.sessao) return;

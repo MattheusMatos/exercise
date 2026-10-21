@@ -9,6 +9,12 @@
   "treinos": [
     {
       "id": "push_a",
+      "extras": [
+        {"imagem": "Dips_-_Chest_Version", "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min", "motivo": "Os supinos de hoje pegam pouco a parte de baixo do peito. As paralelas trabalham essa região com o músculo bem alongado."},
+        {"imagem": "Incline_Dumbbell_Flyes", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "Mais trabalho com o peito alongado, agora no banco inclinado, que enfatiza a parte de cima (Rodríguez-Ridao et al., 2020)."},
+        {"imagem": "Triceps_Pushdown", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "Hoje o tríceps é feito acima da cabeça, que prioriza a cabeça longa (Maeo et al., 2023). A polia completa com as outras duas cabeças."},
+        {"imagem": "Reverse_Machine_Flyes", "series": 2, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min", "motivo": "Hoje só tem empurrar. O deltoide posterior quase não trabalha nos supinos e ganha um estímulo extra."}
+      ],
       "titulo": "PUSH A",
       "foco": "Peito",
       "duracao": "~50 min",
@@ -57,6 +63,12 @@
     },
     {
       "id": "pull_a",
+      "extras": [
+        {"imagem": "Seated_Cable_Rows", "series": 2, "reps": "10–12", "rir": "1–2", "descanso": "2 min", "motivo": "Hoje há uma remada só. A remada no cabo acrescenta volume de costas, com as escápulas indo bem à frente no início."},
+        {"imagem": "Hammer_Curls", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "A pegada neutra trabalha mais o braquial, que fica embaixo do bíceps, e o braquiorradial, no antebraço."},
+        {"imagem": "Preacher_Curl", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "A rosca inclinada alonga o bíceps pelo ombro. A Scott carrega o bíceps com o cotovelo estendido, outra posição alongada."},
+        {"imagem": "Dumbbell_Shrug", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "As remadas trabalham mais o meio do trapézio. O encolhimento foca a parte de cima, perto do pescoço."}
+      ],
       "titulo": "PULL A",
       "foco": "Dorsal (puxadas verticais)",
       "duracao": "~55 min",
@@ -113,6 +125,12 @@
     },
     {
       "id": "legs_a",
+      "extras": [
+        {"imagem": "Split_Squat_with_Dumbbells", "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min", "motivo": "Uma perna por vez (repetições contadas em cada perna): trabalha glúteo e quadríceps e ajuda quando um lado é mais forte que o outro."},
+        {"imagem": "Thigh_Adductor", "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "Os adutores são grandes e já crescem com o agachamento profundo (Kubo et al., 2019). A máquina acrescenta trabalho direto."},
+        {"imagem": "Barbell_Hip_Thrust", "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min", "motivo": "Carga alta no glúteo com o quadril estendido. É opcional: o agachamento fez o glúteo crescer tanto quanto (Plotkin et al., 2023)."},
+        {"imagem": "Seated_Calf_Raise", "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1 min", "motivo": "Hoje a panturrilha é em pé, com o joelho estendido. Sentado, o joelho dobrado foca o sóleo."}
+      ],
       "titulo": "LEGS A",
       "foco": "Quadríceps",
       "duracao": "~60 min",
@@ -169,6 +187,11 @@
     },
     {
       "id": "push_b",
+      "extras": [
+        {"imagem": "Cable_Crossover", "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "Hoje o peito só tem supino e paralelas. O crucifixo dá tensão com o peito alongado, sem depender do tríceps."},
+        {"imagem": "Cable_Seated_Lateral_Raise", "series": 2, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min", "motivo": "Com halteres, a elevação lateral quase não pesa embaixo. O cabo mantém a tensão nessa parte do movimento."},
+        {"imagem": "Face_Pull", "series": 2, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min", "motivo": "Hoje só tem empurrar. O face pull trabalha o deltoide posterior e os músculos que giram o ombro para fora."}
+      ],
       "titulo": "PUSH B",
       "foco": "Ombro e peito superior",
       "duracao": "~55 min",
@@ -225,6 +248,11 @@
     },
     {
       "id": "pull_b",
+      "extras": [
+        {"imagem": "Straight-Arm_Pulldown", "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1–2 min", "motivo": "Dorsal isolado com o braço estendido: o bíceps não limita, e o dorsal trabalha alongado no começo do movimento."},
+        {"imagem": "Incline_Dumbbell_Curl", "series": 2, "reps": "10–12", "rir": "0–1", "descanso": "1–2 min", "motivo": "Hoje as roscas são Scott e martelo. A inclinada alonga a cabeça longa do bíceps pelo ombro."},
+        {"imagem": "Dumbbell_Shrug", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "As remadas trabalham mais o meio do trapézio. O encolhimento foca a parte de cima, perto do pescoço."}
+      ],
       "titulo": "PULL B",
       "foco": "Espessura (remadas)",
       "duracao": "~50 min",
@@ -281,6 +309,12 @@
     },
     {
       "id": "legs_b",
+      "extras": [
+        {"imagem": "Barbell_Hip_Thrust", "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min", "motivo": "Glúteo é o foco de hoje. O hip thrust pesa mais no topo do movimento, onde o stiff quase não pesa."},
+        {"imagem": "Leg_Press", "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "2 min", "motivo": "Mais volume de quadríceps sem cansar a lombar, que já trabalhou no stiff."},
+        {"imagem": "Thigh_Abductor", "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1 min", "motivo": "Trabalha o glúteo médio, na lateral do quadril, que os outros exercícios de hoje pegam pouco."},
+        {"imagem": "Standing_Calf_Raises", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "motivo": "Hoje a panturrilha é sentada. Em pé, com o joelho estendido, o gastrocnêmio trabalha mais."}
+      ],
       "titulo": "LEGS B",
       "foco": "Posterior e glúteo",
       "duracao": "~60 min",

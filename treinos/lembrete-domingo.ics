@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Treino PPL//PT-BR
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:treino-ppl-domingo@mattheusmatos.github.io
+DTSTAMP:20261021T120000Z
+DTSTART:20261025T090000
+DTEND:20261025T091500
+RRULE:FREQ=WEEKLY;BYDAY=SU
+SUMMARY:Treino PPL: planejar a semana
+DESCRIPTION:Preparado para a semana? Abra o app e escolha quantos dias vai
+  treinar: https://mattheusmatos.github.io/exercise/treinos/
+URL:https://mattheusmatos.github.io/exercise/treinos/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Preparado para a semana? Quantos dias você pretende treinar?
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR

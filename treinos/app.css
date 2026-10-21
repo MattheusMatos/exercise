@@ -170,6 +170,68 @@ svg { width: 22px; height: 22px; flex: none; }
 .status-salvo { margin: -8px 0 0; color: var(--apagado); font-size: 14px; }
 .aviso { margin: 0; font-size: 14px; color: var(--apagado); }
 
+/* Semana */
+.semana-cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--raio);
+  background: var(--superficie);
+}
+.semana-cartao h2 { margin: 0; font: 800 34px/1 var(--fonte-titulo); text-wrap: balance; }
+.pergunta-texto { margin: -6px 0 0; color: var(--apagado); font-size: 17px; }
+.opcoes-dias { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.opcao-dia {
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--laranja);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--texto);
+}
+.opcao-dia strong { font: 800 34px/1 var(--fonte-titulo); color: var(--laranja); }
+.opcao-dia span { color: var(--apagado); font-size: 13px; }
+.semana-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.semana-resumo { color: var(--apagado); font-size: 14px; font-variant-numeric: tabular-nums; }
+.semana { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.dia {
+  width: 100%;
+  min-height: 78px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 1px;
+  border: 1.5px solid var(--linha);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--texto);
+}
+.dia-letra { color: var(--apagado); font: 700 12px/1 var(--fonte-titulo); letter-spacing: 0.08em; }
+.dia-numero { font: 800 21px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.dia-treino {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--apagado);
+  font: 700 11px/1.2 var(--fonte-titulo);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.dia.planejado { border-color: var(--laranja); }
+.dia.planejado .dia-treino { color: var(--laranja); }
+.dia.feito { border-color: var(--verde); background: var(--verde); color: var(--tinta); }
+.dia.feito .dia-letra, .dia.feito .dia-treino { color: var(--tinta); }
+.dia.faltou { opacity: 0.6; }
+.dia.faltou .dia-treino { text-decoration: line-through; }
+.dia.hoje { box-shadow: 0 0 0 2px var(--superficie), 0 0 0 4px var(--texto); }
+.dica-semana { color: var(--apagado); font-size: 13px; }
+.link svg { width: 16px; height: 16px; margin-right: 4px; vertical-align: -3px; }
+
 .como-usar {
   margin: 0;
   padding: 14px 16px;
@@ -507,6 +569,11 @@ svg { width: 22px; height: 22px; flex: none; }
 .modal-caixa { position: relative; width: min(100%, 420px); max-height: 100%; display: flex; flex-direction: column; gap: 10px; }
 .modal video { width: 100%; max-height: calc(100vh - 120px); border-radius: 16px; background: var(--tinta); }
 .modal .botao { align-self: center; }
+.folha { padding: 20px; border-radius: 20px; background: var(--superficie); }
+.folha h2 { margin: 0; font: 800 30px/1.05 var(--fonte-titulo); }
+.folha p { margin: 0 0 4px; color: var(--apagado); font-size: 15px; }
+.folha .botao { align-self: stretch; text-decoration: none; }
+.folha .link { align-self: center; }
 
 /* Biblioteca */
 .camada {
@@ -623,7 +690,12 @@ svg { width: 22px; height: 22px; flex: none; }
 .item-atual { color: var(--laranja); font-size: 13px; font-weight: 600; }
 .vazio { padding: 24px 8px; color: var(--apagado); text-align: center; }
 .detalhe-foto .foto { border-radius: 18px; }
-.bib-acoes { position: sticky; bottom: 0; display: grid; padding-block: 12px; background: var(--fundo); }
+.bib-acoes { position: sticky; bottom: 0; display: grid; gap: 8px; padding-block: 12px; background: var(--fundo); }
+.bib-acoes .aviso { margin: 0; }
+.motivo { margin: 2px 0 0; color: var(--texto); font-size: 14px; line-height: 1.4; }
+.semelhanca .motivo { font-size: 15px; }
+.recomendacao { align-items: flex-start; }
+.recomendacao .mini { margin-top: 2px; }
 
 .toast {
   position: fixed;
