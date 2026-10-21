@@ -64,6 +64,7 @@
   let travaTela = null;
   let bib = null; // estado da tela da biblioteca enquanto aberta
   let esperaAviso = null;
+  let contadorDescansos = 0;
 
   // ---------- utilidades ----------
 
@@ -960,6 +961,13 @@
     return h('img', { class: classe || 'personagem-img', src: window.Avatar.imagem(p.id, fase), alt: `${p.nome}, ${window.Avatar.rotuloDaFase(p.id, fase).toLowerCase()}` });
   }
 
+  // Comemorando ou descansando, com fundo transparente.
+  function imagemDoMomento(momento) {
+    const p = window.Avatar.personagem(estado.perfil.personagem);
+    const textos = { comemora: 'comemorando o treino', 'descanso-1': 'descansando', 'descanso-2': 'olhando o relógio' };
+    return h('img', { class: 'personagem-momento', src: window.Avatar.imagemDoMomento(p.id, momento), alt: `${p.nome}, ${textos[momento]}` });
+  }
+
   function iconeChama(estadoChama) {
     const el = h('span', { class: 'chama-icone', 'aria-hidden': 'true' });
     el.innerHTML = window.Avatar.chama(estadoChama);
@@ -1340,7 +1348,7 @@
     const subiu = of.nivel > resumoFinal.nivelAntes;
     app.replaceChildren(h('section', { class: 'fim' },
       h('div', { class: 'fim-avatar' },
-        h('div', { class: `personagem-palco fase-${window.Ofensiva.fase(of)}${subiu ? ' subiu' : ''}` }, imagemDoPersonagem(window.Ofensiva.fase(of))),
+        h('div', { class: `personagem-solto${subiu ? ' subiu' : ''}` }, imagemDoMomento('comemora')),
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
           h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)))),
@@ -1589,6 +1597,7 @@
       avisado: false,
       intervalo: setInterval(tique, 250),
       esconder: null,
+      variante: (contadorDescansos++ % 2) + 1,
     };
     tique();
   }
@@ -1647,12 +1656,12 @@
     caixa.classList.toggle('pronto', pronto);
     caixa.querySelector('.relogio').textContent = relogio(restante);
     caixa.querySelector('.descanso-rotulo').textContent = pronto ? 'Bora!' : 'Descanso';
-    // Durante o descanso o personagem relaxa; quando acaba, aparece no auge, pronto para a próxima série.
-    const fase = pronto ? 'auge' : 'comecando';
+    // Durante o descanso o personagem descansa (alternando as duas poses); quando acaba, comemora.
+    const momento = pronto ? 'comemora' : `descanso-${descanso.variante}`;
     const lugar = caixa.querySelector('.descanso-personagem');
-    if (lugar.dataset.fase !== fase) {
-      lugar.dataset.fase = fase;
-      lugar.replaceChildren(imagemDoPersonagem(fase));
+    if (lugar.dataset.momento !== momento) {
+      lugar.dataset.momento = momento;
+      lugar.replaceChildren(imagemDoMomento(momento));
     }
     const aviso = pronto ? `Descanso feito. Agora: ${descanso.proxima}.` : `Descanso de ${relogio(descanso.total)}.`;
     const elAviso = caixa.querySelector('.so-leitor');

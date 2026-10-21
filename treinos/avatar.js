@@ -25,6 +25,8 @@
   const personagem = (id) => porId.get(id) || PERSONAGENS[0];
 
   const imagem = (id, fase) => `personagens/${personagem(id).id}-${FASES[fase] ? fase : 'comecando'}.webp`;
+  // Imagens de momento, com fundo transparente: 'comemora', 'descanso-1' e 'descanso-2'.
+  const imagemDoMomento = (id, momento) => `personagens/${personagem(id).id}-${momento}.webp`;
   const rotuloDaFase = (id, fase) => (fase === 'afastado' && personagem(id).genero === 'f' ? 'Afastada' : FASES[fase] || FASES.comecando);
 
   // Fogo da ofensiva: "acesa", "risco" (precisa treinar hoje) ou "apagada".
@@ -38,7 +40,7 @@
       + '</svg>';
   }
 
-  const api = { PERSONAGENS, FASES: Object.keys(FASES), personagem, imagem, rotuloDaFase, chama };
+  const api = { PERSONAGENS, FASES: Object.keys(FASES), personagem, imagem, imagemDoMomento, rotuloDaFase, chama };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Avatar = api;
 })(typeof window !== 'undefined' ? window : globalThis);
