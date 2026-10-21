@@ -125,6 +125,18 @@ Não é porque 6–8 repetições geram mais músculo. Entre ~6 e ~30 repetiçõ
 
 **Prefiro 8–12 no supino e no agachamento. Posso?** Pode. A hipertrofia será parecida; você só ganha um pouco menos de força máxima.
 
+### Quanto descansar entre as séries?
+
+- **Descansar mais rende mais, até certo ponto.** Em homens treinados, 3 min entre séries geraram mais hipertrofia e força que 1 min, com o mesmo treino (Schoenfeld et al., 2016). Na meta-análise de Singer et al. (2024), descansos acima de 60 s foram levemente melhores, e acima de ~90 s a diferença praticamente some.
+- **O motivo é o volume.** Com pouco descanso você faz menos repetições nas séries seguintes. Quando quem descansava 1 min fez séries extras até igualar o volume de quem descansava 3 min, a hipertrofia foi parecida (Longo et al., 2022).
+- **Na prática:** 2–3 min nos compostos pesados, para conseguir repetir as repetições, e 1–2 min nos isoladores. Sem tempo? Faça bi-set de músculos que não competem entre si, como panturrilha e abdômen: economiza tempo sem perder volume (Iversen et al., 2021).
+
+### E a cadência, a velocidade das repetições?
+
+- **Repetições de 0,5 a 8 s geram hipertrofia parecida** (Schoenfeld, Ogborn & Krieger, 2015). Repetições muito lentas, acima de ~10 s, parecem piores, porque obrigam a usar pouca carga.
+- **Não precisa contar tempos rígidos** como "3-1-2". Desça controlando, em ~1–3 s, sem deixar o peso cair, e suba com intenção, o mais rápido que a técnica permitir. Subir na velocidade máxima intencional rendeu mais força que subir na metade da velocidade (Pareja-Blanco et al., 2014).
+- **Pausa na posição alongada** ajuda onde dá para "quicar", como na panturrilha: sem a pausa, o tendão devolve energia e faz parte do trabalho que deveria ser do músculo.
+
 ## Referências
 
 - Bourne MN et al. (2017). Impact of the Nordic hamstring and hip extension exercises on hamstring architecture and morphology: implications for injury prevention. *British Journal of Sports Medicine*.
@@ -133,12 +145,15 @@ Não é porque 6–8 repetições geram mais músculo. Entre ~6 e ~30 repetiçõ
 - Ema R et al. (2016). Unique activation of the quadriceps femoris during single- and multi-joint exercises. *European Journal of Applied Physiology*.
 - Fonseca RM et al. (2014). Changes in exercises are more effective than in loading schemes to improve muscle strength. *Journal of Strength and Conditioning Research*.
 - Haugen ME et al. (2023). Effect of free-weight vs. machine-based strength training on maximal strength, hypertrophy and jump performance: a systematic review and meta-analysis. *BMC Sports Science, Medicine and Rehabilitation*.
+- Iversen VM et al. (2021). No time to lift? Designing time-efficient training programs for strength and hypertrophy: a narrative review. *Sports Medicine*.
 - Kassiano W et al. (2023). Greater gastrocnemius muscle hypertrophy after partial range of motion training performed at long muscle lengths. *Journal of Strength and Conditioning Research*.
 - Kubo K, Ikebukuro T, Yata H (2019). Effects of squat training with different depths on lower limb muscle volumes. *European Journal of Applied Physiology*.
 - Lasevicius T et al. (2022). Muscle failure promotes greater muscle hypertrophy in low-load but not in high-load resistance training. *Journal of Strength and Conditioning Research*.
+- Longo AR et al. (2022). Volume load rather than resting interval influences muscle hypertrophy during high-intensity resistance training. *Journal of Strength and Conditioning Research*.
 - Lopez P et al. (2021). Resistance training load effects on muscle hypertrophy and strength gain: systematic review and network meta-analysis. *Medicine & Science in Sports & Exercise*.
 - Maeo S et al. (2021). Greater hamstrings muscle hypertrophy but similar damage protection after training at long versus short muscle lengths. *Medicine & Science in Sports & Exercise*.
 - Maeo S et al. (2023). Triceps brachii hypertrophy is substantially greater after elbow extension training performed in the overhead versus neutral arm position. *European Journal of Sport Science*.
+- Pareja-Blanco F et al. (2014). Effect of movement velocity during resistance training on neuromuscular performance. *International Journal of Sports Medicine*.
 - Pedrosa GF et al. (2022). Partial range of motion training elicits favorable improvements in muscular adaptations when carried out at long muscle lengths. *European Journal of Sport Science*.
 - Pelland JC et al. (2024). The resistance training dose response: meta-regressions exploring the effects of weekly volume and frequency on muscle hypertrophy and strength gains. *SportRxiv* (preprint).
 - Plotkin D et al. (2022). Progressive overload without progressing load? The effects of load or repetition progression on muscular adaptations. *PeerJ*.
