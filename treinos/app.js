@@ -16,12 +16,16 @@
     trocar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   };
 
+  // Grupos usados no filtro da biblioteca.
   const MUSCULOS = {
     peito: 'Peito', ombros: 'Ombros', triceps: 'Tríceps', dorsais: 'Dorsais', 'meio-das-costas': 'Meio das costas',
     trapezio: 'Trapézio', biceps: 'Bíceps', antebracos: 'Antebraços', quadriceps: 'Quadríceps',
     isquiotibiais: 'Posteriores de coxa', gluteos: 'Glúteos', adutores: 'Adutores', abdutores: 'Abdutores',
     panturrilhas: 'Panturrilhas', abdominais: 'Abdômen', 'inferior-das-costas': 'Lombar', pescoco: 'Pescoço',
   };
+  // A biblioteca separa o deltoide pelo padrão de movimento; no filtro, todos contam como ombros.
+  const DELTOIDES = { 'deltoide-anterior': 'Deltoide anterior', 'deltoide-lateral': 'Deltoide lateral', 'deltoide-posterior': 'Deltoide posterior' };
+  const MECANICAS = { composto: 'multiarticular', isolado: 'isolado' };
   const EQUIPAMENTOS = {
     barra: 'Barra', 'barra-w': 'Barra W', halteres: 'Halteres', cabo: 'Cabo', maquina: 'Máquina',
     'peso-do-corpo': 'Peso do corpo', kettlebell: 'Kettlebell', faixas: 'Elástico', 'bola-medicinal': 'Bola medicinal',
@@ -38,10 +42,8 @@
   let descanso = null; // { fim, total, proxima, avisado, intervalo, esconder }
   let audio = null;
   let travaTela = null;
-  let perfil = null; // { nome, avatar } quando o claude.ai diz quem está vendo
   let bib = null; // estado da tela da biblioteca enquanto aberta
   let esperaAviso = null;
-  const nuvem = { ref: null, ativa: false, gravando: false, pendente: false, falhas: 0, espera: null };
 
   // ---------- utilidades ----------
 
@@ -82,9 +84,22 @@
   const totalSeries = (treino) => treino.exercicios.reduce((soma, ex) => soma + ex.series, 0);
   const doisDigitos = (n) => String(n).padStart(2, '0');
   const semAcento = (texto) => texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-  const rotuloMusculo = (m) => MUSCULOS[m] || m;
+  const rotuloMusculo = (m) => DELTOIDES[m] || MUSCULOS[m] || m;
+  const grupoMuscular = (m) => (DELTOIDES[m] ? 'ombros' : m);
   const rotuloEquipamento = (e) => EQUIPAMENTOS[e] || 'Sem equipamento';
-  const primeiroNome = (nome) => nome.trim().split(/\s+/)[0] || '';
+  const maiuscula = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1);
+
+  // De vermelho (pouco parecido) a verde (muito parecido); abaixo de 30% é vermelho, acima de 90% é verde.
+  function corSemelhanca(porcentagem) {
+    const t = Math.min(1, Math.max(0, (porcentagem - 30) / 60));
+    return `hsl(${Math.round(t * 130)} 70% 58%)`;
+  }
+
+  function seloSemelhanca(porcentagem, classe) {
+    const selo = h('span', { class: `selo ${classe || ''}`, title: 'Semelhança com o exercício original' }, `${porcentagem}%`);
+    selo.style.backgroundColor = corSemelhanca(porcentagem);
+    return selo;
+  }
 
   function segundosDescanso(texto) {
     const numeros = (String(texto).match(/\d+/g) || []).map(Number);
@@ -112,7 +127,7 @@
     }, 2200);
   }
 
-  // ---------- estado: no aparelho e, quando dá, na conta ----------
+  // ---------- estado, salvo no aparelho ----------
 
   function sessaoValida(s) {
     if (!s || typeof s !== 'object') return null;
@@ -155,92 +170,22 @@
   function salvar() {
     estado.atualizado = Date.now();
     gravar(CHAVE_ESTADO, estado);
-    agendarNuvem();
-  }
-
-  async function conectarConta() {
-    const claude = window.claude;
-    if (!claude || typeof claude.use !== 'function') return; // fora do claude.ai (ex.: GitHub Pages)
-    let user = null;
-    let db = null;
-    try {
-      [user, db] = await Promise.all([claude.use('user'), claude.use('db')]);
-    } catch (e) {
-      return;
-    }
-    if (user) {
-      const eu = await user.me();
-      if (eu.name) {
-        perfil = { nome: eu.name, avatar: eu.avatarUrl };
-        if (tela === 'inicio') renderInicio();
-      }
-    }
-    if (!user || !db) return;
-    const uid = await user.id();
-    if (!uid) return;
-    try {
-      const ref = db.doc(`data/users/${uid}/estado`);
-      const foto = await ref.get();
-      const remoto = foto.exists ? estadoValido(foto.data()) : null;
-      if (remoto && remoto.atualizado > estado.atualizado && tela !== 'treino') {
-        estado = remoto;
-        gravar(CHAVE_ESTADO, estado);
-        selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
-      }
-      // Gravar confirma que esta pessoa pode salvar na conta; quem só pode ver cai no catch.
-      const versao = estado.atualizado;
-      await ref.set(JSON.parse(JSON.stringify(estado)));
-      nuvem.ref = ref;
-      nuvem.ativa = true;
-      if (estado.atualizado !== versao) agendarNuvem();
-    } catch (e) {
-      nuvem.ativa = false;
-    }
-    if (tela === 'inicio') renderInicio();
-  }
-
-  function agendarNuvem(atraso = 1200) {
-    if (!nuvem.ativa) return;
-    clearTimeout(nuvem.espera);
-    nuvem.espera = setTimeout(gravarNuvem, atraso);
-  }
-
-  async function gravarNuvem() {
-    if (!nuvem.ativa) return;
-    if (nuvem.gravando) {
-      nuvem.pendente = true;
-      return;
-    }
-    nuvem.gravando = true;
-    try {
-      await nuvem.ref.set(JSON.parse(JSON.stringify(estado)));
-      nuvem.falhas = 0;
-    } catch (e) {
-      if (e && e.code === 'unavailable' && nuvem.falhas === 0) {
-        nuvem.falhas += 1;
-        nuvem.pendente = true;
-      } else if (!e || e.code !== 'unavailable') {
-        // Sem permissão de gravar (por exemplo, quem só pode ver): fica salvo no aparelho.
-        nuvem.ativa = false;
-        if (tela === 'inicio') renderInicio();
-      }
-    } finally {
-      nuvem.gravando = false;
-      if (nuvem.pendente && nuvem.ativa) {
-        nuvem.pendente = false;
-        agendarNuvem(1500 + Math.random() * 2000);
-      }
-    }
   }
 
   // ---------- exercícios e biblioteca ----------
+
+  // O exercício que o programa definiu para o lugar, como aparece na biblioteca.
+  function originalDoLugar(treinoIdx, slot) {
+    return biblioteca ? biblioteca.porId.get(programa.treinos[treinoIdx].exercicios[slot].imagem) : null;
+  }
 
   function exercicio(treinoIdx, slot) {
     const treino = programa.treinos[treinoIdx];
     const base = treino.exercicios[slot];
     const id = estado.trocas[treino.id] && estado.trocas[treino.id][slot];
     const item = id && biblioteca ? biblioteca.porId.get(id) : null;
-    if (!item) return { ...base, trocado: false, k: null };
+    if (!item) return { ...base, trocado: false, k: null, semelhanca: null };
+    const original = originalDoLugar(treinoIdx, slot);
     return {
       ...base,
       nome: item.nome,
@@ -250,7 +195,31 @@
       dicas: item.passos,
       trocado: true,
       k: item.k,
+      semelhanca: original && window.Semelhanca ? window.Semelhanca.comparar(original, item).porcentagem : null,
     };
+  }
+
+  function porQue(original, outro, nota) {
+    const todos = (e) => [...e.musculos, ...e.auxiliares];
+    const comuns = todos(original).filter((m) => todos(outro).includes(m));
+    const faltam = original.musculos.filter((m) => !todos(outro).includes(m));
+    const movimento = window.Semelhanca.rotuloMovimento;
+    const itens = [comuns.length ? `Músculos em comum: ${comuns.map(rotuloMusculo).join(', ')}` : 'Nenhum músculo em comum'];
+    if (faltam.length) itens.push(`Não trabalha: ${faltam.map(rotuloMusculo).join(', ')}`);
+    if (nota.movimento === 1) itens.push(`Mesmo movimento: ${movimento(outro.padrao)}`);
+    else {
+      const tipoDeDiferenca = nota.movimento > 0 ? 'Movimento parecido' : 'Movimento diferente';
+      itens.push(`${tipoDeDiferenca}: ${movimento(outro.padrao)} (o original é ${movimento(original.padrao)})`);
+    }
+    if (MECANICAS[original.mecanica] && MECANICAS[outro.mecanica]) {
+      itens.push(original.mecanica === outro.mecanica
+        ? `Também ${MECANICAS[outro.mecanica]}`
+        : `${maiuscula(MECANICAS[outro.mecanica])}; o original é ${MECANICAS[original.mecanica]}`);
+    }
+    itens.push(nota.equipamento === 1
+      ? `Mesmo equipamento: ${rotuloEquipamento(outro.equipamento)}`
+      : `Outro equipamento: ${rotuloEquipamento(outro.equipamento)}`);
+    return itens;
   }
 
   function sprite(k, classe, quadro, rotulo) {
@@ -318,12 +287,14 @@
       return;
     }
     const trocando = slot !== undefined;
-    let musculo = 'todos';
-    if (trocando) {
-      const original = biblioteca.porId.get(programa.treinos[treinoIdx].exercicios[slot].imagem);
-      if (original && original.musculos[0]) musculo = original.musculos[0];
-    }
-    bib = { trocando, treinoIdx, slot, musculo, equipamento: 'todos', busca: '', limite: LIMITE_LISTA, detalhe: null, rolagem: 0 };
+    const original = trocando ? originalDoLugar(treinoIdx, slot) : null;
+    const notas = original && window.Semelhanca
+      ? new Map(biblioteca.itens.map((e) => [e.k, window.Semelhanca.comparar(original, e)]))
+      : null;
+    bib = {
+      trocando, treinoIdx, slot, original, notas,
+      musculo: 'todos', equipamento: 'todos', busca: '', limite: LIMITE_LISTA, detalhe: null, rolagem: 0,
+    };
     document.body.append(h('div', { class: 'camada biblioteca', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Biblioteca de exercícios' }));
     renderBiblioteca();
   }
@@ -334,6 +305,8 @@
     bib = null;
   }
 
+  const nomeDoLugar = () => programa.treinos[bib.treinoIdx].exercicios[bib.slot].nome;
+
   function renderBiblioteca() {
     const camada = document.querySelector('.biblioteca');
     if (!camada || !bib) return;
@@ -343,7 +316,7 @@
       return;
     }
 
-    const titulo = bib.trocando ? `Trocar: ${exercicio(bib.treinoIdx, bib.slot).nome}` : 'Biblioteca de exercícios';
+    const titulo = bib.trocando ? `Trocar ${nomeDoLugar()}` : 'Biblioteca de exercícios';
     const busca = h('input', {
       type: 'search', id: 'busca-exercicio', class: 'campo', value: bib.busca, autocomplete: 'off',
       placeholder: 'Buscar: supino, rosca, agachamento…', 'aria-label': 'Buscar exercício',
@@ -377,11 +350,16 @@
 
     const extras = [];
     if (bib.trocando) {
+      if (bib.notas) {
+        extras.push(h('div', { class: 'legenda-semelhanca' },
+          h('p', null, `A porcentagem mostra o quanto cada exercício se parece com ${nomeDoLugar()}: músculos (50%), movimento (30%), tipo de exercício (10%) e equipamento (10%). Aparelho ocupado? Filtre por outro equipamento.`),
+          h('div', { class: 'escala', 'aria-hidden': 'true' }),
+          h('div', { class: 'escala-rotulos', 'aria-hidden': 'true' }, h('span', null, 'Pouco parecido'), h('span', null, 'Muito parecido'))));
+      }
       extras.push(h('p', { class: 'aviso' }, 'Séries, repetições e descanso continuam os do treino.'));
       if (exercicio(bib.treinoIdx, bib.slot).trocado) {
-        const original = programa.treinos[bib.treinoIdx].exercicios[bib.slot];
         extras.push(h('button', { class: 'botao secundario', onclick: () => trocar(bib.treinoIdx, bib.slot, null) },
-          `Voltar para ${original.nome}`));
+          `Voltar para ${nomeDoLugar()}`));
       }
     }
 
@@ -408,24 +386,13 @@
     camada.scrollTop = bib.rolagem;
   }
 
-  function atualizarResultados() {
-    const camada = document.querySelector('.biblioteca');
-    if (!camada || !bib) return;
-    const termos = semAcento(bib.busca).split(/\s+/).filter(Boolean);
-    const lista = biblioteca.itens.filter((e) =>
-      (bib.musculo === 'todos' || e.musculos.includes(bib.musculo)) &&
-      (bib.equipamento === 'todos' || e.equipamento === bib.equipamento) &&
-      termos.every((t) => e.busca.includes(t)));
-    const atual = bib.trocando ? exercicio(bib.treinoIdx, bib.slot).imagem : null;
-    const posAtual = atual ? lista.findIndex((e) => e.id === atual) : -1;
-    if (posAtual > 0) lista.unshift(lista.splice(posAtual, 1)[0]);
-    camada.querySelector('.contagem').textContent = lista.length === 1 ? '1 exercício' : `${lista.length} exercícios`;
-    const ul = camada.querySelector('.resultados');
-    ul.replaceChildren(...lista.slice(0, bib.limite).map((e) => h('li', null, h('button', {
+  function itemBiblioteca(e, atual) {
+    const nota = bib.notas ? bib.notas.get(e.k) : null;
+    return h('li', null, h('button', {
       class: 'item-bib',
       'aria-current': e.id === atual ? 'true' : null,
       onclick: () => {
-        bib.rolagem = camada.scrollTop;
+        bib.rolagem = document.querySelector('.biblioteca').scrollTop;
         bib.detalhe = e.k;
         renderBiblioteca();
       },
@@ -434,9 +401,40 @@
       h('span', { class: 'item-texto' },
         h('span', { class: 'item-nome' }, e.nome),
         h('span', { class: 'item-meta' }, `${e.musculos.map(rotuloMusculo).join(', ')} · ${rotuloEquipamento(e.equipamento)}`),
-        e.id === atual ? h('span', { class: 'item-atual' }, 'No treino agora') : null)))));
+        e.id === atual ? h('span', { class: 'item-atual' }, 'No treino agora') : null),
+      nota ? seloSemelhanca(nota.porcentagem) : null));
+  }
+
+  function atualizarResultados() {
+    const camada = document.querySelector('.biblioteca');
+    if (!camada || !bib) return;
+    const termos = semAcento(bib.busca).split(/\s+/).filter(Boolean);
+    const idOriginal = bib.original ? bib.original.id : null;
+    const lista = biblioteca.itens.filter((e) =>
+      e.id !== idOriginal &&
+      (bib.musculo === 'todos' || e.musculos.some((m) => grupoMuscular(m) === bib.musculo)) &&
+      (bib.equipamento === 'todos' || e.equipamento === bib.equipamento) &&
+      termos.every((t) => e.busca.includes(t)));
+    const atual = bib.trocando ? exercicio(bib.treinoIdx, bib.slot).imagem : null;
+    const ul = camada.querySelector('.resultados');
+    camada.querySelector('.contagem').textContent = lista.length === 1 ? '1 exercício' : `${lista.length} exercícios`;
+
+    if (bib.notas) {
+      // Na troca: os mais parecidos primeiro; variações incomuns não entram entre os recomendados.
+      const nota = (e) => bib.notas.get(e.k).porcentagem;
+      lista.sort((a, b) => nota(b) - nota(a) || a.nome.localeCompare(b.nome, 'pt'));
+      const recomendados = lista.filter((e) => !e.incomum).slice(0, 6);
+      const outros = lista.filter((e) => !recomendados.includes(e));
+      const linhas = [];
+      if (recomendados.length) linhas.push(h('li', { class: 'secao' }, 'Mais recomendados'), ...recomendados.map((e) => itemBiblioteca(e, atual)));
+      if (outros.length) linhas.push(h('li', { class: 'secao' }, 'Outras opções'), ...outros.slice(0, bib.limite).map((e) => itemBiblioteca(e, atual)));
+      ul.replaceChildren(...linhas);
+      camada.querySelector('.mais-resultados').hidden = outros.length <= bib.limite;
+    } else {
+      ul.replaceChildren(...lista.slice(0, bib.limite).map((e) => itemBiblioteca(e, atual)));
+      camada.querySelector('.mais-resultados').hidden = lista.length <= bib.limite;
+    }
     if (!lista.length) ul.append(h('li', { class: 'vazio' }, 'Nenhum exercício encontrado. Tente outra palavra ou tire um filtro.'));
-    camada.querySelector('.mais-resultados').hidden = lista.length <= bib.limite;
   }
 
   function detalheBiblioteca(e) {
@@ -444,8 +442,9 @@
     const meta = [
       rotuloEquipamento(e.equipamento),
       NIVEIS[e.nivel],
-      e.mecanica === 'composto' ? 'Multiarticular' : e.mecanica === 'isolado' ? 'Isolado' : null,
+      MECANICAS[e.mecanica] ? maiuscula(MECANICAS[e.mecanica]) : null,
     ].filter(Boolean).join(' · ');
+    const nota = bib.notas ? bib.notas.get(e.k) : null;
     const voltar = () => {
       bib.detalhe = null;
       renderBiblioteca();
@@ -455,6 +454,13 @@
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar para a lista', onclick: voltar }),
         h('h2', null, e.nome)),
       h('div', { class: 'detalhe-foto' }, figura(ex, null, null)),
+      nota
+        ? h('section', { class: 'semelhanca' },
+          h('div', { class: 'semelhanca-topo' },
+            seloSemelhanca(nota.porcentagem, 'grande'),
+            h('p', null, `semelhante a ${nomeDoLugar()}`)),
+          h('ul', { class: 'por-que' }, porQue(bib.original, e, nota).map((texto) => h('li', null, texto))))
+        : null,
       h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
         e.musculos.map((m) => h('li', { class: 'principal' }, rotuloMusculo(m))),
         e.auxiliares.map((m) => h('li', { class: 'auxiliar' }, rotuloMusculo(m)))),
@@ -511,16 +517,9 @@
         h('span', { class: 'linha-foco' }, `${treino.foco} · ${treino.exercicios.length} exercícios · ${treino.duracao}`)));
     }));
 
-    const ola = perfil ? `Olá, ${primeiroNome(perfil.nome)}. ` : '';
-    const ondeSalva = nuvem.ativa ? 'Seu progresso fica salvo na sua conta.' : 'Seu progresso fica salvo neste aparelho.';
-
     app.replaceChildren(h('section', { class: 'inicio' },
-      h('header', { class: 'marca' },
-        h('h1', null, 'Treino PPL'),
-        perfil
-          ? h('span', { class: 'perfil' }, h('img', { src: perfil.avatar, alt: '' }), primeiroNome(perfil.nome))
-          : h('span', null, 'Push · Pull · Legs')),
-      h('p', { class: 'status-salvo' }, ola + ondeSalva),
+      h('header', { class: 'marca' }, h('h1', null, 'Treino PPL'), h('span', null, 'Push · Pull · Legs')),
+      h('p', { class: 'status-salvo' }, 'Seu progresso fica salvo neste celular.'),
       heroTreino(selecionado),
       h('p', { class: 'como-usar' },
         h('strong', null, 'Como usar: '),
@@ -555,7 +554,9 @@
         miniatura(ex),
         h('span', { class: 'ex-texto' },
           h('span', { class: 'ex-nome' }, ex.nome),
-          h('span', { class: 'ex-meta' }, `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`)),
+          h('span', { class: 'ex-meta' }, ex.trocado && ex.semelhanca !== null
+            ? `${ex.series} × ${ex.reps} · trocado, ${ex.semelhanca}% semelhante`
+            : `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`)),
         biblioteca
           ? h('button', { class: 'trocar-linha', 'aria-label': `Trocar ${ex.nome}`, onclick: () => abrirBiblioteca(i, slot) }, 'Trocar')
           : null);
@@ -649,7 +650,7 @@
     const completo = feitas >= ex.series;
     const botaoTrocar = biblioteca
       ? h('button', { class: ex.trocado ? 'trocar ativo' : 'trocar', icone: 'trocar', onclick: () => abrirBiblioteca(treinoIdx, i) },
-        ex.trocado ? 'Trocado' : 'Trocar')
+        ex.trocado ? (ex.semelhanca !== null ? `Trocado · ${ex.semelhanca}%` : 'Trocado') : 'Trocar')
       : null;
     return h('article', { class: `cartao ${posicao}`, 'data-i': i, 'aria-label': ex.nome },
       h('span', { class: 'carimbo carimbo-feito', 'aria-hidden': 'true' }, 'Feito'),
@@ -1115,7 +1116,6 @@
       selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
       carregarBiblioteca();
-      conectarConta();
     })
     .catch(() => {
       app.replaceChildren(h('section', { class: 'erro' },

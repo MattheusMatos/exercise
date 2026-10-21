@@ -5,6 +5,7 @@
 | [`programa_ppl.md`](programa_ppl.md) | O programa PPL explicado, com as referências científicas |
 | [`programa_ppl.json`](programa_ppl.json) | Os mesmos treinos em dados, usados pelo app e pelos vídeos |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
+| [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
 | [`videos/`](videos/) | Um vídeo vertical por treino (1080×1920, ~1 min) |
@@ -19,10 +20,21 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - toque numa anilha ao terminar cada série e o cronômetro de descanso começa sozinho;
 - arraste o cartão para a direita quando terminar o exercício;
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
-- toque em **Trocar** para escolher outro exercício na biblioteca, com busca e filtro por músculo e equipamento;
-- o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido.
+- toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
+- o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
 
-Aberto pelo claude.ai por alguém que entrou na própria conta e tem permissão de editar, o app cumprimenta pelo nome e salva o progresso na conta da pessoa, em qualquer aparelho. Nos outros casos (link público, só visualização, GitHub Pages), salva no navegador do aparelho.
+### Como a semelhança é calculada
+
+[`semelhanca.js`](semelhanca.js) compara o exercício original com cada opção da biblioteca:
+
+| Parte | Peso | O que mede |
+|---|---|---|
+| Músculos | 50% | Quanto a opção cobre os músculos principais do original e quanto os músculos coincidem no todo (principal vale 1, auxiliar 0,5) |
+| Movimento | 30% | Mesmo padrão de movimento vale 100%; padrões parecidos valem uma parte (agachamento e afundo, 80%) |
+| Tipo | 10% | Multiarticular ou isolado |
+| Equipamento | 10% | Mesmo equipamento |
+
+Exemplos: leg press no lugar do agachamento dá 87%; cadeira extensora, 46%. O padrão de movimento vem do nome do exercício (`gerar_biblioteca.py`) e também separa o deltoide: a base chama todo exercício de ombro de "ombros", e o padrão diz se é anterior, lateral ou posterior. Algumas trocas têm a nota reduzida com base em estudos: tríceps na polia no lugar do tríceps acima da cabeça (Maeo et al., 2023) e mesa flexora deitada no lugar da sentada (Maeo et al., 2021).
 
 Para testar no computador:
 
