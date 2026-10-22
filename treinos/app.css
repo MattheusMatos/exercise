@@ -469,28 +469,37 @@ svg { width: 22px; height: 22px; flex: none; }
   border-top: 1px solid var(--linha);
 }
 .anilhas { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Cada série é um cronômetro: tocar ao terminar a série começa o descanso. */
 .anilha {
+  position: relative;
   width: 44px;
   height: 44px;
+  margin-top: 6px;
   display: grid;
   place-items: center;
-  border: 0;
+  padding: 0;
+  border: 3px solid var(--linha);
   border-radius: 50%;
   background: var(--superficie-2);
-  box-shadow: inset 0 0 0 3px var(--linha), inset 0 0 0 8px var(--superficie-2), inset 0 0 0 9px var(--linha);
+  color: var(--texto);
   font: 700 19px/1 var(--fonte-titulo);
   font-variant-numeric: tabular-nums;
   transition: background 0.15s ease;
 }
-.anilha.proxima {
-  color: var(--laranja);
-  box-shadow: inset 0 0 0 3px var(--laranja), inset 0 0 0 8px var(--superficie-2), inset 0 0 0 9px var(--linha);
+/* Botão de cima e botão do lado, como num cronômetro de mão. */
+.anilha::before, .anilha::after {
+  content: "";
+  position: absolute;
+  background: var(--linha);
+  border-radius: 2px;
 }
-.anilha.cheia {
-  background: var(--laranja);
-  color: var(--tinta);
-  box-shadow: inset 0 0 0 3px var(--tinta), inset 0 0 0 8px var(--laranja), inset 0 0 0 9px var(--tinta);
-}
+.anilha::before { top: -9px; left: 50%; width: 12px; height: 6px; transform: translateX(-50%); }
+.anilha::after { top: -2px; right: -3px; width: 7px; height: 5px; transform: rotate(45deg); }
+.anilha span { position: relative; }
+.anilha.proxima { border-color: var(--laranja); color: var(--laranja); }
+.anilha.proxima::before, .anilha.proxima::after { background: var(--laranja); }
+.anilha.cheia { border-color: var(--laranja); background: var(--laranja); color: var(--tinta); }
+.anilha.cheia::before, .anilha.cheia::after { background: var(--laranja); }
 .arraste { margin-left: auto; max-width: 9em; text-align: right; color: var(--apagado); font-size: 13px; line-height: 1.25; }
 .arraste.pronto { color: var(--verde); font-weight: 600; }
 
@@ -987,3 +996,81 @@ svg { width: 22px; height: 22px; flex: none; }
 .saiba-mais summary { cursor: pointer; font-weight: 600; }
 .saiba-mais ul { margin: 8px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--apagado); font-size: 14px; line-height: 1.4; }
 .saiba-mais strong { color: var(--texto); }
+
+/* Carga, aquecimento e técnica no cartão */
+.carga-e-aquecimento { flex: none; display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 0; border-top: 1px solid var(--linha); }
+.campo-carga { display: grid; grid-template-columns: auto 5.2em auto 1fr; align-items: center; gap: 4px 8px; }
+.campo-carga input { width: 100%; min-height: 40px; padding: 0 8px; border: 1.5px solid var(--linha); border-radius: 10px; background: var(--fundo); color: var(--texto); font: 700 20px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.campo-carga input:focus { border-color: var(--laranja); outline: none; }
+.campo-carga .unidade { color: var(--apagado); font-size: 14px; }
+.dica-carga { color: var(--apagado); font-size: 12px; line-height: 1.25; }
+.aquecimento { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.aquecimento .dica-carga { flex-basis: 100%; }
+.serie-aquecimento { min-height: 34px; padding: 0 12px; border: 1.5px dashed var(--azul); border-radius: 999px; background: none; color: var(--azul); font: 700 15px/1 var(--fonte-titulo); cursor: pointer; }
+.serie-aquecimento.feita { border-style: solid; background: var(--azul); color: var(--tinta); }
+.tecnica { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 14px; background: var(--superficie-2); box-shadow: inset 3px 0 0 var(--laranja); }
+.tecnica .rotulo { color: var(--laranja); }
+.tecnica-aviso { margin: 0; font-weight: 600; font-size: 14px; }
+.mini-pausa { align-self: flex-start; min-height: 40px; }
+.tag-tecnica { margin-left: 6px; padding: 1px 6px; border-radius: 6px; background: var(--superficie-2); color: var(--laranja); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.contador-linha { color: var(--apagado); font-size: 14px; font-variant-numeric: tabular-nums; }
+.tempo-treino { font-variant-numeric: tabular-nums; }
+.descanso-treino { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.descanso.minimizado .descanso-treino { display: none; }
+.ajuste-aviso { color: var(--texto); }
+
+/* Primeira abertura */
+.boas-vindas { display: flex; flex-direction: column; gap: 14px; padding-bottom: 84px; }
+.boas-vindas h1 { margin: 0; font: 800 clamp(40px, 12vw, 56px)/0.95 var(--fonte-titulo); }
+.boas-vindas-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.boas-vindas-topo .etiqueta { margin: 0; }
+.passos-boas-vindas { display: flex; gap: 6px; }
+.passos-boas-vindas span { width: 28px; height: 4px; border-radius: 2px; background: var(--linha); }
+.passos-boas-vindas .feito { background: var(--laranja); }
+.opcoes-sexo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.opcao-sexo { min-height: 120px; border: 2px solid var(--linha); border-radius: var(--raio); background: var(--superficie); color: var(--texto); font: 800 30px/1 var(--fonte-titulo); cursor: pointer; }
+.opcao-sexo:hover, .opcao-sexo:focus-visible { border-color: var(--laranja); }
+.botao.fixo { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); box-shadow: 0 8px 24px var(--sombra); }
+.boas-vindas > .link { align-self: center; }
+.grupo-programas { display: flex; flex-direction: column; gap: 8px; }
+.boas-vindas .opcoes-programa, .perfil-folha .opcoes-programa { grid-template-columns: 1fr; }
+.opcao-programa .nivel-programa { align-self: flex-start; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--azul); box-shadow: inset 0 0 0 1.5px var(--azul); }
+.opcao-programa .nivel-iniciante { color: var(--sem-alta); box-shadow: inset 0 0 0 1.5px var(--sem-alta); }
+.opcao-programa .nivel-avancado { color: var(--laranja); box-shadow: inset 0 0 0 1.5px var(--laranja); }
+.opcao-programa .dias-programa { color: var(--texto); font-weight: 600; }
+.escolha-sexo { display: flex; align-items: center; gap: 6px; color: var(--apagado); font-size: 14px; }
+.escolha-sexo button { min-height: 34px; padding: 0 12px; border: 1.5px solid var(--linha); border-radius: 999px; background: none; color: var(--texto); cursor: pointer; }
+.escolha-sexo [aria-pressed="true"] { border-color: var(--laranja); color: var(--laranja); }
+
+/* Fim do treino: cartão de comemoração, como o de descanso */
+.fim-destaque {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px 16px;
+  border-radius: var(--raio);
+  background: radial-gradient(120% 70% at 50% 30%, #ffb37a, var(--laranja) 55%, #d9481a);
+  color: var(--tinta);
+  text-align: center;
+}
+.fim-destaque .rotulo { color: var(--tinta); }
+.fim-destaque .personagem-solto { width: min(60vw, 230px); height: min(30vh, 230px); }
+.fim-tempo { margin: 0; font: 800 clamp(72px, 22vw, 104px)/0.9 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.fim-tempo-rotulo { margin: -4px 0 4px; font-weight: 600; }
+.fim-destaque .resumo { width: 100%; }
+.fim-destaque .resumo div { background: rgba(18, 20, 26, 0.14); }
+.fim-destaque .resumo dt { color: var(--tinta); opacity: 0.8; }
+.fim-destaque .fim-ofensiva { align-items: center; }
+.fim-destaque .nivel, .fim-destaque .pontos-fim, .fim-destaque .subiu-texto, .fim-destaque .ofensiva > span:last-child { color: var(--tinta); }
+.esforco-cartao { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: var(--raio); background: var(--superficie); }
+.esforco-cartao h2 { margin: 0; font: 800 28px/1 var(--fonte-titulo); }
+.opcoes-esforco { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.opcoes-esforco button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px; border: 2px solid var(--linha); border-radius: 14px; background: var(--fundo); color: var(--texto); font-weight: 600; font-size: 13px; cursor: pointer; }
+.opcoes-esforco button span { font-size: 26px; line-height: 1; }
+.opcoes-esforco [aria-pressed="true"] { border-color: var(--laranja); background: var(--superficie-2); }
+.sugestao { display: flex; flex-direction: column; gap: 8px; margin: 0; font-size: 15px; line-height: 1.4; }
+.sugestao p { margin: 0; }
+.ajustes { display: flex; flex-wrap: wrap; gap: 8px; }
+.ajuste { min-height: 44px; padding: 0 14px; border: 2px solid var(--laranja); border-radius: 12px; background: none; color: var(--laranja); font-weight: 700; cursor: pointer; }
+.ajuste.ligado { background: var(--laranja); color: var(--tinta); }

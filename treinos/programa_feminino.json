@@ -2,10 +2,14 @@
   "nome": "Pernas e glúteo para hipertrofia",
   "titulo": "Treino Pernas e Glúteo",
   "marca": "Glúteo · Superior · Pernas",
+  "publico": "f",
+  "nivel": "Intermediário",
+  "dias": "3 a 6 dias por semana",
+  "resumo": "Quatro de seis treinos para pernas e glúteo, e dois para a parte de cima.",
   "regras": [
     "2 primeiros exercícios: RIR 1–2, descanso 2–3 min",
     "Demais exercícios: RIR 0–1, descanso 1–2 min",
-    "Aquecimento só no 1º exercício de cada músculo"
+    "Aquecer: 6 reps com 40% e 6 com 80% da carga"
   ],
   "progressao": "Completou todas as séries no topo da faixa de repetições? Aumente a carga em 2,5–5% na próxima sessão.",
   "treinos": [
@@ -26,6 +30,7 @@
           "series": 4, "reps": "8–12", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Glúteo"],
           "secundarios": ["Posteriores de coxa"],
+          "aquecimento": true,
           "porque": "Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). Numa revisão de estudos, é o exercício indicado para priorizar o glúteo (Krause Neto et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Costas apoiadas no banco, na altura das escápulas", "Suba até alinhar quadril e tronco", "Queixo para baixo, sem arquear a lombar"]
@@ -36,6 +41,7 @@
           "series": 3, "reps": "8–10", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Posteriores de coxa", "Glúteo"],
           "secundarios": ["Eretores da coluna"],
+          "aquecimento": true,
           "porque": "O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Glúteo e posterior trabalham alongados na descida.",
           "evidencia": "crescimento",
           "dicas": ["Joelhos levemente flexionados e fixos", "Quadril para trás, barra rente às pernas", "Desça até alongar o posterior, coluna neutra"]
@@ -66,6 +72,7 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Glúteo médio"],
           "secundarios": [],
+          "aquecimento": true,
           "porque": "Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). A abdução trabalha esses músculos, mas o crescimento com ela não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Costas apoiadas e quadril encaixado no banco", "Abra até o fim e segure 1 s", "Volte devagar, sem deixar o peso bater"]
@@ -89,6 +96,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Peitoral maior"],
           "secundarios": ["Deltoide anterior", "Tríceps"],
+          "aquecimento": true,
           "porque": "Quem fez supino inclinado teve mais crescimento na parte de cima do peito do que quem fez o reto (Chaves et al., 2020).",
           "evidencia": "crescimento",
           "dicas": ["Banco a ~30°", "Desça até sentir o peito alongar", "Cotovelos a ~45° do tronco"]
@@ -99,6 +107,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Dorsal"],
           "secundarios": ["Bíceps"],
+          "aquecimento": true,
           "porque": "O dorsal é o principal músculo da puxada. Não há estudo comparando o crescimento entre as variações.",
           "evidencia": "nao-testado",
           "dicas": ["Braços totalmente estendidos em cima", "Puxe a barra até o alto do peito", "Peito alto, sem jogar o tronco para trás"]
@@ -109,6 +118,7 @@
           "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
+          "aquecimento": true,
           "porque": "Remada com carga estável e fácil de ajustar. Não há estudo de crescimento comparando remadas.",
           "evidencia": "nao-testado",
           "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
@@ -119,6 +129,7 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
+          "aquecimento": true,
           "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
@@ -129,6 +140,7 @@
           "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
+          "aquecimento": true,
           "porque": "Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos apontados para a frente", "Desça até alongar bem atrás da cabeça", "Estenda totalmente sem mexer os ombros"]
@@ -139,6 +151,7 @@
           "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
+          "aquecimento": true,
           "porque": "Num estudo com mulheres, a rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
@@ -162,6 +175,7 @@
           "series": 3, "reps": "6–10", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Quadríceps", "Glúteo"],
           "secundarios": ["Adutores"],
+          "aquecimento": true,
           "porque": "Em mulheres treinadas, o agachamento fez o glúteo crescer mais que o hip thrust (Barbalho et al., 2020). Profundo, rendeu mais glúteo e adutores que o meio agachamento (Kubo et al., 2019).",
           "evidencia": "crescimento",
           "dicas": ["Desça o mais fundo que mantiver a técnica", "Joelhos na direção dos pés", "Respire e trave o abdômen antes de descer"]
@@ -192,6 +206,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
+          "aquecimento": true,
           "porque": "Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos", "Pausa de 1–2 s embaixo, bem alongado", "Suba o máximo, sem quicar"]
@@ -225,6 +240,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "2 min",
           "primarios": ["Glúteo"],
           "secundarios": ["Posteriores de coxa"],
+          "aquecimento": true,
           "porque": "Segundo hip thrust da semana, agora com mais repetições. Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Costas apoiadas no banco, na altura das escápulas", "Suba até alinhar quadril e tronco", "Queixo para baixo, sem arquear a lombar"]
@@ -265,6 +281,7 @@
           "series": 3, "reps": "15–20", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Glúteo médio"],
           "secundarios": [],
+          "aquecimento": true,
           "porque": "Segundo estímulo da semana para o glúteo médio. Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). O crescimento com a abdução não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Costas apoiadas e quadril encaixado no banco", "Abra até o fim e segure 1 s", "Volte devagar, sem deixar o peso bater"]
@@ -288,6 +305,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Deltoide anterior"],
           "secundarios": ["Deltoide lateral", "Tríceps"],
+          "aquecimento": true,
           "porque": "O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento.",
           "evidencia": "ativacao",
           "dicas": ["Sentado, com encosto quase vertical", "Halteres descem até a altura do queixo", "Não arqueie demais a lombar"]
@@ -298,6 +316,7 @@
           "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Dorsal", "Meio das costas"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
+          "aquecimento": true,
           "porque": "Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada.",
           "evidencia": "nao-testado",
           "dicas": ["Mão e joelho apoiados no banco", "Deixe o halter descer bem", "Puxe o cotovelo em direção ao quadril"]
@@ -308,6 +327,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Peitoral maior"],
           "secundarios": ["Deltoide anterior", "Tríceps"],
+          "aquecimento": true,
           "porque": "Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023), e na máquina dá para ir perto da falha sem ajuda.",
           "evidencia": "crescimento",
           "dicas": ["Banco ajustado para os pegadores ficarem no meio do peito", "Desça até alongar o peito", "Não trave os cotovelos no fim"]
@@ -328,6 +348,7 @@
           "series": 2, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide posterior"],
           "secundarios": ["Meio das costas"],
+          "aquecimento": true,
           "porque": "O deltoide posterior puxa o braço para trás, o contrário dos supinos. O crescimento com este exercício não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Pegadores na altura do ombro", "Abra os braços sem encolher os ombros", "Pausa de 1 s atrás"]
@@ -338,6 +359,7 @@
           "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
+          "aquecimento": true,
           "porque": "Num estudo com mulheres, a Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Axilas encaixadas no apoio", "Desça até quase estender o cotovelo", "Suba sem tirar os braços do apoio"]
@@ -361,6 +383,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Quadríceps"],
           "secundarios": ["Glúteo", "Adutores"],
+          "aquecimento": true,
           "porque": "Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023). Desça fundo, como no agachamento profundo, que rendeu mais glúteo (Kubo et al., 2019).",
           "evidencia": "crescimento",
           "dicas": ["Costas e quadril apoiados no encosto", "Desça o mais fundo que conseguir com controle", "Joelhos na direção dos pés"]
@@ -381,6 +404,7 @@
           "series": 3, "reps": "12–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Glúteo"],
           "secundarios": ["Posteriores de coxa"],
+          "aquecimento": true,
           "porque": "Numa revisão de estudos, a extensão de quadril ajoelhada também fez o glúteo crescer (Krause Neto et al., 2025). Use caneleira ou o cabo para ter carga.",
           "evidencia": "crescimento",
           "dicas": ["Repetições contadas por perna", "Leve a perna para trás e para cima sem arquear a lombar", "Segure 1 s em cima, apertando o glúteo"]
@@ -391,6 +415,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
+          "aquecimento": true,
           "porque": "Joelho estendido, como em pé: assim a panturrilha cresceu bem mais do que sentado, que quase não fez o gastrocnêmio crescer (Kinoshita et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos, sem travar", "Só a ponta dos pés na plataforma", "Pausa de 1–2 s embaixo, bem alongado"]

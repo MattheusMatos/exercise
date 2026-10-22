@@ -1,0 +1,178 @@
+{
+  "nome": "Mobilidade",
+  "titulo": "Mobilidade",
+  "marca": "Quadril · Ombro · Coluna",
+  "publico": "todos",
+  "nivel": "Todos os níveis",
+  "dias": "Antes do treino ou no dia de descanso",
+  "resumo": "Duas rotinas de 15 a 20 minutos, só com o peso do corpo: quadril e tornozelo, ombro e coluna.",
+  "mobilidade": true,
+  "regras": [
+    "Sem dor: só desconforto leve",
+    "Respire devagar e solte ao expirar",
+    "Antes do treino, até 60 s por músculo"
+  ],
+  "progressao": "A cada semana, tente ir um pouco mais longe na mesma posição, sem dor.",
+  "treinos": [
+    {
+      "id": "mob_a",
+      "extras": [
+      ],
+      "titulo": "MOBILIDADE A",
+      "foco": "Quadril, posterior e tornozelo",
+      "duracao": "~18 min",
+      "exercicios": [
+        {
+          "nome": "Alongamento do avanço com rotação",
+          "imagem": "Worlds_Greatest_Stretch",
+          "series": 2, "reps": "5 por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Quadril", "Posteriores de coxa"],
+          "secundarios": ["Coluna torácica"],
+          "porque": "Abre quadril, posterior e coluna no mesmo movimento. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Passada longa, joelho de trás perto do chão", "Cotovelo desce até o pé da frente", "Gire o tronco e aponte a mão para o teto"]
+        },
+        {
+          "nome": "Alongamento do flexor do quadril ajoelhado",
+          "imagem": "Kneeling_Hip_Flexor",
+          "series": 2, "reps": "30 s por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Flexores do quadril"],
+          "secundarios": ["Quadríceps"],
+          "porque": "Ficar muito tempo sentado encurta a frente do quadril. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Joelho de trás apoiado, tronco reto", "Contraia o glúteo da perna de trás", "Leve o quadril para a frente, sem arquear a lombar"]
+        },
+        {
+          "nome": "Alongamento do posterior deitado",
+          "imagem": "90_90_Hamstring",
+          "series": 2, "reps": "30 s por perna", "rir": "—", "descanso": "15 s",
+          "primarios": ["Posteriores de coxa"],
+          "secundarios": ["Panturrilha"],
+          "porque": "Deitado, a lombar fica apoiada enquanto o posterior alonga. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Segure atrás da coxa com o joelho dobrado a 90°", "Estique o joelho devagar até sentir o posterior", "A outra perna fica no chão"]
+        },
+        {
+          "nome": "Alongamento do glúteo (figura 4)",
+          "imagem": "Ankle_On_The_Knee",
+          "series": 2, "reps": "30 s por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Glúteo"],
+          "secundarios": ["Piriforme"],
+          "porque": "Alonga o glúteo e os rotadores do quadril, que trabalham no agachamento e no hip thrust. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Tornozelo sobre o joelho oposto", "Puxe a coxa de baixo em direção ao peito", "Cabeça e ombros relaxados no chão"]
+        },
+        {
+          "nome": "Alongamento da panturrilha na parede",
+          "imagem": "Calf_Stretch_Hands_Against_Wall",
+          "series": 2, "reps": "30 s por perna", "rir": "—", "descanso": "15 s",
+          "primarios": ["Panturrilha"],
+          "secundarios": [],
+          "porque": "Tornozelo com mais amplitude ajuda a descer no agachamento sem tirar o calcanhar do chão. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Mãos na parede, perna de trás esticada", "Calcanhar de trás no chão", "Leve o quadril para a frente até sentir a panturrilha"]
+        },
+        {
+          "nome": "Avanço com as mãos no chão (groiner)",
+          "imagem": "Groiners",
+          "series": 2, "reps": "8 por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Adutores", "Flexores do quadril"],
+          "secundarios": [],
+          "porque": "Movimento dinâmico, bom para antes de dia de perna. Musculação com amplitude completa melhorou a amplitude tanto quanto alongar (Afonso et al., 2021): a mobilidade é um complemento.",
+          "evidencia": "nao-testado",
+          "dicas": ["Comece em posição de prancha", "Leve um pé até o lado da mão", "Volte e troque de perna, no seu ritmo"]
+        },
+        {
+          "nome": "Gato e vaca",
+          "imagem": "Cat_Stretch",
+          "series": 2, "reps": "8 lentas", "rir": "—", "descanso": "15 s",
+          "primarios": ["Lombar"],
+          "secundarios": ["Coluna torácica"],
+          "porque": "Mexe a coluna inteira, vértebra por vértebra, sem carga. Musculação com amplitude completa melhorou a amplitude tanto quanto alongar (Afonso et al., 2021): a mobilidade é um complemento.",
+          "evidencia": "nao-testado",
+          "dicas": ["De quatro apoios, mãos embaixo dos ombros", "Arredonde as costas soltando o ar", "Depois afunde a barriga e olhe para a frente"]
+        }
+      ]
+    },
+    {
+      "id": "mob_b",
+      "extras": [
+      ],
+      "titulo": "MOBILIDADE B",
+      "foco": "Ombro, peito e coluna",
+      "duracao": "~15 min",
+      "exercicios": [
+        {
+          "nome": "Círculos com os braços",
+          "imagem": "Arm_Circles",
+          "series": 2, "reps": "10 para cada lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Ombros"],
+          "secundarios": [],
+          "porque": "Aquece o ombro em todas as direções antes de alongar. Musculação com amplitude completa melhorou a amplitude tanto quanto alongar (Afonso et al., 2021): a mobilidade é um complemento.",
+          "evidencia": "nao-testado",
+          "dicas": ["Braços abertos na altura dos ombros", "Círculos pequenos que vão crescendo", "Depois troque o sentido"]
+        },
+        {
+          "nome": "Abertura dinâmica do peito",
+          "imagem": "Dynamic_Chest_Stretch",
+          "series": 2, "reps": "10", "rir": "—", "descanso": "15 s",
+          "primarios": ["Peitoral"],
+          "secundarios": ["Ombros"],
+          "porque": "Alonga o peito em movimento, bom antes de dia de empurrar. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Braços esticados à frente", "Abra para trás o máximo que der", "Volte e repita, cada vez um pouco mais rápido"]
+        },
+        {
+          "nome": "Passagem do bastão por cima da cabeça",
+          "imagem": "Chest_And_Front_Of_Shoulder_Stretch",
+          "series": 2, "reps": "8", "rir": "—", "descanso": "15 s",
+          "primarios": ["Ombros", "Peitoral"],
+          "secundarios": [],
+          "porque": "Use um cabo de vassoura ou bastão. Trabalha a amplitude do ombro de que o desenvolvimento e a puxada precisam. Musculação com amplitude completa melhorou a amplitude tanto quanto alongar (Afonso et al., 2021): a mobilidade é um complemento.",
+          "evidencia": "nao-testado",
+          "dicas": ["Pegada bem aberta no bastão", "Leve por cima da cabeça até atrás, sem dobrar os cotovelos", "Volte devagar; aproxime as mãos com o tempo"]
+        },
+        {
+          "nome": "Rotação da coluna sentado",
+          "imagem": "Spinal_Stretch",
+          "series": 2, "reps": "8 por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Coluna torácica"],
+          "secundarios": [],
+          "porque": "A parte de cima da coluna gira; a lombar quase não. Sentado, o quadril fica parado. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Sentado, mãos atrás da cabeça, pés no chão", "Gire o tronco para um lado, soltando o ar", "Volte ao centro e troque"]
+        },
+        {
+          "nome": "Alongamento da parte de cima das costas",
+          "imagem": "Upper_Back_Stretch",
+          "series": 2, "reps": "30 s", "rir": "—", "descanso": "15 s",
+          "primarios": ["Costas (meio)"],
+          "secundarios": [],
+          "porque": "Solta as escápulas, que ficam presas depois de dias de remada. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Mãos juntas à frente, braços esticados", "Empurre as mãos para longe arredondando as costas", "Queixo para baixo"]
+        },
+        {
+          "nome": "Rotação da lombar deitado",
+          "imagem": "Knee_Across_The_Body",
+          "series": 2, "reps": "30 s por lado", "rir": "—", "descanso": "15 s",
+          "primarios": ["Lombar", "Glúteo"],
+          "secundarios": [],
+          "porque": "Rotação suave da coluna com os ombros no chão. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Deitado, cruze um joelho sobre o corpo", "Os dois ombros ficam no chão", "Olhe para o lado oposto"]
+        },
+        {
+          "nome": "Postura da criança",
+          "imagem": "Childs_Pose",
+          "series": 2, "reps": "30 s", "rir": "—", "descanso": "15 s",
+          "primarios": ["Lombar", "Dorsal"],
+          "secundarios": [],
+          "porque": "Alonga lombar e dorsal com o corpo apoiado. Bom para terminar. Alongar aumenta a amplitude de movimento logo depois, e até 60 s por músculo quase não muda o desempenho no treino (Behm et al., 2016).",
+          "evidencia": "nao-testado",
+          "dicas": ["Joelhos afastados, sente nos calcanhares", "Braços esticados à frente no chão", "Solte o ar e afunde o peito"]
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,9 @@
 | [`programa_ppl.md`](programa_ppl.md) | O programa PPL explicado, com as referências científicas |
 | [`programa_ppl.json`](programa_ppl.json) | Os mesmos treinos em dados, usados pelo app e pelos vídeos |
 | [`programa_feminino.md`](programa_feminino.md), [`programa_feminino.json`](programa_feminino.json) | Versão com foco em pernas e glúteo, explicada e em dados |
+| [`programa_iniciante_m.md`](programa_iniciante_m.md), [`programa_iniciante_f.md`](programa_iniciante_f.md) | Corpo inteiro 3x por semana, para começar (com o `.json` de cada um) |
+| [`programa_avancado_m.md`](programa_avancado_m.md), [`programa_avancado_f.md`](programa_avancado_f.md) | Avançados com bi-set, tri-set, cluster, rest-pause e drop-set |
+| [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
@@ -22,13 +25,43 @@
 
 Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e dicas de execução:
 
-- toque numa anilha ao terminar cada série e o cronômetro de descanso começa sozinho;
+- cada série é um cronômetro no pé do cartão: toque nele ao terminar a série e o descanso começa sozinho;
+- anote a **carga** de cada exercício: ela fica salva para a próxima vez, junto com a data;
+- no primeiro exercício de cada músculo, o **aquecimento** mostra 6 repetições com 40% e 6 com 80% da carga anotada (Ribeiro et al., 2021); não conta como série;
+- nos programas avançados, cada técnica aparece no cartão com como fazer e o estudo: no **bi-set** e no **tri-set**, marcar a série traz o próximo exercício do grupo sem descanso, e o descanso começa depois do último; **cluster** e **rest-pause** têm o botão **Mini-pausa**;
+- o topo do treino mostra o tempo desde o começo, com os descansos;
 - arraste o cartão para a direita quando terminar o exercício;
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
 - toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
 - toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só para hoje ou sempre naquele treino;
 - cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Não testado** (anatomia ou estudos com exercícios parecidos);
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
+
+### Primeira abertura e programas
+
+Na primeira vez, o app pergunta se a pessoa é homem ou mulher (só para ordenar as sugestões), depois o personagem, com a descrição de cada um, e por fim o treino. A lista mostra primeiro os recomendados, depois a mobilidade e por fim os do outro sexo, que qualquer pessoa pode escolher:
+
+| Programa | Público sugerido | Nível | Dias |
+|---|---|---|---|
+| [Corpo Inteiro 3x](programa_iniciante_m.md) | Homens | Iniciante | 3 |
+| [Treino PPL](programa_ppl.md) | Homens | Intermediário | 3 a 6 |
+| [Avançado: Superior e Inferior](programa_avancado_m.md) | Homens | Avançado | 4 |
+| [Corpo Inteiro com Glúteo](programa_iniciante_f.md) | Mulheres | Iniciante | 3 |
+| [Pernas e Glúteo](programa_feminino.md) | Mulheres | Intermediário | 3 a 6 |
+| [Avançado: Glúteo e Pernas](programa_avancado_f.md) | Mulheres | Avançado | 4 |
+| [Mobilidade](programa_mobilidade.md) | Todos | Todos | antes do treino ou no descanso |
+
+Cada `.md` explica as escolhas com os estudos; cada exercício tem o motivo e a base no app.
+
+### Fim do treino
+
+O fim mostra um cartão com o personagem comemorando, o tempo total de treino (com os descansos), as séries, os exercícios e uma estimativa de calorias: MET × peso × tempo, com 3,5 METs para musculação, 6,0 se o treino foi pesado e 2,3 para mobilidade (Compendium of Physical Activities, Ainsworth et al., 2011).
+
+Depois, **Como foi o treino?** (Leve, Na medida, Pesado ou No limite) dá uma sugestão:
+
+- **Leve:** subir 2,5–5% da carga (ACSM, 2009) ou parar mais perto da falha (Robinson et al., 2024), com um botão para sugerir +5% no próximo treino igual;
+- **Na medida** e **Pesado:** manter;
+- **No limite:** botões para **+30 s de descanso** (Schoenfeld et al., 2016; Singer et al., 2024) e **baixar 10% da carga** no próximo treino igual. O ajuste aparece no treino, vale uma vez e pode ser desfeito.
 
 ### Personagem, ofensiva e treino
 
@@ -62,7 +95,7 @@ Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Acti
 - aeróbico logo antes da musculação diminui as repetições do treino de força por algumas horas (Sporer e Wenger, 2003), por isso fica no fim;
 - a corrida diminuiu um pouco o crescimento das fibras do tipo I, e a bicicleta não (Lundberg et al., 2022, evidência preliminar), por isso o app sugere evitar corrida em dia de perna.
 
-Toque no personagem para trocar: o escolhido aparece grande, com uma descrição. Na mesma tela se escolhe o treino, separado do personagem: **Treino PPL** ou **Pernas e glúteo** ([`programa_feminino.md`](programa_feminino.md)). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
+Toque no personagem para trocar: o escolhido aparece grande, com uma descrição. Na mesma tela se escolhe o treino, separado do personagem, e para quem são as sugestões. Cada programa lembra o próprio próximo treino; a ofensiva, o histórico, as cargas e a semana planejada continuam os mesmos.
 
 ### Semana
 

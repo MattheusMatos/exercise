@@ -48,13 +48,23 @@
   };
 
   // Avatar de menina usa o treino com foco em pernas e glúteo; o de menino, o PPL.
-  const ARQUIVOS_PROGRAMA = { masculino: 'programa_ppl.json', feminino: 'programa_feminino.json' };
+  // "masculino" e "feminino" são os ids dos dois primeiros programas, guardados assim desde a primeira versão.
+  const ARQUIVOS_PROGRAMA = {
+    masculino: 'programa_ppl.json',
+    feminino: 'programa_feminino.json',
+    iniciante_m: 'programa_iniciante_m.json',
+    avancado_m: 'programa_avancado_m.json',
+    iniciante_f: 'programa_iniciante_f.json',
+    avancado_f: 'programa_avancado_f.json',
+    mobilidade: 'programa_mobilidade.json',
+  };
   let programas = {};
   let programa = null; // o do avatar escolhido
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    aerobicos: [], cronoAerobico: null, peso: 70, perfil: { personagem: 'brutus', programa: 'masculino' }, atualizado: 0,
+    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {},
+    perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
   let selecionado = 0;
@@ -96,7 +106,7 @@
       else if (chave.startsWith('on')) el.addEventListener(chave.slice(2), valor);
       else el.setAttribute(chave, valor === true ? '' : valor);
     }
-    for (const filho of filhos.flat()) {
+    for (const filho of filhos.flat(Infinity)) {
       if (filho === null || filho === undefined || filho === false) continue;
       el.append(filho instanceof Node ? filho : String(filho));
     }
@@ -132,11 +142,18 @@
       Object.entries(EVIDENCIAS).map(([tipo, [, descricao]]) => h('li', null, seloEvidencia(tipo), descricao)));
   }
 
+  // "2–3 min" vira 150 s e "15 s" vira 15 s.
   function segundosDescanso(texto) {
     const numeros = (String(texto).match(/\d+/g) || []).map(Number);
     if (!numeros.length) return 90;
-    const minutos = numeros.length > 1 ? (numeros[0] + numeros[1]) / 2 : numeros[0];
-    return Math.round(minutos * 60);
+    const media = numeros.length > 1 ? (numeros[0] + numeros[1]) / 2 : numeros[0];
+    return Math.round(/\bs\b/.test(texto) && !/min/.test(texto) ? media : media * 60);
+  }
+
+  // Descanso do cartão, com os segundos a mais pedidos no fim do último treino igual.
+  function descansoComAjuste(texto) {
+    const extra = estado.sessao ? estado.sessao.ajuste.descanso : 0;
+    return extra ? `${texto} + ${extra} s` : texto;
   }
 
   function relogio(segundos) {
@@ -196,6 +213,9 @@
       historico: Array.isArray(s.historico) ? s.historico : [],
       inicio: Number(s.inicio) || Date.now(),
       extras,
+      aquecidos: s.aquecidos && typeof s.aquecidos === 'object' ? s.aquecidos : {},
+      cargas: s.cargas && typeof s.cargas === 'object' ? s.cargas : {},
+      ajuste: s.ajuste && typeof s.ajuste === 'object' ? { descanso: Number(s.ajuste.descanso) || 0, carga: Number(s.ajuste.carga) || 0 } : { descanso: 0, carga: 0 },
     };
   }
 
@@ -207,11 +227,31 @@
     const personagem = window.Avatar.PERSONAGENS.some((x) => x.id === p.personagem) ? p.personagem : ANTIGOS[p.avatar] || 'brutus';
     const nomePrograma = programas[p.programa] ? p.programa : /^menina/.test(p.avatar || '') ? 'feminino' : 'masculino';
     const prog = programas[nomePrograma];
+    // Quem já usava o app antes da primeira abertura guiada não passa por ela: o sexo vem do programa.
+    const sexo = p.sexo === 'm' || p.sexo === 'f' ? p.sexo : prog.publico === 'f' ? 'f' : 'm';
+    // Estado salvo por versões antigas não tem o campo: quem já usava o app não passa pela primeira abertura.
+    const configurado = typeof p.configurado === 'boolean' ? p.configurado : Object.keys(e).length > 0;
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
-      perfil: { personagem, programa: nomePrograma }, atualizado: Number(e.atualizado) || 0,
+      cargas: {}, ajustes: {},
+      perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, configurado }, atualizado: Number(e.atualizado) || 0,
     };
+    // Carga usada por exercício (id da foto), para a próxima vez.
+    if (e.cargas && typeof e.cargas === 'object') {
+      for (const [id, c] of Object.entries(e.cargas)) {
+        if (c && Number.isFinite(c.kg) && c.kg >= 0 && c.kg <= 1000 && /^\d{4}-\d{2}-\d{2}$/.test(c.data)) limpo.cargas[id] = { kg: c.kg, data: c.data };
+      }
+    }
+    // Ajuste pedido no fim de um treino, para a próxima vez que ele for feito.
+    if (e.ajustes && typeof e.ajustes === 'object') {
+      for (const [id, a] of Object.entries(e.ajustes)) {
+        if (!a) continue;
+        const descanso = [0, 30, 60].includes(a.descanso) ? a.descanso : 0;
+        const carga = [-10, 0, 5].includes(a.carga) ? a.carga : 0;
+        if (descanso || carga) limpo.ajustes[id] = { descanso, carga };
+      }
+    }
     if (Number.isInteger(e.proximo) && e.proximo >= 0 && e.proximo < prog.treinos.length) limpo.proximo = e.proximo;
     // Próximo treino do outro programa, guardado para quando trocar de avatar.
     for (const [nome, p] of Object.entries(programas)) {
@@ -257,8 +297,11 @@
 
   function carregarLocal() {
     const salvo = ler(CHAVE_ESTADO, null);
-    // Versão anterior do app guardava em duas chaves separadas.
-    return estadoValido(salvo || { proximo: ler('ppl:proximo', 0), sessao: ler('ppl:sessao', null) });
+    if (salvo) return estadoValido(salvo);
+    // Versão anterior do app guardava em duas chaves separadas; sem nada salvo, é a primeira abertura.
+    const proximo = ler('ppl:proximo', null);
+    const sessao = ler('ppl:sessao', null);
+    return estadoValido(proximo === null && sessao === null ? null : { proximo: proximo || 0, sessao });
   }
 
   function salvar() {
@@ -966,7 +1009,39 @@
 
   // ---------- ofensiva e personagem ----------
 
-  const PROGRAMAS_NOMES = { masculino: ['Treino PPL', 'Push, pull e legs: volume distribuído no corpo todo'], feminino: ['Pernas e glúteo', 'Quatro de seis treinos para pernas e glúteo'] };
+  // Programas na ordem da lista: os recomendados para o sexo escolhido, depois a mobilidade
+  // (para todos) e por fim os do outro sexo, que qualquer pessoa pode escolher.
+  const ORDEM_NIVEL = { Iniciante: 0, 'Intermediário': 1, 'Avançado': 2 };
+  function gruposDeProgramas(sexo) {
+    const lista = Object.entries(programas).sort(([, a], [, b]) => (ORDEM_NIVEL[a.nivel] ?? 3) - (ORDEM_NIVEL[b.nivel] ?? 3));
+    const de = (filtro) => lista.filter(([, p]) => filtro(p.publico)).map(([id]) => id);
+    return [
+      ['Recomendados para você', de((x) => x === sexo)],
+      ['Para todos', de((x) => x === 'todos')],
+      [sexo === 'f' ? 'Outros treinos (sugeridos para homens)' : 'Outros treinos (sugeridos para mulheres)', de((x) => x !== sexo && x !== 'todos')],
+    ].filter(([, ids]) => ids.length);
+  }
+
+  function opcaoPrograma(id, escolher, atual) {
+    const p = programas[id];
+    return h('button', {
+      class: 'opcao-programa',
+      'aria-pressed': String(id === atual),
+      'data-programa': id,
+      onclick: () => escolher(id),
+    },
+    h('span', { class: `nivel-programa nivel-${(p.nivel || '').normalize('NFD').replace(/[^a-z]/gi, '').toLowerCase()}` }, p.nivel),
+    h('strong', null, p.titulo),
+    h('span', { class: 'dias-programa' }, `${p.dias} · ${p.treinos.length} treinos`),
+    h('span', null, p.resumo));
+  }
+
+  // atual: o programa marcado como escolhido (nenhum na primeira abertura).
+  function listaDeProgramas(sexo, escolher, atual) {
+    return gruposDeProgramas(sexo).map(([titulo, ids]) => h('div', { class: 'grupo-programas' },
+      h('p', { class: 'rotulo' }, titulo),
+      h('div', { class: 'opcoes-programa' }, ids.map((id) => opcaoPrograma(id, escolher, atual)))));
+  }
 
   function imagemDoPersonagem(fase, classe) {
     const p = window.Avatar.personagem(estado.perfil.personagem);
@@ -1042,7 +1117,7 @@
     pararDescanso();
     salvar();
     renderInicio();
-    avisar(PROGRAMAS_NOMES[depois][0]);
+    avisar(programa.titulo);
   }
 
   function abrirPerfil() {
@@ -1089,11 +1164,17 @@
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
         h('p', { class: 'rotulo' }, 'Seu treino'),
-        h('div', { class: 'opcoes-programa' }, Object.entries(PROGRAMAS_NOMES).map(([nome, [titulo, descricao]]) => h('button', {
-          class: 'opcao-programa',
-          'aria-pressed': String(nome === estado.perfil.programa),
-          onclick: () => escolherPrograma(nome),
-        }, h('strong', null, titulo), h('span', null, descricao)))),
+        h('div', { class: 'escolha-sexo', role: 'group', 'aria-label': 'Sugestões de treino para' },
+          h('span', null, 'Sugestões para'),
+          [['m', 'Homem'], ['f', 'Mulher']].map(([valor, rotulo]) => h('button', {
+            'aria-pressed': String(estado.perfil.sexo === valor),
+            onclick: () => {
+              estado.perfil = { ...estado.perfil, sexo: valor };
+              salvar();
+              desenhar();
+            },
+          }, rotulo))),
+        listaDeProgramas(estado.perfil.sexo, escolherPrograma, estado.perfil.programa),
         confirmando
           ? h('div', { class: 'confirmar-troca' },
             h('p', null, `Trocar de treino encerra o ${programa.treinos[estado.sessao.treino].titulo} em andamento.`),
@@ -1129,7 +1210,7 @@
             h('li', null, 'Com 15 dias de ofensiva, o personagem chega no auge.'),
             h('li', null, 'Com 4 dias ou mais sem treinar, ele aparece afastado; no primeiro treino depois disso, fica "de volta" por uma semana.'))),
         h('button', { class: 'link', onclick: fechar }, 'Fechar'),
-      ].filter(Boolean));
+      ].flat(Infinity).filter(Boolean));
     }
     desenhar();
     document.body.append(modal);
@@ -1138,8 +1219,84 @@
 
   // ---------- telas ----------
 
+  // Primeira abertura: sexo (só para ordenar as sugestões), personagem e treino.
+  let boasVindas = { passo: 1 };
+
+  function renderBoasVindas() {
+    const passo = boasVindas.passo;
+    const voltar = passo > 1 ? h('button', {
+      class: 'link',
+      onclick: () => {
+        boasVindas.passo -= 1;
+        renderBoasVindas();
+      },
+    }, 'Voltar') : null;
+    const topo = h('header', { class: 'boas-vindas-topo' },
+      h('p', { class: 'etiqueta' }, `Passo ${passo} de 3`),
+      h('div', { class: 'passos-boas-vindas', 'aria-hidden': 'true' }, [1, 2, 3].map((n) => h('span', { class: n <= passo ? 'feito' : '' }))));
+    let corpo;
+    if (passo === 1) {
+      corpo = [
+        h('h1', null, 'Bem-vindo!'),
+        h('p', { class: 'grupo-descricao' }, 'Para sugerir os treinos certos: você é homem ou mulher? Dá para escolher qualquer treino depois.'),
+        h('div', { class: 'opcoes-sexo' }, [['m', 'Homem'], ['f', 'Mulher']].map(([valor, rotulo]) => h('button', {
+          class: 'opcao-sexo',
+          onclick: () => {
+            boasVindas = { ...boasVindas, passo: 2, sexo: valor };
+            renderBoasVindas();
+          },
+        }, rotulo))),
+      ];
+    } else if (passo === 2) {
+      const escolhido = boasVindas.personagem || estado.perfil.personagem;
+      const p = window.Avatar.personagem(escolhido);
+      corpo = [
+        h('h1', null, 'Escolha seu personagem'),
+        h('p', { class: 'grupo-descricao' }, 'Ele acompanha seus treinos e muda conforme a ofensiva: começando, no auge, afastado ou de volta. Qualquer personagem combina com qualquer treino.'),
+        h('div', { class: 'destaque-personagem' },
+          h('div', { class: 'personagem-palco fase-auge' }, h('img', { src: window.Avatar.imagem(p.id, 'auge'), alt: '' })),
+          h('div', null, h('strong', null, p.nome), h('p', null, p.descricao))),
+        h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((x) => h('button', {
+          class: 'opcao-personagem',
+          'aria-pressed': String(x.id === escolhido),
+          'aria-label': `${x.nome}: ${x.descricao}`,
+          onclick: () => {
+            boasVindas.personagem = x.id;
+            renderBoasVindas();
+          },
+        }, h('img', { src: window.Avatar.imagem(x.id, 'auge'), alt: '', loading: 'lazy' }), h('span', null, x.nome)))),
+        h('button', {
+          class: 'botao primario fixo',
+          onclick: () => {
+            boasVindas = { ...boasVindas, passo: 3, personagem: escolhido };
+            renderBoasVindas();
+            window.scrollTo(0, 0);
+          },
+        }, `Continuar com ${p.nome}`),
+      ];
+    } else {
+      corpo = [
+        h('h1', null, 'Escolha seu treino'),
+        h('p', { class: 'grupo-descricao' }, 'Os primeiros são os recomendados para você. Cada exercício mostra o estudo que justifica a escolha.'),
+        listaDeProgramas(boasVindas.sexo, (id) => {
+          estado.perfil = { personagem: boasVindas.personagem, programa: id, sexo: boasVindas.sexo, configurado: true };
+          programa = programas[id];
+          estado.proximo = estado.proximos[id] || 0;
+          selecionado = estado.proximo;
+          salvar();
+          tela = 'inicio';
+          render();
+          window.scrollTo(0, 0);
+          avisar(`${window.Avatar.personagem(boasVindas.personagem).nome} e ${programa.titulo}: bora!`);
+        }),
+      ];
+    }
+    app.replaceChildren(h('section', { class: 'boas-vindas' }, topo, corpo, voltar));
+  }
+
   function render() {
-    if (tela === 'treino' && estado.sessao) renderTreino();
+    if (!estado.perfil.configurado) renderBoasVindas();
+    else if (tela === 'treino' && estado.sessao) renderTreino();
     else if (tela === 'fim' && resumoFinal) renderFim();
     else {
       tela = 'inicio';
@@ -1148,6 +1305,11 @@
   }
 
   function renderInicio() {
+    // A biblioteca e o aviso de instalar redesenham o início; antes da primeira escolha, fica a primeira abertura.
+    if (!estado.perfil.configurado) {
+      renderBoasVindas();
+      return;
+    }
     const lista = h('ul', { class: 'lista' }, programa.treinos.map((treino, i) => {
       let tag = null;
       if (estado.sessao && estado.sessao.treino === i) tag = h('span', { class: 'tag andamento' }, 'Em andamento');
@@ -1174,7 +1336,7 @@
       heroTreino(selecionado),
       h('p', { class: 'como-usar' },
         h('strong', null, 'Como usar: '),
-        'toque numa anilha ao terminar cada série e o descanso começa sozinho. Acabou o exercício? ',
+        'terminou a série? Toque no cronômetro dela e o descanso começa sozinho. Acabou o exercício? ',
         h('strong', null, 'Arraste o cartão para a direita.'),
         ' Aparelho ocupado? Arraste para a esquerda e ele volta no fim.'),
       h('h2', { class: 'rotulo' }, 'Todos os treinos'),
@@ -1204,6 +1366,19 @@
         `Começar este treino encerra o ${programa.treinos[sessao.treino].titulo} em andamento.`));
     }
     if (emAndamento) extras.push(botaoRecomecar(i));
+    const ajuste = !emAndamento && estado.ajustes[treino.id];
+    if (ajuste) {
+      const partes = [ajuste.descanso ? `+${ajuste.descanso} s de descanso` : null, ajuste.carga ? `carga ${ajuste.carga > 0 ? '+' : '−'}${Math.abs(ajuste.carga)}%` : null].filter(Boolean);
+      extras.push(h('p', { class: 'aviso ajuste-aviso' }, `Ajuste pedido no fim do último ${nomeDoTreino(treino.titulo)}: ${partes.join(' e ')}. `,
+        h('button', {
+          class: 'link',
+          onclick: () => {
+            delete estado.ajustes[treino.id];
+            salvar();
+            renderInicio();
+          },
+        }, 'Desfazer')));
+    }
 
     const exercicios = h('ol', { class: 'exercicios-treino' }, treino.exercicios.map((_, slot) => {
       const ex = exercicio(i, slot);
@@ -1213,8 +1388,9 @@
           h('span', { class: 'ex-nome' }, ex.nome),
           h('span', { class: 'ex-meta' }, ex.trocado && ex.semelhanca !== null
             ? `${ex.series} × ${ex.reps} · trocado, ${ex.semelhanca}% semelhante`
-            : `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`)),
-        biblioteca
+            : `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`,
+          ex.tecnica && TECNICAS[ex.tecnica.tipo] ? h('span', { class: 'tag-tecnica' }, `${TECNICAS[ex.tecnica.tipo].nome.replace(' na última série', '')}${ex.tecnica.grupo ? ` ${ex.tecnica.grupo}` : ''}`) : null)),
+        biblioteca && !programa.mobilidade
           ? h('button', { class: 'trocar-linha', 'aria-label': `Trocar ${ex.nome}`, onclick: () => abrirBiblioteca(i, slot) }, 'Trocar')
           : null);
     }));
@@ -1278,7 +1454,8 @@
       h('header', { class: 'barra' },
         h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar ao início', onclick: voltarInicio }),
         h('span', { class: 'personagem-mini' }, imagemDoPersonagem(window.Ofensiva.fase(ofensivaAtual()))),
-        h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo), h('span', { class: 'contador' })),
+        h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo),
+          h('span', { class: 'contador-linha' }, h('span', { class: 'contador' }), ' · ', h('span', { class: 'tempo-treino', role: 'timer', 'aria-label': 'Tempo de treino' }))),
         h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) }),
         h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(estado.sessao.treino) })),
       h('div', { class: 'segmentos', 'aria-hidden': 'true' }, indicesDaSessao().map((i) => h('span', { 'data-i': i }))),
@@ -1293,8 +1470,24 @@
     atualizarDescanso();
   }
 
+  // Tempo de treino desde o começo, com os descansos: no topo do treino e no cartão de descanso.
+  const tempoLongo = (segundos) => {
+    const s = Math.max(0, Math.floor(segundos));
+    const horas = Math.floor(s / 3600);
+    return horas ? `${horas}:${doisDigitos(Math.floor((s % 3600) / 60))}:${doisDigitos(s % 60)}` : relogio(s);
+  };
+  setInterval(() => {
+    if (!estado.sessao) return;
+    const texto = tempoLongo((Date.now() - estado.sessao.inicio) / 1000);
+    document.querySelectorAll('.tempo-treino').forEach((el) => {
+      if (el.textContent !== texto) el.textContent = texto;
+    });
+  }, 1000);
+
   function atualizarCabecalho() {
     const sessao = estado.sessao;
+    const tempo = app.querySelector('.tempo-treino');
+    if (tempo) tempo.textContent = tempoLongo((Date.now() - sessao.inicio) / 1000);
     const n = indicesDaSessao().length;
     app.querySelector('.contador').textContent = `Exercício ${Math.min(sessao.feitos.length + 1, n)} de ${n}`;
     app.querySelectorAll('.segmentos span').forEach((seg) => {
@@ -1316,6 +1509,123 @@
     if (animar) requestAnimationFrame(() => requestAnimationFrame(() => topo.classList.replace('atras', 'topo')));
   }
 
+  // ---------- técnicas, aquecimento e carga ----------
+
+  const TECNICAS = {
+    biset: {
+      nome: 'Bi-set', evidencia: 'crescimento',
+      texto: 'Faça uma série de cada exercício do par, sem descanso entre eles; descanse só depois do par. Rendeu o mesmo músculo e a mesma força que séries normais, em menos tempo, mas cansa mais (Zhang et al., 2025).',
+    },
+    triset: {
+      nome: 'Tri-set', evidencia: 'nao-testado',
+      texto: 'Uma série de cada um dos três exercícios, sem descanso entre eles; descanse só depois do terceiro. Os estudos de superséries testaram pares, que renderam o mesmo que séries normais em menos tempo (Zhang et al., 2025); três seguidos não foram testados.',
+    },
+    drop: {
+      nome: 'Drop-set na última série', evidencia: 'crescimento',
+      texto: 'Na última série, ao chegar perto da falha, tire 20 a 30% do peso e continue até perto da falha de novo; dá para repetir mais uma vez. Rendeu crescimento parecido com séries normais, em metade a um terço do tempo (Sødal et al., 2023).',
+    },
+    restpause: {
+      nome: 'Rest-pause', evidencia: 'crescimento',
+      texto: 'Vá até 1 repetição antes da falha, descanse 15 s (botão Mini-pausa) e faça mais repetições; repita a pausa mais uma vez. Tudo conta como 1 série. Rendeu pelo menos o mesmo crescimento que séries normais em pessoas treinadas (Prestes et al., 2019).',
+    },
+    cluster: {
+      nome: 'Cluster', evidencia: 'crescimento',
+      texto: 'Cada série é dividida em blocos de 2 repetições, com 20 s de pausa entre eles (botão Mini-pausa). A carga pesada sai mais rápida e com menos cansaço; músculo e força cresceram igual às séries normais (Davies et al., 2021).',
+    },
+  };
+
+  // Exercícios do mesmo bi-set ou tri-set, na ordem do treino (só os do programa).
+  function membrosDoGrupo(i) {
+    const treino = programa.treinos[estado.sessao.treino];
+    const t = i < treino.exercicios.length ? treino.exercicios[i].tecnica : null;
+    if (!t || !t.grupo) return null;
+    return treino.exercicios.map((e, j) => (e.tecnica && e.tecnica.grupo === t.grupo ? j : -1)).filter((j) => j >= 0);
+  }
+
+  const arredondarCarga = (kg) => Math.round(kg * 2) / 2;
+  const textoKg = (kg) => `${String(kg).replace('.', ',')} kg`;
+
+  // Carga de hoje (se já digitada), senão a da última vez, com o ajuste pedido no fim do último treino.
+  function cargaDoExercicio(i, ex) {
+    const sessao = estado.sessao;
+    const hoje = sessao.cargas[i];
+    const ultima = estado.cargas[ex.imagem] || null;
+    const ajuste = sessao.ajuste.carga;
+    const sugerida = ultima && ajuste ? arredondarCarga(ultima.kg * (1 + ajuste / 100)) : null;
+    return { hoje: Number.isFinite(hoje) ? hoje : null, ultima, sugerida, ajuste };
+  }
+
+  function campoCarga(i, ex) {
+    const c = cargaDoExercicio(i, ex);
+    const valor = c.hoje !== null ? c.hoje : c.sugerida !== null ? c.sugerida : c.ultima ? c.ultima.kg : '';
+    const dica = c.sugerida !== null
+      ? `Sugestão de hoje: ${textoKg(c.sugerida)} (${c.ajuste > 0 ? '+' : '−'}${Math.abs(c.ajuste)}% da última, ${textoKg(c.ultima.kg)})`
+      : c.ultima ? `Última vez: ${textoKg(c.ultima.kg)}` : 'Anote a carga: fica salva para a próxima vez';
+    return h('label', { class: 'campo-carga' },
+      h('span', { class: 'rotulo' }, 'Carga'),
+      h('input', {
+        type: 'number', inputmode: 'decimal', step: '0.5', min: '0', max: '1000', value: String(valor), placeholder: '0',
+        'aria-label': `Carga de ${ex.nome}, em kg`,
+        onchange: (e) => {
+          const kg = arredondarCarga(Number(String(e.target.value).replace(',', '.')));
+          if (!Number.isFinite(kg) || kg < 0 || kg > 1000 || e.target.value === '') return;
+          estado.sessao.cargas[i] = kg;
+          estado.cargas[ex.imagem] = { kg, data: dataLocal(new Date()) };
+          salvar();
+          const aq = e.target.closest('.cartao').querySelector('.aquecimento');
+          if (aq) aq.replaceWith(blocoAquecimento(i, ex));
+        },
+      }),
+      h('span', { class: 'unidade' }, 'kg'),
+      h('span', { class: 'dica-carga' }, dica));
+  }
+
+  // Aquecimento (Ribeiro et al., 2021): 6 repetições com 40% e 6 com 80% da carga do treino.
+  function blocoAquecimento(i, ex) {
+    const feitos = estado.sessao.aquecidos[i] || 0;
+    const c = cargaDoExercicio(i, ex);
+    const base = c.hoje !== null ? c.hoje : c.sugerida !== null ? c.sugerida : c.ultima ? c.ultima.kg : null;
+    return h('div', { class: 'aquecimento' },
+      h('span', { class: 'rotulo' }, 'Aquecimento'),
+      [40, 80].map((pct, k) => h('button', {
+        class: k < feitos ? 'serie-aquecimento feita' : 'serie-aquecimento',
+        'aria-pressed': String(k < feitos),
+        onclick: () => {
+          estado.sessao.aquecidos[i] = k < feitos ? k : k + 1;
+          salvar();
+          const el = app.querySelector(`.cartao.topo[data-i="${i}"] .aquecimento`);
+          if (el) el.replaceWith(blocoAquecimento(i, ex));
+          if (k >= feitos) iniciarDescanso(60, k === 0 ? 'aquecimento com 80%' : `série 1 de ${ex.series} de ${ex.nome}`, true);
+        },
+      }, `6 × ${base ? textoKg(arredondarCarga((base * pct) / 100)) : `${pct}%`}`)),
+      h('span', { class: 'dica-carga' }, 'Não conta como série. Prepara a carga e a técnica (Ribeiro et al., 2021).'));
+  }
+
+  function blocoTecnica(i, ex) {
+    const t = ex.tecnica && TECNICAS[ex.tecnica.tipo];
+    if (!t) return null;
+    const membros = membrosDoGrupo(i);
+    let titulo = t.nome;
+    let aviso = null;
+    if (membros) {
+      const pos = membros.indexOf(i);
+      titulo = `${t.nome} ${ex.tecnica.grupo} · ${pos + 1} de ${membros.length}`;
+      const outros = membros.filter((j) => j !== i).map((j) => exercicio(estado.sessao.treino, j).nome);
+      aviso = pos < membros.length - 1
+        ? `Depois de cada série, sem descanso: ${exercicio(estado.sessao.treino, membros[pos + 1]).nome}.`
+        : `Último do grupo: descanse depois de cada série e volte para ${exercicio(estado.sessao.treino, membros[0]).nome}.`;
+      if (!outros.length) aviso = null;
+    }
+    const pausa = ex.tecnica.pausa
+      ? h('button', { class: 'botao secundario mini-pausa', onclick: () => iniciarDescanso(ex.tecnica.pausa, ex.tecnica.tipo === 'cluster' ? 'próximo bloco' : 'mais repetições', true) }, `Mini-pausa ${ex.tecnica.pausa} s`)
+      : null;
+    return h('div', { class: `tecnica tecnica-${ex.tecnica.tipo}` },
+      h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, titulo), seloEvidencia(t.evidencia)),
+      aviso ? h('p', { class: 'tecnica-aviso' }, aviso) : null,
+      h('p', { class: 'porque' }, t.texto),
+      pausa);
+  }
+
   function cartao(i, posicao) {
     const treinoIdx = estado.sessao.treino;
     const ex = exercicioDaSessao(i);
@@ -1332,6 +1642,8 @@
       botao = h('button', { class: ex.trocado ? 'trocar ativo' : 'trocar', icone: 'trocar', onclick: () => abrirBiblioteca(treinoIdx, i) },
         ex.trocado ? (ex.semelhanca !== null ? `Trocado · ${ex.semelhanca}%` : 'Trocado') : 'Trocar');
     }
+    const mobilidade = Boolean(programa.mobilidade);
+    if (mobilidade && !ex.extra) botao = null;
     return h('article', { class: `cartao ${posicao}`, 'data-i': i, 'aria-label': ex.nome },
       h('span', { class: 'carimbo carimbo-feito', 'aria-hidden': 'true' }, 'Feito'),
       h('span', { class: 'carimbo carimbo-depois', 'aria-hidden': 'true' }, 'Depois'),
@@ -1339,9 +1651,10 @@
       h('div', { class: 'corpo' },
         h('h2', null, ex.nome),
         h('div', { class: 'numeros' },
-          h('div', null, h('span', { class: 'rotulo' }, 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),
-          h('div', null, h('span', { class: 'rotulo' }, 'RIR'), h('strong', null, ex.rir)),
-          h('div', null, h('span', { class: 'rotulo' }, 'Descanso'), h('strong', null, ex.descanso))),
+          h('div', null, h('span', { class: 'rotulo' }, mobilidade ? 'Séries × tempo' : 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),
+          mobilidade ? null : h('div', null, h('span', { class: 'rotulo' }, 'RIR'), h('strong', null, ex.rir)),
+          h('div', null, h('span', { class: 'rotulo' }, 'Descanso'), h('strong', null, descansoComAjuste(ex.descanso)))),
+        blocoTecnica(i, ex),
         h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
           ex.primarios.map((m) => h('li', { class: 'principal' }, m)),
           ex.secundarios.map((m) => h('li', { class: 'auxiliar' }, m))),
@@ -1353,16 +1666,80 @@
         daBiblioteca(ex)
           ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d)))
           : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d)))),
+      mobilidade ? null : h('div', { class: 'carga-e-aquecimento' },
+        campoCarga(i, ex),
+        ex.aquecimento ? blocoAquecimento(i, ex) : null),
       h('footer', { class: 'series' },
-        h('div', { class: 'anilhas', role: 'group', 'aria-label': 'Séries feitas' },
+        h('div', { class: 'anilhas', role: 'group', 'aria-label': 'Séries: toque no cronômetro ao terminar cada uma' },
           Array.from({ length: ex.series }, (_, k) => h('button', {
             class: k < feitas ? 'anilha cheia' : k === feitas ? 'anilha proxima' : 'anilha',
             'aria-pressed': String(k < feitas),
             'aria-label': `Série ${k + 1} de ${ex.series}`,
             onclick: () => marcarSerie(i, k),
-          }, k + 1))),
+          }, h('span', null, k + 1)))),
         h('span', { class: completo ? 'arraste pronto' : 'arraste' },
-          completo ? 'Pronto! Arraste para a direita' : 'Toque ao terminar cada série')));
+          completo ? 'Pronto! Arraste para a direita' : 'Terminou a série? Toque no cronômetro')));
+  }
+
+  // Esforço do treino (escala de percepção da sessão, Foster et al., 2001) e o que o app sugere.
+  const ESFORCOS = {
+    leve: { rotulo: 'Leve', emoji: '🙂' },
+    medida: { rotulo: 'Na medida', emoji: '💪' },
+    pesado: { rotulo: 'Pesado', emoji: '😤' },
+    limite: { rotulo: 'No limite', emoji: '🥵' },
+  };
+
+  // Gasto do treino: MET × peso × horas (Compendium, Ainsworth et al., 2011). Musculação moderada
+  // vale 3,5 METs, vigorosa 6,0, e alongamento leve 2,3.
+  function caloriasDoTreino(r) {
+    if (!r.segundos) return null;
+    const met = programa.mobilidade ? 2.3 : r.esforco === 'pesado' || r.esforco === 'limite' ? 6 : 3.5;
+    return Math.round((met * estado.peso * r.segundos) / 3600 / 5) * 5;
+  }
+
+  function sugestaoDoEsforco(r, treino) {
+    const ajuste = estado.ajustes[treino.id] || { descanso: 0, carga: 0 };
+    const pedir = (mudanca) => {
+      const novo = { ...ajuste, ...mudanca };
+      if (novo.descanso || novo.carga) estado.ajustes[treino.id] = novo;
+      else delete estado.ajustes[treino.id];
+      salvar();
+      renderFim();
+    };
+    const botaoAjuste = (rotulo, mudanca, ligado) => h('button', {
+      class: ligado ? 'ajuste ligado' : 'ajuste',
+      'aria-pressed': String(ligado),
+      onclick: () => pedir(ligado ? Object.fromEntries(Object.keys(mudanca).map((k) => [k, 0])) : mudanca),
+    }, ligado ? `✓ ${rotulo}` : rotulo);
+    const nome = nomeDoTreino(treino.titulo);
+    if (programa.mobilidade) {
+      const textos = {
+        leve: 'Tranquilo. Na próxima, segure cada posição um pouco mais longe, sempre sem dor.',
+        medida: 'Ótimo: desconforto leve é o ponto certo do alongamento.',
+        pesado: 'Alongamento não precisa doer. Na próxima, vá até o desconforto leve e pare ali.',
+        limite: 'Pare se sentir pontada ou formigamento. Alongar com dor não aumenta o ganho de amplitude.',
+      };
+      return h('p', { class: 'sugestao' }, textos[r.esforco]);
+    }
+    if (r.esforco === 'leve') {
+      return h('div', { class: 'sugestao' },
+        h('p', null, `Sobrou energia. Onde você fez todas as repetições no topo da faixa, suba 2,5 a 5% da carga (ACSM, 2009), ou pare mais perto da falha: o crescimento aumenta quanto mais perto dela a série termina (Robinson et al., 2024).`),
+        botaoAjuste(`Sugerir +5% de carga no próximo ${nome}`, { carga: 5 }, ajuste.carga === 5));
+    }
+    if (r.esforco === 'medida') {
+      return h('div', { class: 'sugestao' },
+        h('p', null, 'Ótimo. Mantenha e siga a regra do programa: completou todas as séries no topo da faixa, sobe a carga na próxima.'));
+    }
+    if (r.esforco === 'pesado') {
+      return h('div', { class: 'sugestao' },
+        h('p', null, 'Treino perto da falha é pesado mesmo: é o que o programa pede (RIR 0 a 2). Mantenha a carga. Se a técnica caiu no fim das séries, pare 1 repetição antes.'));
+    }
+    return h('div', { class: 'sugestao' },
+      h('p', null, `Intenso demais. No próximo ${nome}, o app pode dar mais descanso ou baixar a carga. Descansar mais entre as séries ajuda a manter as repetições e rendeu um pouco mais de músculo (Schoenfeld et al., 2016; Singer et al., 2024). Dor nas articulações ou tontura: pare e procure orientação.`),
+      h('div', { class: 'ajustes' },
+        botaoAjuste('+30 s de descanso', { descanso: 30 }, ajuste.descanso === 30),
+        botaoAjuste('Baixar 10% da carga', { carga: -10 }, ajuste.carga === -10)),
+      ajuste.descanso || ajuste.carga ? h('p', { class: 'aviso' }, `Vale só para o próximo ${nome}.`) : null);
   }
 
   function renderFim() {
@@ -1370,19 +1747,42 @@
     const proximo = programa.treinos[(resumoFinal.treino + 1) % programa.treinos.length];
     const of = ofensivaAtual();
     const subiu = of.nivel > resumoFinal.nivelAntes;
+    const kcal = caloriasDoTreino(resumoFinal);
+    const marcarEsforco = (valor) => {
+      resumoFinal.esforco = valor;
+      // Guarda no histórico do dia, junto com o treino.
+      for (let k = estado.historico.length - 1; k >= 0; k--) {
+        if (estado.historico[k].treino === resumoFinal.treinoId) {
+          estado.historico[k] = { ...estado.historico[k], esforco: valor };
+          break;
+        }
+      }
+      salvar();
+      renderFim();
+    };
+    const rolagem = window.scrollY;
     app.replaceChildren(h('section', { class: 'fim' },
-      h('div', { class: 'fim-avatar' },
+      h('div', { class: 'fim-destaque' },
+        h('p', { class: 'rotulo' }, `${treino.titulo} concluído`),
         h('div', { class: `personagem-solto${subiu ? ' subiu' : ''}` }, imagemDoMomento('comemora')),
+        h('p', { class: 'fim-tempo' }, resumoFinal.segundos ? tempoLongo(resumoFinal.segundos) : '—'),
+        h('p', { class: 'fim-tempo-rotulo' }, 'de treino, com os descansos'),
+        h('dl', { class: 'resumo' },
+          h('div', null, h('dt', null, 'Séries'), h('dd', null, `${resumoFinal.series}/${resumoFinal.totalSeries}`)),
+          h('div', null, h('dt', null, 'Exercícios'), h('dd', null, resumoFinal.exercicios)),
+          h('div', null, h('dt', null, 'Calorias'), h('dd', null, kcal ? `~${kcal}` : '—'))),
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
           h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)),
           h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje · ${plural(pontosAtuais(), 'ponto')} no total`))),
-      h('p', { class: 'etiqueta' }, `${treino.titulo} concluído`),
-      h('h1', null, 'Treino feito.'),
-      h('dl', { class: 'resumo' },
-        h('div', null, h('dt', null, 'Séries'), h('dd', null, `${resumoFinal.series}/${resumoFinal.totalSeries}`)),
-        h('div', null, h('dt', null, 'Exercícios'), h('dd', null, resumoFinal.exercicios)),
-        h('div', null, h('dt', null, 'Duração'), h('dd', null, resumoFinal.minutos ? `${resumoFinal.minutos} min` : '—'))),
+      h('article', { class: 'esforco-cartao' },
+        h('h2', null, 'Como foi o treino?'),
+        h('div', { class: 'opcoes-esforco', role: 'group', 'aria-label': 'Esforço do treino' }, Object.entries(ESFORCOS).map(([valor, e]) => h('button', {
+          'aria-pressed': String(resumoFinal.esforco === valor),
+          onclick: () => marcarEsforco(valor),
+        }, h('span', { 'aria-hidden': 'true' }, e.emoji), e.rotulo))),
+        resumoFinal.esforco ? sugestaoDoEsforco(resumoFinal, treino) : null,
+        h('p', { class: 'aviso' }, `Calorias: estimativa por MET × peso (${estado.peso} kg) × tempo, pelo Compendium of Physical Activities (Ainsworth et al., 2011); ${programa.mobilidade ? 'alongamento leve vale 2,3 METs' : 'musculação vale 3,5 METs, ou 6,0 se o treino foi pesado'}. O peso se ajusta no aeróbico.`)),
       cartaoAerobico(),
       cartaoSemana(false),
       h('article', { class: 'proximo' },
@@ -1397,6 +1797,7 @@
           render();
         },
       }, 'Voltar ao início')));
+    window.scrollTo(0, rolagem);
   }
 
   // ---------- aeróbico ----------
@@ -1678,7 +2079,12 @@
       historico: [],
       inicio: Date.now(),
       extras,
+      aquecidos: {},
+      cargas: {},
+      // O ajuste pedido no fim da última vez vale para esta sessão e sai da fila de ajustes.
+      ajuste: estado.ajustes[treino.id] || { descanso: 0, carga: 0 },
     };
+    delete estado.ajustes[treino.id];
     selecionado = i;
     pararDescanso();
     salvar();
@@ -1704,7 +2110,7 @@
     const ex = exercicioDaSessao(i);
     if (!ex) return;
     const antes = sessao.series[i] || 0;
-    const agora = k < antes ? k : k + 1; // tocar numa anilha cheia desmarca dela em diante
+    const agora = k < antes ? k : k + 1; // tocar num cronômetro já marcado desmarca dele em diante
     sessao.series[i] = agora;
     salvar();
 
@@ -1717,16 +2123,44 @@
       });
       const dica = topo.querySelector('.arraste');
       dica.classList.toggle('pronto', agora >= ex.series);
-      dica.textContent = agora >= ex.series ? 'Pronto! Arraste para a direita' : 'Toque ao terminar cada série';
+      dica.textContent = agora >= ex.series ? 'Pronto! Arraste para a direita' : 'Terminou a série? Toque no cronômetro';
     }
 
-    if (agora > antes) {
-      const ultima = agora >= ex.series;
-      const seguinte = sessao.fila.find((x) => x !== i);
-      const proxima = !ultima ? `série ${agora + 1} de ${ex.series} de ${ex.nome}`
-        : seguinte === undefined ? 'fim do treino' : exercicioDaSessao(seguinte).nome;
-      iniciarDescanso(segundosDescanso(ex.descanso), proxima);
+    if (agora <= antes) return;
+    // Bi-set e tri-set: entre os exercícios do grupo não há descanso; o app passa para o próximo.
+    const membros = (membrosDoGrupo(i) || []).filter((j) => !sessao.feitos.includes(j));
+    const pos = membros.indexOf(i);
+    const pendente = (j) => (sessao.series[j] || 0) < seriesDaSessao(j);
+    if (membros.length > 1 && pos >= 0) {
+      const depois = membros.slice(pos + 1).find(pendente);
+      if (depois !== undefined) {
+        pararDescanso();
+        trazerParaFrente(depois);
+        avisar(`Sem descanso: agora ${exercicioDaSessao(depois).nome}`);
+        return;
+      }
+      const primeiro = membros.find(pendente);
+      if (primeiro !== undefined && primeiro !== i) {
+        trazerParaFrente(primeiro);
+        iniciarDescanso(segundosDescanso(ex.descanso), `rodada ${(sessao.series[primeiro] || 0) + 1} do ${ex.tecnica.tipo === 'triset' ? 'tri-set' : 'bi-set'}: ${exercicioDaSessao(primeiro).nome}`);
+        return;
+      }
     }
+    const ultima = agora >= ex.series;
+    const seguinte = sessao.fila.find((x) => x !== i);
+    const proxima = !ultima ? `série ${agora + 1} de ${ex.series} de ${ex.nome}`
+      : seguinte === undefined ? 'fim do treino' : exercicioDaSessao(seguinte).nome;
+    iniciarDescanso(segundosDescanso(ex.descanso), proxima);
+  }
+
+  // Põe o exercício j no topo da pilha sem marcar nada; o atual fica logo atrás.
+  function trazerParaFrente(j) {
+    const sessao = estado.sessao;
+    if (!sessao.fila.includes(j) || sessao.fila[0] === j) return;
+    sessao.fila = [j, ...sessao.fila.filter((x) => x !== j)];
+    salvar();
+    montarPilha(app.querySelector('.pilha'), false);
+    atualizarCabecalho();
   }
 
   function acaoBotao(direcao) {
@@ -1783,13 +2217,18 @@
   function terminar() {
     const sessao = estado.sessao;
     const treino = programa.treinos[sessao.treino];
-    const minutos = Math.round((Date.now() - sessao.inicio) / 60000);
+    const segundos = Math.round((Date.now() - sessao.inicio) / 1000);
+    const minutos = Math.round(segundos / 60);
     const indices = indicesDaSessao();
     const total = indices.reduce((soma, i) => soma + seriesDaSessao(i), 0);
     const feitas = indices.reduce((soma, i) => soma + (Number(sessao.series[i]) || 0), 0);
     resumoFinal = {
       treino: sessao.treino,
       minutos: minutos < 240 ? Math.max(1, minutos) : null,
+      segundos: minutos < 240 ? segundos : null,
+      treinoId: treino.id,
+      esforco: null,
+      cargasAnotadas: Object.keys(sessao.cargas).length,
       series: Math.min(feitas, total),
       totalSeries: total,
       exercicios: indices.length,
@@ -1797,7 +2236,7 @@
       pontosAntes: pontosAtuais(),
     };
     // Marca o dia na semana e soma na ofensiva.
-    estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id }].slice(-400);
+    estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id, minutos: resumoFinal.minutos }].slice(-400);
     estado.proximo = (sessao.treino + 1) % programa.treinos.length;
     estado.sessao = null;
     selecionado = estado.proximo;
@@ -1887,8 +2326,10 @@
 
   // ---------- descanso ----------
 
-  function iniciarDescanso(segundos, proxima) {
+  // semAjuste: mini-pausas e aquecimento não ganham o descanso extra pedido no fim do último treino.
+  function iniciarDescanso(segundos, proxima, semAjuste) {
     pararDescanso();
+    if (!semAjuste && estado.sessao) segundos += estado.sessao.ajuste.descanso;
     descanso = {
       fim: Date.now() + segundos * 1000,
       total: segundos,
@@ -1952,6 +2393,7 @@
       caixa.append(
         h('div', { class: 'descanso-topo' },
           h('span', { class: 'rotulo descanso-rotulo' }),
+          h('span', { class: 'descanso-treino' }, 'Treino ', h('span', { class: 'tempo-treino' }, estado.sessao ? tempoLongo((Date.now() - estado.sessao.inicio) / 1000) : '')),
           h('button', { class: 'minimizar', onclick: alternarDescanso }, 'Minimizar')),
         h('button', { class: 'expandir', 'aria-label': 'Abrir o descanso em tela cheia', onclick: alternarDescanso },
           h('span', { class: 'descanso-personagem' }),

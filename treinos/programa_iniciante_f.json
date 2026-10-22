@@ -1,0 +1,243 @@
+{
+  "nome": "Corpo inteiro 3x com foco em glúteo",
+  "titulo": "Corpo Inteiro com Glúteo",
+  "marca": "A · B · C",
+  "publico": "f",
+  "nivel": "Iniciante",
+  "dias": "3 dias por semana",
+  "resumo": "Corpo todo em cada treino, com glúteo e pernas nos três. Poucos exercícios e técnica primeiro.",
+  "regras": [
+    "3 dias por semana, com folga entre os treinos",
+    "RIR 2–3 nas primeiras semanas, depois 1–2",
+    "Aquecer: 6 reps com 40% e 6 com 80% da carga"
+  ],
+  "progressao": "Completou todas as séries no topo da faixa de repetições? Aumente a carga em 2,5–5% na próxima sessão.",
+  "treinos": [
+    {
+      "id": "fini_a",
+      "extras": [
+        {"imagem": "Standing_Calf_Raises", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min", "evidencia": "crescimento", "motivo": "Hoje não tem panturrilha. Com o joelho estendido, ela cresceu bem mais do que sentado (Kinoshita et al., 2023)."}
+      ],
+      "titulo": "TREINO A",
+      "foco": "Agachamento, hip thrust e puxada",
+      "duracao": "~50 min",
+      "exercicios": [
+        {
+          "nome": "Agachamento livre (ou hack)",
+          "imagem": "Barbell_Full_Squat",
+          "series": 3, "reps": "8–12", "rir": "2–3", "descanso": "2–3 min",
+          "primarios": ["Quadríceps", "Glúteo"],
+          "secundarios": ["Adutores"],
+          "aquecimento": true,
+          "porque": "O agachamento profundo fez glúteo e adutores crescerem mais que o meio agachamento; o quadríceps cresceu igual nos dois (Kubo et al., 2019).",
+          "evidencia": "crescimento",
+          "dicas": ["Desça o mais fundo que mantiver a técnica", "Joelhos na direção dos pés", "Respire e trave o abdômen antes de descer"]
+        },
+        {
+          "nome": "Elevação pélvica (hip thrust)",
+          "imagem": "Barbell_Hip_Thrust",
+          "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Glúteo"],
+          "secundarios": ["Posteriores de coxa"],
+          "aquecimento": true,
+          "porque": "Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). Numa revisão de estudos, é o exercício indicado para priorizar o glúteo (Krause Neto et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Costas apoiadas no banco, na altura das escápulas", "Suba até alinhar quadril e tronco", "Queixo para baixo, sem arquear a lombar"]
+        },
+        {
+          "nome": "Puxada frontal",
+          "imagem": "Full_Range-Of-Motion_Lat_Pulldown",
+          "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Dorsal"],
+          "secundarios": ["Bíceps"],
+          "aquecimento": true,
+          "porque": "O dorsal é o principal músculo da puxada, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa.",
+          "evidencia": "nao-testado",
+          "dicas": ["Braços totalmente estendidos em cima", "Puxe a barra até o alto do peito", "Peito alto, sem jogar o tronco para trás"]
+        },
+        {
+          "nome": "Supino máquina",
+          "imagem": "Machine_Bench_Press",
+          "series": 2, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Peitoral maior"],
+          "secundarios": ["Deltoide anterior", "Tríceps"],
+          "aquecimento": true,
+          "porque": "Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023), e na máquina dá para ir perto da falha sem ajuda.",
+          "evidencia": "crescimento",
+          "dicas": ["Banco ajustado para os pegadores ficarem no meio do peito", "Desça até alongar o peito", "Não trave os cotovelos no fim"]
+        },
+        {
+          "nome": "Abdução de quadril na máquina",
+          "imagem": "Thigh_Abductor",
+          "series": 2, "reps": "15–20", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Glúteo médio"],
+          "secundarios": [],
+          "porque": "Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). O crescimento com a abdução não foi medido.",
+          "evidencia": "nao-testado",
+          "dicas": ["Costas apoiadas e quadril encaixado no banco", "Abra até o fim e segure 1 s", "Volte devagar, sem deixar o peso bater"]
+        },
+        {
+          "nome": "Abdominal na polia",
+          "imagem": "Cable_Crunch",
+          "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Abdômen"],
+          "secundarios": [],
+          "porque": "Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen.",
+          "evidencia": "nao-testado",
+          "dicas": ["Quadril parado, enrole a coluna", "Leve os cotovelos em direção às coxas", "Pode fazer em bi-set com a panturrilha"]
+        }
+      ]
+    },
+    {
+      "id": "fini_b",
+      "extras": [
+        {"imagem": "Thigh_Abductor", "series": 2, "reps": "15–20", "rir": "0–1", "descanso": "1 min", "evidencia": "nao-testado", "motivo": "Glúteo médio e mínimo, na lateral do quadril, quase não crescem com agachamento e hip thrust (Plotkin et al., 2023)."}
+      ],
+      "titulo": "TREINO B",
+      "foco": "Stiff, leg press e remada",
+      "duracao": "~50 min",
+      "exercicios": [
+        {
+          "nome": "Stiff (terra romeno)",
+          "imagem": "Romanian_Deadlift",
+          "series": 3, "reps": "8–12", "rir": "2–3", "descanso": "2–3 min",
+          "primarios": ["Posteriores de coxa", "Glúteo"],
+          "secundarios": ["Eretores da coluna"],
+          "aquecimento": true,
+          "porque": "O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Num exercício de quadril, a cabeça longa do bíceps femoral cresceu mais que no nórdico, que é de joelho (Bourne et al., 2017).",
+          "evidencia": "crescimento",
+          "dicas": ["Joelhos levemente flexionados e fixos", "Quadril para trás, barra rente às pernas", "Desça até alongar o posterior, coluna neutra"]
+        },
+        {
+          "nome": "Leg press",
+          "imagem": "Leg_Press",
+          "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Quadríceps"],
+          "secundarios": ["Glúteo", "Adutores"],
+          "porque": "Mais volume de quadríceps e glúteo com a lombar apoiada. Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Desça fundo sem tirar a lombar do encosto", "Pés na largura do quadril", "Não trave os joelhos no topo"]
+        },
+        {
+          "nome": "Remada sentada no cabo",
+          "imagem": "Seated_Cable_Rows",
+          "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Meio das costas", "Dorsal"],
+          "secundarios": ["Deltoide posterior", "Bíceps"],
+          "aquecimento": true,
+          "porque": "Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento.",
+          "evidencia": "nao-testado",
+          "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
+        },
+        {
+          "nome": "Elevação lateral no cabo",
+          "imagem": "Cable_Seated_Lateral_Raise",
+          "series": 2, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Deltoide lateral"],
+          "secundarios": ["Trapézio superior"],
+          "aquecimento": true,
+          "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
+        },
+        {
+          "nome": "Coice de glúteo com caneleira",
+          "imagem": "Glute_Kickback",
+          "series": 2, "reps": "12–15", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Glúteo"],
+          "secundarios": ["Posteriores de coxa"],
+          "porque": "Numa revisão de estudos, a extensão de quadril ajoelhada também fez o glúteo crescer (Krause Neto et al., 2025). Use caneleira ou o cabo para ter carga.",
+          "evidencia": "crescimento",
+          "dicas": ["Repetições contadas por perna", "Leve a perna para trás e para cima sem arquear a lombar", "Segure 1 s em cima, apertando o glúteo"]
+        },
+        {
+          "nome": "Tríceps na polia",
+          "imagem": "Triceps_Pushdown",
+          "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Tríceps"],
+          "secundarios": [],
+          "aquecimento": true,
+          "porque": "Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha.",
+          "evidencia": "crescimento",
+          "dicas": ["Cotovelos colados ao corpo", "Estenda totalmente embaixo", "Volte controlando"]
+        }
+      ]
+    },
+    {
+      "id": "fini_c",
+      "extras": [
+        {"imagem": "Cable_Crunch", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "evidencia": "nao-testado", "motivo": "Hoje não tem abdômen. Quase não há estudos medindo o crescimento do abdômen; a polia deixa a carga fácil de aumentar."}
+      ],
+      "titulo": "TREINO C",
+      "foco": "Búlgaro, hip thrust e ombros",
+      "duracao": "~50 min",
+      "exercicios": [
+        {
+          "nome": "Agachamento búlgaro",
+          "imagem": "Split_Squat_with_Dumbbells",
+          "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Quadríceps", "Glúteo"],
+          "secundarios": ["Adutores"],
+          "aquecimento": true,
+          "porque": "Quadríceps e glúteo, uma perna por vez. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o búlgaro em si não foi testado.",
+          "evidencia": "nao-testado",
+          "dicas": ["Repetições contadas por perna", "Tronco levemente à frente puxa mais glúteo", "Desça até o joelho de trás quase tocar o chão"]
+        },
+        {
+          "nome": "Elevação pélvica (hip thrust)",
+          "imagem": "Barbell_Hip_Thrust",
+          "series": 3, "reps": "12–15", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Glúteo"],
+          "secundarios": ["Posteriores de coxa"],
+          "porque": "Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). Numa revisão de estudos, é o exercício indicado para priorizar o glúteo (Krause Neto et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Costas apoiadas no banco, na altura das escápulas", "Suba até alinhar quadril e tronco", "Queixo para baixo, sem arquear a lombar"]
+        },
+        {
+          "nome": "Remada unilateral com halter (serrote)",
+          "imagem": "One-Arm_Dumbbell_Row",
+          "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Dorsal", "Meio das costas"],
+          "secundarios": ["Deltoide posterior", "Bíceps"],
+          "aquecimento": true,
+          "porque": "Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada.",
+          "evidencia": "nao-testado",
+          "dicas": ["Mão e joelho apoiados no banco", "Deixe o halter descer bem", "Puxe o cotovelo em direção ao quadril"]
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "imagem": "Dumbbell_Shoulder_Press",
+          "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Deltoide anterior"],
+          "secundarios": ["Deltoide lateral", "Tríceps"],
+          "aquecimento": true,
+          "porque": "O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento.",
+          "evidencia": "ativacao",
+          "dicas": ["Sentado, com encosto quase vertical", "Halteres descem até a altura do queixo", "Não arqueie demais a lombar"]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "1–2 min",
+          "primarios": ["Posteriores de coxa"],
+          "secundarios": ["Panturrilha"],
+          "aquecimento": true,
+          "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021).",
+          "evidencia": "crescimento",
+          "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
+        },
+        {
+          "nome": "Rosca inclinada com halteres",
+          "imagem": "Incline_Dumbbell_Curl",
+          "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Bíceps"],
+          "secundarios": ["Braquial"],
+          "aquecimento": true,
+          "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
+        }
+      ]
+    }
+  ]
+}

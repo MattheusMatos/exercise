@@ -1,6 +1,15 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v6';
+const VERSAO = 'treino-ppl-v7';
+const PROGRAMAS = [
+  'programa_ppl.json',
+  'programa_feminino.json',
+  'programa_iniciante_m.json',
+  'programa_avancado_m.json',
+  'programa_iniciante_f.json',
+  'programa_avancado_f.json',
+  'programa_mobilidade.json',
+];
 const ESSENCIAIS = [
   './',
   'index.html',
@@ -10,8 +19,7 @@ const ESSENCIAIS = [
   'ofensiva.js',
   'avatar.js',
   'aerobico.js',
-  'programa_ppl.json',
-  'programa_feminino.json',
+  ...PROGRAMAS,
   'biblioteca/exercicios.json',
   'manifest.webmanifest',
   'icones/icone-192.png',
@@ -23,8 +31,8 @@ self.addEventListener('install', (evento) => {
     const cache = await caches.open(VERSAO);
     await cache.addAll(ESSENCIAIS);
     try {
-      // Fotos dos dois programas, para o treino abrir completo mesmo sem sinal.
-      const programas = await Promise.all(['programa_ppl.json', 'programa_feminino.json'].map(async (arquivo) => (await cache.match(arquivo)).json()));
+      // Fotos de todos os programas, para o treino abrir completo mesmo sem sinal.
+      const programas = await Promise.all(PROGRAMAS.map(async (arquivo) => (await cache.match(arquivo)).json()));
       const fotos = programas.flatMap((programa) => programa.treinos.flatMap((treino) =>
         treino.exercicios.flatMap((ex) => [`fotos/${ex.imagem}-0.jpg`, `fotos/${ex.imagem}-1.jpg`])));
       const nomes = ['brutus', 'otto', 'capi', 'zeca', 'duda', 'nina', 'ravi', 'bento', 'bia', 'joca', 'nino'];

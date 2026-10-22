@@ -1,6 +1,6 @@
 # Programa com foco em pernas e glúteo
 
-Uma das duas opções de treino do app, escolhida junto com o personagem. São seis treinos, quatro de pernas e glúteo e dois de parte de cima: o glúteo aparece nos quatro dias de perna. Os vídeos de cada treino estão em [`videos/`](videos/).
+Uma das opções de treino do app, recomendada para mulheres. São seis treinos, quatro de pernas e glúteo e dois de parte de cima: o glúteo aparece nos quatro dias de perna. Os vídeos de cada treino estão em [`videos/`](videos/).
 
 ## Por que uma versão com foco em pernas e glúteo
 
@@ -23,7 +23,7 @@ Com o mesmo volume semanal, treinar um músculo mais ou menos vezes por semana d
 
 ## Regras gerais
 
-As mesmas do [programa PPL](programa_ppl.md#regras-gerais): nos 2 primeiros exercícios, RIR 1–2 e 2–3 min de descanso; nos demais, RIR 0–1 e 1–2 min; aquecimento só no primeiro exercício de cada músculo; amplitude completa, com ênfase na parte em que o músculo está alongado.
+As mesmas do [programa PPL](programa_ppl.md#regras-gerais): nos 2 primeiros exercícios, RIR 1–2 e 2–3 min de descanso; nos demais, RIR 0–1 e 1–2 min; aquecimento de 6 repetições com 40% e 6 com 80% da carga no primeiro exercício de cada músculo (Ribeiro et al., 2021); amplitude completa, com ênfase na parte em que o músculo está alongado.
 
 ## Treinos
 

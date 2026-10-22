@@ -142,10 +142,17 @@ def barras(img, total, atual, progresso):
             d.rounded_rectangle((x0, 34, x0 + larg * progresso, 42), radius=4, fill=ACCENT)
 
 
+def caber(d, texto, peso, tamanho, largura, minimo=24):
+    """Maior fonte, até tamanho, em que o texto cabe na largura."""
+    while tamanho > minimo and d.textlength(texto, font=font(peso, tamanho)) > largura:
+        tamanho -= 2
+    return font(peso, tamanho)
+
+
 def slide_intro(treino, fotos, regras, titulo):
     img = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(img)
-    cabecalho(d, f"{titulo.upper()} · HIPERTROFIA")
+    cabecalho(d, titulo.upper() if "mobilidade" in titulo.lower() else f"{titulo.upper()} · HIPERTROFIA")
     d.text((MARGEM - 6, 190), treino["titulo"], font=font("Black", 180), fill=TEXT)
     d.text((MARGEM, 420), treino["foco"], font=font("Medium", 56), fill=MUTED)
     d.rectangle((MARGEM, 520, MARGEM + 200, 532), fill=ACCENT)
@@ -176,7 +183,8 @@ def slide_intro(treino, fotos, regras, titulo):
     d.rounded_rectangle((MARGEM, y, W - MARGEM, y + 120 + 62 * len(regras)), radius=32, fill=CARD)
     d.text((MARGEM + 44, y + 36), "Regras do dia", font=font("Bold", 42), fill=TEXT)
     for i, regra in enumerate(regras):
-        d.text((MARGEM + 44, y + 110 + i * 62), "•  " + regra, font=font("Regular", 36), fill=MUTED)
+        texto = "•  " + regra
+        d.text((MARGEM + 44, y + 110 + i * 62), texto, font=caber(d, texto, "Regular", 36, W - 2 * MARGEM - 88), fill=MUTED)
     return img
 
 
@@ -201,7 +209,7 @@ def slide_exercicio(treino, i, ex, fotos):
         x = MARGEM + j * (caixa_w + 16)
         d.rounded_rectangle((x, y, x + caixa_w, y + 150), radius=28, fill=CARD)
         d.text((x + 28, y + 28), rotulo, font=font("SemiBold", 26), fill=MUTED)
-        d.text((x + 28, y + 70), valor, font=font("Bold", 50), fill=TEXT)
+        d.text((x + 28, y + 70), valor, font=caber(d, valor, "Bold", 50, caixa_w - 56), fill=TEXT)
     y += 150 + 36
 
     y = chips(d, y, ex["primarios"], ACCENT)

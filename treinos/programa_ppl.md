@@ -19,7 +19,7 @@ O app segue essa sequência em qualquer meta de dias. Com o mesmo volume semanal
 
 - **2 primeiros exercícios do treino:** pare a 1–2 repetições da falha (RIR 1–2) e descanse 2–3 min. Parar a 1–2 repetições da falha deu crescimento parecido com ir até a falha (Refalo et al., 2024), e nos compostos descansar 3 min rendeu mais que 1 min (Schoenfeld et al., 2016).
 - **Demais exercícios:** RIR 0–1 e 1–2 min de descanso. Quanto mais perto da falha, mais crescimento (Robinson et al., 2024); acima de ~90 s de descanso, a diferença praticamente some (Singer et al., 2024).
-- **Aquecimento:** 2–3 séries progressivas, só no primeiro exercício de cada músculo. É prática comum para acertar carga e técnica; não há estudo de crescimento sobre aquecimento.
+- **Aquecimento:** no primeiro exercício de cada músculo, 6 repetições com 40% e 6 com 80% da carga do treino. Em homens treinados, esse aquecimento deixou as primeiras repetições do agachamento e do supino mais rápidas que sem aquecer (Ribeiro et al., 2021). Não há estudo de crescimento sobre aquecimento; o app calcula os pesos a partir da carga anotada.
 - **Execução:** amplitude completa, com ênfase na parte em que o músculo está alongado. Amplitude completa rendeu pelo menos tanto quanto a parcial (Wolf et al., 2023), e em alguns músculos treinar mais alongado rendeu mais (Maeo et al., 2021 e 2023; Pedrosa et al., 2022; Kassiano et al., 2023). Desça controlando, sem precisar ser lento: repetições de 0,5 a 8 s deram crescimento parecido (Schoenfeld, Ogborn & Krieger, 2015).
 
 ## Treinos
@@ -183,6 +183,7 @@ Os supinos, o desenvolvimento e as paralelas também trabalham o tríceps e cont
 - Plotkin D et al. (2022). Progressive overload without progressing load? The effects of load or repetition progression on muscular adaptations. *PeerJ*.
 - Plotkin DL et al. (2023). Hip thrust and back squat training elicit similar gluteus muscle hypertrophy and transfer similarly to the deadlift. *Frontiers in Physiology*.
 - Refalo MC et al. (2024). Similar muscle hypertrophy following eight weeks of resistance training to momentary muscular failure or with repetitions-in-reserve in resistance-trained individuals. *Journal of Sports Sciences*.
+- Ribeiro B et al. (2021). Aquecimento específico de 2 × 6 repetições com 40% e 80% da carga, comparado a não aquecer, na velocidade do agachamento e do supino em homens treinados. *Journal of Men's Health*, 17(4), 226–233.
 - Robinson ZP et al. (2024). Exploring the dose–response relationship between estimated resistance training proximity to failure, strength gain, and muscle hypertrophy: a series of meta-regressions. *Sports Medicine*.
 - Rodríguez-Ridao D et al. (2020). Effect of five bench inclinations on the electromyographic activity of the pectoralis major, anterior deltoid, and triceps brachii during the bench press exercise. *International Journal of Environmental Research and Public Health*.
 - Schoenfeld BJ et al. (2014). Effects of different volume-equated resistance training loading strategies on muscular adaptations in well-trained men. *Journal of Strength and Conditioning Research*.
