@@ -37,23 +37,30 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 - cada dia com treino soma 1, e dia de descanso não apaga;
 - a ofensiva apaga quando não dá mais para bater a meta da semana (semana sem meta pede 1 treino). No dia em que é preciso treinar para não apagar, o fogo pisca e o app avisa;
 - são 11 personagens ([`personagens/`](personagens/)), cada um com 4 imagens: **começando**, **no auge** (15 dias de ofensiva ou mais), **afastado** (4 dias ou mais sem treinar) e **de volta** (até uma semana depois de voltar). A fase vem de `fase()` em `ofensiva.js`;
-- as imagens não têm fundo e o personagem se mexe conforme a fase: balança animado começando e de volta, estufa o peito no auge e se arrasta afastado (sem animação se o celular pedir menos movimento);
-- o personagem aparece também no topo do treino, no descanso e no fim do treino. O descanso abre num cartão de tela cheia, com o personagem descansando, o tempo, o que vem a seguir, **+30 s** e **Pular**; quando acaba, ele comemora. **Minimizar** reduz o descanso a uma barra para ver o cartão do exercício.
+- as imagens não têm fundo, e o personagem fica parado;
+- o personagem aparece também no topo do treino, no descanso e no fim do treino. O descanso abre num cartão laranja de tela cheia, com o personagem descansando, o tempo, o que vem a seguir, **+30 s** e **Pular**; quando acaba, fica verde e ele comemora. **Minimizar** reduz o descanso a uma barra para ver o cartão do exercício, e marcar o exercício como **Feito** encerra o descanso.
 
 ### Aeróbico e pontos
 
-Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias para o tempo escolhido (10, 20 ou 30 min) e o peso da pessoa. Marcar o aeróbico soma 1 ponto a cada 2 minutos (até +15), uma vez por dia de treino.
+Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
+
+**Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia de treino.
 
 | Aeróbico | METs | Impacto |
 |---|---|---|
-| Caminhada na esteira (5,5 km/h) | 4,3 | baixo: 1 a 1,5 vez o peso do corpo por passo |
+| Caminhada na esteira (5,6 km/h) | 4,3 | baixo: 1 a 1,5 vez o peso do corpo por passo |
 | Corrida na esteira (8 km/h) | 8,3 | alto: 2 a 3 vezes o peso do corpo por passada |
 | Bicicleta ergométrica (moderado) | 6,8 | nenhum |
 | Elíptico (moderado) | 5,0 | baixo |
 | Escada (simulador) | 9,0 | baixo, com o joelho trabalhando dobrado |
 | Remo ergométrico (moderado) | 7,0 | nenhum |
 
-Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Activities (Ainsworth et al., 2011). Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo (Schumann et al., 2022); corrida atrapalha mais que bicicleta (Wilson et al., 2012), por isso o app sugere evitar corrida em dia de perna.
+Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Activities (Ainsworth et al., 2011). O app explica, em **O que dizem os estudos**:
+
+- a OMS (2020) recomenda 150 a 300 min por semana de aeróbico moderado, ou 75 a 150 de intenso;
+- numa revisão de 43 estudos, juntar aeróbico e musculação não diminuiu o ganho de músculo nem de força máxima, com corrida ou bicicleta, no mesmo dia ou em dias separados; só a força explosiva ganhou um pouco menos (Schumann et al., 2022);
+- aeróbico logo antes da musculação diminui as repetições do treino de força por algumas horas (Sporer e Wenger, 2003), por isso fica no fim;
+- a corrida diminuiu um pouco o crescimento das fibras do tipo I, e a bicicleta não (Lundberg et al., 2022, evidência preliminar), por isso o app sugere evitar corrida em dia de perna.
 
 Toque no personagem para trocar: o escolhido aparece grande, com uma descrição. Na mesma tela se escolhe o treino, separado do personagem: **Treino PPL** ou **Pernas e glúteo** ([`programa_feminino.md`](programa_feminino.md)). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico e a semana planejada continuam os mesmos.
 

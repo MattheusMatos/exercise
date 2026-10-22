@@ -612,7 +612,7 @@ svg { width: 22px; height: 22px; flex: none; }
   background: none;
   cursor: pointer;
 }
-/* Sombra no chão, que encolhe quando o personagem sobe. */
+/* Sombra no chão, embaixo do personagem. */
 .personagem-palco::before {
   content: "";
   position: absolute;
@@ -622,7 +622,6 @@ svg { width: 22px; height: 22px; flex: none; }
   height: 12px;
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
-  animation: sombra 2.4s ease-in-out infinite;
 }
 .personagem-palco img {
   position: relative;
@@ -634,20 +633,10 @@ svg { width: 22px; height: 22px; flex: none; }
   transform-origin: 50% 100%;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
 }
-/* Cada fase se mexe de um jeito: começando e de volta balançam animados, no auge respira
-   estufando o peito, afastado se arrasta devagar. Ao aparecer, o personagem pula na tela. */
-.personagem-palco.fase-comecando img { animation: entrar 0.5s ease-out both, quicar 2.4s ease-in-out 0.5s infinite; }
-.personagem-palco.fase-volta img { animation: entrar 0.5s ease-out both, quicar 1.6s ease-in-out 0.5s infinite; }
-.personagem-palco.fase-auge img { animation: entrar 0.5s ease-out both, estufar 2s ease-in-out 0.5s infinite; }
-.personagem-palco.fase-afastado img { animation: entrar 0.5s ease-out both, arrastar 4s ease-in-out 0.5s infinite; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35)) saturate(0.75); }
-.personagem-palco:active img { animation: apertar 0.3s ease-out; }
-@keyframes entrar { from { opacity: 0; transform: translateY(18px) scale(0.85); } 70% { opacity: 1; transform: translateY(-4px) scale(1.04); } }
-@keyframes quicar { 0%, 100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-5px) rotate(-1.5deg); } 50% { transform: translateY(0) rotate(0); } 75% { transform: translateY(-5px) rotate(1.5deg); } }
-@keyframes estufar { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.05, 1.03) translateY(-2px); } }
-@keyframes arrastar { 0%, 100% { transform: rotate(-1.5deg) translateY(1px); } 50% { transform: rotate(1.5deg) translateY(0); } }
-@keyframes apertar { 50% { transform: scale(0.92, 1.06); } }
-@keyframes sombra { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.9); } }
-@keyframes flutuar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.personagem-palco.fase-afastado img { filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35)) saturate(0.75); }
+/* O personagem fica parado: só aparece com um leve esmaecer. */
+.personagem-palco img, .personagem-solto img, .descanso.cheio .descanso-personagem img, .crono-personagem img { animation: surgir 0.35s ease-out both; }
+@keyframes surgir { from { opacity: 0; } }
 .personagem-nome { margin: 0; display: flex; align-items: baseline; gap: 8px; }
 .personagem-nome strong { font: 800 24px/1 var(--fonte-titulo); }
 .personagem-nome span { color: var(--laranja); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
@@ -675,7 +664,8 @@ svg { width: 22px; height: 22px; flex: none; }
   gap: 14px;
   padding: max(16px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
   border-radius: 0;
-  background: radial-gradient(120% 70% at 50% 38%, var(--superficie-2), var(--fundo) 70%);
+  background: radial-gradient(120% 70% at 50% 36%, #ffb37a, var(--laranja) 55%, #d9481a);
+  color: var(--tinta);
   animation: abrir-descanso 0.3s ease-out;
 }
 .descanso.cheio.pronto { background: radial-gradient(120% 70% at 50% 38%, #6ee7b0, var(--verde) 70%); }
@@ -685,18 +675,18 @@ svg { width: 22px; height: 22px; flex: none; }
 .descanso.cheio .minimizar { background: none; color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .descanso.cheio .expandir { flex: 0 1 auto; min-height: 0; flex-direction: column; justify-content: center; gap: 0; }
 .descanso.cheio .descanso-personagem { width: min(78vw, 360px); height: min(44vh, 380px); margin: 0; }
-.descanso.cheio .descanso-personagem img { animation: entrar 0.5s ease-out both, respirar 3.2s ease-in-out 0.5s infinite; transform-origin: 50% 100%; }
-.descanso.cheio.pronto .descanso-personagem img { animation: entrar 0.5s ease-out both, quicar 0.9s ease-in-out 0.5s infinite; }
 .descanso.cheio .relogio { font-size: clamp(84px, 26vw, 128px); line-height: 0.95; }
 .descanso.cheio .descanso-info { flex: none; gap: 10px; align-items: center; text-align: center; }
 .descanso.cheio .barra-tempo { width: 100%; height: 8px; border-radius: 4px; }
-.descanso.cheio .descanso-proxima { font-size: 17px; white-space: normal; color: var(--texto); }
+.descanso.cheio .rotulo { color: var(--tinta); }
+.descanso.cheio .barra-tempo { background: rgba(18, 20, 26, 0.22); }
+.descanso.cheio .barra-tempo i { background: var(--tinta); }
+.descanso.cheio .descanso-botoes .mais { background: rgba(18, 20, 26, 0.16); color: var(--tinta); }
+.descanso.cheio .descanso-proxima { font-size: 17px; white-space: normal; color: var(--tinta); font-weight: 600; }
 .descanso.cheio.pronto .descanso-proxima { color: var(--tinta); }
 .descanso.cheio .descanso-botoes { gap: 12px; }
 .descanso.cheio .descanso-botoes button { flex: 1; min-height: 58px; border-radius: 16px; font: 800 22px/1 var(--fonte-titulo); }
-.descanso.cheio .pular { background: var(--laranja); color: var(--tinta); }
-.descanso.cheio.pronto .pular { background: var(--tinta); color: var(--texto); }
-@keyframes respirar { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025, 1.015); } }
+.descanso.cheio .pular { background: var(--tinta); color: var(--texto); }
 @keyframes abrir-descanso { from { opacity: 0; transform: scale(1.04); } }
 
 /* Aeróbico */
@@ -737,7 +727,6 @@ svg { width: 22px; height: 22px; flex: none; }
 .aerobico-detalhe p { margin: 0; font-size: 14px; line-height: 1.4; }
 .descanso-personagem img, .personagem-solto img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35)); }
 .personagem-solto { flex: none; width: 140px; height: 150px; }
-.personagem-solto img { animation: entrar 0.6s ease-out both, flutuar 2.2s ease-in-out 0.6s infinite; }
 .personagem-solto.subiu { animation: subiu 0.8s ease-out 2; }
 .pontos { color: var(--texto); font-weight: 700; }
 .pontos-fim { margin: 0; color: var(--laranja); font-weight: 700; font-size: 14px; }
@@ -768,8 +757,7 @@ svg { width: 22px; height: 22px; flex: none; }
 .opcao-programa[aria-pressed="true"] { border-color: var(--laranja); background: var(--superficie-2); }
 .opcoes-personagem { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .opcao-personagem { display: flex; flex-direction: column; gap: 4px; padding: 4px 4px 6px; border: 2px solid var(--linha); border-radius: 14px; background: var(--fundo); color: var(--texto); font-weight: 600; font-size: 14px; cursor: pointer; }
-.opcao-personagem img { width: 100%; aspect-ratio: 1; object-fit: contain; object-position: 50% 100%; transition: transform 0.2s ease-out; }
-.opcao-personagem:hover img, .opcao-personagem[aria-pressed="true"] img { transform: translateY(-3px) scale(1.05); }
+.opcao-personagem img { width: 100%; aspect-ratio: 1; object-fit: contain; object-position: 50% 100%; }
 .destaque-personagem { display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 6px; border-radius: 16px; background: var(--superficie-2); }
 .destaque-personagem strong { font: 800 24px/1 var(--fonte-titulo); }
 .destaque-personagem p { margin: 4px 0 0; color: var(--texto); font-size: 14px; line-height: 1.35; }
@@ -946,10 +934,56 @@ svg { width: 22px; height: 22px; flex: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .cartao, .cartao.saindo, .barra-tempo i, .anilha { transition: none; }
-  .chama-icone, .personagem-palco, .personagem-palco img, .personagem-palco::before, .personagem-solto img,
+  .chama-icone, .personagem-palco, .personagem-palco img, .personagem-solto img, .crono-personagem img,
   .descanso.cheio, .descanso-personagem img, .mais-pontos { animation: none !important; }
   .pose-b { animation: none; opacity: 1; }
   .foto .pose { width: 50%; }
   .foto .pose-b { left: 50%; }
   .quadro { height: auto; width: 100%; aspect-ratio: 3 / 1; }
 }
+
+/* Cronômetro do aeróbico, em tela cheia */
+.crono-aerobico {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: max(16px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  background: radial-gradient(120% 70% at 50% 36%, #1f3a5c, var(--fundo) 70%);
+  color: var(--texto);
+}
+.crono-aerobico > * { width: min(100%, 440px); }
+.crono-topo { display: flex; align-items: center; gap: 12px; }
+.crono-topo img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
+.crono-topo div { display: flex; flex-direction: column; gap: 2px; }
+.crono-topo strong { font: 800 24px/1.05 var(--fonte-titulo); }
+.crono-pergunta { margin: 12px 0 0; font: 800 30px/1 var(--fonte-titulo); text-align: center; }
+.crono-ajuste { display: flex; align-items: center; justify-content: center; gap: 18px; }
+.crono-passo { width: 64px; height: 64px; border: 0; border-radius: 50%; background: var(--superficie-2); color: var(--texto); font: 700 34px/1 var(--fonte-texto); cursor: pointer; }
+.crono-minutos { margin: 0; min-width: 3ch; display: flex; align-items: baseline; justify-content: center; gap: 6px; }
+.crono-minutos strong { font: 800 96px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.crono-minutos span { color: var(--apagado); font-size: 20px; font-weight: 600; }
+.crono-aerobico .opcoes-minutos { flex: none; grid-template-columns: repeat(4, 1fr); }
+.crono-previsao { margin: 0; color: var(--apagado); text-align: center; font-variant-numeric: tabular-nums; }
+.crono-personagem { width: min(60vw, 240px); height: min(30vh, 240px); }
+.crono-personagem img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35)); }
+.crono-relogio { margin: 0; text-align: center; font: 800 clamp(84px, 26vw, 128px)/0.95 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.crono-aerobico .barra-tempo { height: 8px; border-radius: 4px; }
+.crono-aerobico .barra-tempo i { background: var(--azul); }
+.crono-aerobico.pausado .crono-relogio { color: var(--apagado); }
+.crono-botoes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.crono-feito { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.crono-feito strong { font: 800 44px/1 var(--fonte-titulo); }
+.crono-feito span { color: var(--apagado); }
+.aerobico-semana { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 14px; background: var(--superficie-2); }
+.aerobico-semana p { margin: 0; font-size: 14px; color: var(--apagado); }
+.aerobico-semana strong { color: var(--texto); }
+.aerobico-semana .barra-tempo i { background: var(--azul); }
+.saiba-mais summary { cursor: pointer; font-weight: 600; }
+.saiba-mais ul { margin: 8px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--apagado); font-size: 14px; line-height: 1.4; }
+.saiba-mais strong { color: var(--texto); }

@@ -6,7 +6,7 @@
  * Impacto: força no chão a cada passo, em vezes o peso do corpo (caminhada ~1–1,5×,
  * corrida ~2–3×); bicicleta, elíptico e remo não têm a fase de voo.
  *
- * Pontos: 10 por dia de treino e, no mesmo dia, 1 a cada 2 minutos de aeróbico (até 30 min).
+ * Pontos: 10 por dia de treino e, no mesmo dia, 1 a cada 2 minutos de aeróbico (somando até 30 min).
  * No navegador fica em window.Aerobico; no Node, em module.exports.
  */
 (function (raiz) {
@@ -14,16 +14,16 @@
 
   const MODALIDADES = [
     {
-      id: 'caminhada', nome: 'Caminhada na esteira', imagem: 'Walking_Treadmill', met: 4.3, ritmo: '5,5 km/h, sem inclinação',
+      id: 'caminhada', nome: 'Caminhada na esteira', imagem: 'Walking_Treadmill', met: 4.3, ritmo: '5,6 km/h, sem inclinação',
       impacto: 'baixo', articulacoes: 'Um pé sempre no chão: cada passo leva 1 a 1,5 vez o peso do corpo. Boa para quem sente o joelho. Com inclinação, gasta mais sem aumentar o impacto.',
     },
     {
       id: 'corrida', nome: 'Corrida na esteira', imagem: 'Running_Treadmill', met: 8.3, ritmo: '8 km/h',
-      impacto: 'alto', articulacoes: 'Cada passada leva 2 a 3 vezes o peso do corpo em tornozelo, joelho e quadril. Evite com dor nessas articulações e em dia de perna: corrida atrapalha mais o ganho de músculo que bicicleta (Wilson et al., 2012).',
+      impacto: 'alto', articulacoes: 'Cada passada leva 2 a 3 vezes o peso do corpo em tornozelo, joelho e quadril. Evite com dor nessas articulações e em dia de perna: corrida pode atrapalhar um pouco o crescimento das fibras do tipo I, e a bicicleta não (Lundberg et al., 2022).',
     },
     {
       id: 'bicicleta', nome: 'Bicicleta ergométrica', imagem: 'Bicycling_Stationary', met: 6.8, ritmo: 'moderado, 90–100 W',
-      impacto: 'nenhum', articulacoes: 'Sem impacto: o peso fica no banco. Banco na altura do quadril, para o joelho não dobrar demais. É o aeróbico que menos atrapalha a musculação (Wilson et al., 2012).',
+      impacto: 'nenhum', articulacoes: 'Sem impacto: o peso fica no banco. Banco na altura do quadril, para o joelho não dobrar demais. Nos estudos, bicicleta junto com musculação não atrapalhou o crescimento das fibras (Lundberg et al., 2022).',
     },
     {
       id: 'eliptico', nome: 'Elíptico', imagem: 'Elliptical_Trainer', met: 5.0, ritmo: 'moderado',
@@ -39,7 +39,9 @@
     },
   ];
   const IMPACTOS = { nenhum: 'Sem impacto', baixo: 'Impacto baixo', alto: 'Impacto alto' };
-  const MINUTOS = [10, 20, 30];
+  const MINUTOS = [15, 20, 30]; // atalhos do cronômetro; dá para escolher qualquer tempo
+  const MINUTOS_MAX = 180;
+  const META_SEMANA = 150; // minutos de atividade moderada por semana (OMS, 2020)
   const PONTOS_TREINO = 10;
 
   const porId = new Map(MODALIDADES.map((m) => [m.id, m]));
@@ -47,15 +49,18 @@
   const calorias = (id, minutos, peso) => Math.round(((modalidade(id) || { met: 0 }).met * peso * minutos) / 60 / 5) * 5;
   const pontosDoAerobico = (minutos) => Math.floor(Math.min(30, minutos) / 2);
 
-  // historico: [{ data }] dos treinos; aerobicos: [{ data, tipo, minutos }], um por dia.
-  // O aeróbico só pontua no dia em que houve treino.
+  const minutosDoDia = (aerobicos, data) => aerobicos.filter((a) => a.data === data).reduce((soma, a) => soma + a.minutos, 0);
+
+  // historico: [{ data }] dos treinos; aerobicos: [{ data, tipo, minutos }], pode haver vários no dia.
+  // O aeróbico só pontua no dia em que houve treino, somando até 30 min por dia.
   function pontos(historico, aerobicos) {
     const dias = new Set(historico.map((x) => x.data));
-    const extra = aerobicos.filter((a) => dias.has(a.data)).reduce((soma, a) => soma + pontosDoAerobico(a.minutos), 0);
+    let extra = 0;
+    for (const data of dias) extra += pontosDoAerobico(minutosDoDia(aerobicos, data));
     return dias.size * PONTOS_TREINO + extra;
   }
 
-  const api = { MODALIDADES, IMPACTOS, MINUTOS, PONTOS_TREINO, modalidade, calorias, pontosDoAerobico, pontos };
+  const api = { MODALIDADES, IMPACTOS, MINUTOS, MINUTOS_MAX, META_SEMANA, PONTOS_TREINO, modalidade, calorias, pontosDoAerobico, minutosDoDia, pontos };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Aerobico = api;
 })(typeof window !== 'undefined' ? window : globalThis);
