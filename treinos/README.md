@@ -8,6 +8,7 @@
 | [`programa_iniciante_m.md`](programa_iniciante_m.md), [`programa_iniciante_f.md`](programa_iniciante_f.md) | Corpo inteiro 3x por semana, para começar (com o `.json` de cada um) |
 | [`programa_avancado_m.md`](programa_avancado_m.md), [`programa_avancado_f.md`](programa_avancado_f.md) | Avançados com bi-set, tri-set, cluster, rest-pause e drop-set |
 | [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
+| [`analise_hipertrofia.md`](analise_hipertrofia.md) | O que a literatura diz sobre volume, frequência e divisão do treino, e o volume de cada programa |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
@@ -27,14 +28,15 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 
 - cada série é um cronômetro no pé do cartão: toque nele ao terminar a série e o descanso começa sozinho;
 - anote a **carga** de cada exercício: ela fica salva para a próxima vez, junto com a data;
-- no primeiro exercício de cada músculo, o **aquecimento** mostra 6 repetições com 40% e 6 com 80% da carga anotada (Ribeiro et al., 2021); não conta como série;
+- ao tocar em **Começar treino**, abre a tela de **aquecimento**: mostra quais exercícios têm 6 repetições com 40% e 6 com 80% da carga anotada antes (Ribeiro et al., 2021), com a opção de pular o aquecimento daquele dia. Só aquece o primeiro exercício de cada região que ainda não trabalhou no treino, nem como músculo auxiliar: o supino já aquece tríceps e ombro;
+- na tela inicial, toque num exercício da lista para ver a prévia: fotos em movimento, séries, técnica, motivo e o trecho dele no vídeo do treino;
 - nos programas avançados, cada técnica aparece no cartão com como fazer e o estudo: no **bi-set** e no **tri-set**, marcar a série traz o próximo exercício do grupo sem descanso, e o descanso começa depois do último; **cluster** e **rest-pause** têm o botão **Mini-pausa**;
 - o topo do treino mostra o tempo desde o começo, com os descansos;
 - arraste o cartão para a direita quando terminar o exercício;
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
 - toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
-- toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só para hoje ou sempre naquele treino;
-- cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Não testado** (anatomia ou estudos com exercícios parecidos);
+- toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só na próxima vez (ou só hoje, durante o treino) ou sempre naquele treino;
+- cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Princípios gerais** (nenhum estudo mediu o crescimento com o exercício em si; ele segue o que faz qualquer músculo crescer: carga, volume e séries perto da falha);
 - o app lembra qual é o próximo treino, as trocas feitas e retoma um treino interrompido. Tudo fica salvo no navegador do celular, sem login.
 
 ### Primeira abertura e programas
@@ -95,7 +97,7 @@ Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Acti
 - aeróbico logo antes da musculação diminui as repetições do treino de força por algumas horas (Sporer e Wenger, 2003), por isso fica no fim;
 - a corrida diminuiu um pouco o crescimento das fibras do tipo I, e a bicicleta não (Lundberg et al., 2022, evidência preliminar), por isso o app sugere evitar corrida em dia de perna.
 
-Toque no personagem para trocar: o escolhido aparece grande, com uma descrição. Na mesma tela se escolhe o treino, separado do personagem, e para quem são as sugestões. Cada programa lembra o próprio próximo treino; a ofensiva, o histórico, as cargas e a semana planejada continuam os mesmos.
+Toque no personagem para trocar: a folha tem duas abas, **Treino** (primeiro homem ou mulher, que só muda a ordem das sugestões, e depois a lista de programas) e **Personagem** (o escolhido aparece grande, com a descrição). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico, as cargas e a semana planejada continuam os mesmos.
 
 ### Semana
 

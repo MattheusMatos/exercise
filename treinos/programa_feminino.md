@@ -31,23 +31,23 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 
 - **Crescimento:** um estudo mediu o músculo crescendo com esse exercício ou com essa escolha.
 - **Ativação:** só há estudo de ativação (EMG), que mede o quanto o músculo trabalha durante o exercício e nem sempre prevê o crescimento.
-- **Não testado:** vem da anatomia ou de estudos com exercícios parecidos.
+- **Princípios gerais:** nenhum estudo mediu o crescimento com o exercício em si. Isso não quer dizer que ele não funcione: ele trabalha o músculo com carga e perto da falha, que é o que faz qualquer músculo crescer (Robinson et al., 2024; Pelland et al., 2026). Falta só a comparação com outros exercícios.
 
 ### Glúteo A: glúteo e posterior (16 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
 | 1 | Elevação pélvica (hip thrust) | 4 × 8–12 | Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). Numa revisão de estudos, é o exercício indicado para priorizar o glúteo (Krause Neto et al., 2025). | Crescimento |
 | 2 | Stiff (terra romeno) | 3 × 8–10 | O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Glúteo e posterior trabalham alongados na descida. | Crescimento |
-| 3 | Agachamento búlgaro | 3 × 8–12 por perna | Glúteo e quadríceps, uma perna por vez. Não foi comparado ao agachamento em estudo de crescimento. | Não testado |
+| 3 | Agachamento búlgaro | 3 × 8–12 por perna | Glúteo e quadríceps, uma perna por vez. Não foi comparado ao agachamento em estudo de crescimento. | Princípios gerais |
 | 4 | Mesa flexora sentada | 3 × 10–15 | Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). | Crescimento |
-| 5 | Abdução de quadril na máquina | 3 × 12–20 | Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). A abdução trabalha esses músculos, mas o crescimento com ela não foi medido. | Não testado |
+| 5 | Abdução de quadril na máquina | 3 × 12–20 | Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). A abdução trabalha esses músculos, mas o crescimento com ela não foi medido. | Princípios gerais |
 
 ### Superior A: peito, costas e ombros (16 séries, ~50 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
 | 1 | Supino inclinado com halteres | 3 × 8–12 | Quem fez supino inclinado teve mais crescimento na parte de cima do peito do que quem fez o reto (Chaves et al., 2020). | Crescimento |
-| 2 | Puxada frontal | 3 × 8–12 | O dorsal é o principal músculo da puxada. Não há estudo comparando o crescimento entre as variações. | Não testado |
-| 3 | Remada sentada no cabo | 3 × 10–12 | Remada com carga estável e fácil de ajustar. Não há estudo de crescimento comparando remadas. | Não testado |
+| 2 | Puxada frontal | 3 × 8–12 | O dorsal é o principal músculo da puxada. Não há estudo comparando o crescimento entre as variações. | Princípios gerais |
+| 3 | Remada sentada no cabo | 3 × 10–12 | Remada com carga estável e fácil de ajustar. Não há estudo de crescimento comparando remadas. | Princípios gerais |
 | 4 | Elevação lateral no cabo | 3 × 12–20 | Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025). | Crescimento |
 | 5 | Tríceps acima da cabeça no cabo | 2 × 10–15 | Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023). | Crescimento |
 | 6 | Rosca inclinada com halteres | 2 × 10–15 | Num estudo com mulheres, a rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025). | Crescimento |
@@ -59,26 +59,27 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 | 2 | Leg press | 3 × 10–15 | Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025). A lombar fica apoiada. | Crescimento |
 | 3 | Cadeira extensora | 3 × 10–15 | O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez ele crescer mais que o resto do quadríceps (Ema et al., 2013). | Crescimento |
 | 4 | Panturrilha em pé | 3 × 10–15 | Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023). | Crescimento |
-| 5 | Abdominal na polia | 2 × 10–15 | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Não testado |
+| 5 | Abdominal na polia | 2 × 10–15 | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Princípios gerais |
 
 ### Glúteo B: glúteo e posterior (15 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
 | 1 | Elevação pélvica (hip thrust) | 3 × 10–15 | Segundo hip thrust da semana, agora com mais repetições. Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). | Crescimento |
 | 2 | Hiperextensão 45° | 3 × 10–15 | Num estudo, este exercício de extensão de quadril fez a cabeça longa do bíceps femoral crescer mais que o nórdico (Bourne et al., 2017). O glúteo não foi medido. | Crescimento |
-| 3 | Afundo para trás com halteres | 3 × 8–12 por perna | Glúteo e quadríceps, uma perna por vez, variando em relação ao búlgaro. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o afundo em si não foi testado. | Não testado |
+| 3 | Afundo para trás com halteres | 3 × 8–12 por perna | Glúteo e quadríceps, uma perna por vez, variando em relação ao búlgaro. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o afundo em si não foi testado. | Princípios gerais |
 | 4 | Mesa flexora sentada | 3 × 10–15 | Segundo estímulo da semana. Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). | Crescimento |
-| 5 | Abdução de quadril na máquina | 3 × 15–20 | Segundo estímulo da semana para o glúteo médio. Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). O crescimento com a abdução não foi medido. | Não testado |
+| 5 | Abdução de quadril na máquina | 3 × 15–20 | Segundo estímulo da semana para o glúteo médio. Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). O crescimento com a abdução não foi medido. | Princípios gerais |
 
-### Superior B: ombros e costas (16 séries, ~50 min)
+### Superior B: ombros e costas (19 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
 | 1 | Desenvolvimento com halteres | 3 × 8–12 | O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento. | Ativação |
-| 2 | Remada unilateral com halter (serrote) | 3 × 10–12 | Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada. | Não testado |
+| 2 | Remada unilateral com halter (serrote) | 3 × 10–12 | Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada. | Princípios gerais |
 | 3 | Supino máquina | 3 × 8–12 | Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023), e na máquina dá para ir perto da falha sem ajuda. | Crescimento |
-| 4 | Puxada com pegada fechada | 3 × 8–12 | Segunda puxada da semana, com outra pegada. Não há estudo comparando o crescimento entre pegadas. | Não testado |
-| 5 | Crucifixo inverso na máquina | 2 × 12–20 | O deltoide posterior puxa o braço para trás, o contrário dos supinos. O crescimento com este exercício não foi medido. | Não testado |
-| 6 | Rosca Scott com barra W | 2 × 10–15 | Num estudo com mulheres, a Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025). | Crescimento |
+| 4 | Puxada com pegada fechada | 3 × 8–12 | Segunda puxada da semana, com outra pegada. Não há estudo comparando o crescimento entre pegadas. | Princípios gerais |
+| 5 | Elevação lateral com halteres | 3 × 12–20 | Trabalha direto o deltoide lateral, que só aparecia no Superior A. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025). | Crescimento |
+| 6 | Crucifixo inverso na máquina | 2 × 12–20 | O deltoide posterior puxa o braço para trás, o contrário dos supinos. O crescimento com este exercício não foi medido. | Princípios gerais |
+| 7 | Rosca Scott com barra W | 2 × 10–15 | Num estudo com mulheres, a Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025). | Crescimento |
 
 ### Pernas B: quadríceps e glúteo (14 séries, ~50 min)
 | # | Exercício | Séries × reps | Por quê | Base |
@@ -87,7 +88,7 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 | 2 | Cadeira extensora | 3 × 12–15 | Segundo estímulo da semana para o reto femoral, que o agachamento não fez crescer (Kubo et al., 2019) e a extensora fez (Ema et al., 2013). | Crescimento |
 | 3 | Coice de glúteo com caneleira | 3 × 12–15 por perna | Numa revisão de estudos, a extensão de quadril ajoelhada também fez o glúteo crescer (Krause Neto et al., 2025). Use caneleira ou o cabo para ter carga. | Crescimento |
 | 4 | Panturrilha no leg press | 3 × 10–15 | Joelho estendido, como em pé: assim a panturrilha cresceu bem mais do que sentado, que quase não fez o gastrocnêmio crescer (Kinoshita et al., 2023). | Crescimento |
-| 5 | Elevação de pernas na barra | 2 × 10–15 | Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen. | Não testado |
+| 5 | Elevação de pernas na barra | 2 × 10–15 | Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen. | Princípios gerais |
 
 ## Volume semanal
 
@@ -104,14 +105,14 @@ Com 6 dias por semana. Músculo principal do exercício conta a série inteira; 
 | Peitoral maior | 6 | 6 |
 | Dorsal | 12 | 12 |
 | Meio das costas | 6 | 8,5 |
-| Deltoide lateral | 3 | 4,5 |
+| Deltoide lateral | 6 | 7,5 |
 | Deltoide anterior | 3 | 6 |
 | Deltoide posterior | 2 | 5 |
 | Tríceps | 2 | 6,5 |
 | Bíceps | 4 | 10 |
 | Abdômen | 4 | 4 |
 
-O glúteo fica com 25 séries por semana como músculo principal e o quadríceps com 21; cada músculo da parte de cima fica entre 4,5 e 12, contando as auxiliares.
+O glúteo fica com 25 séries por semana como músculo principal e o quadríceps com 21; cada músculo da parte de cima fica entre 5 e 12, contando as auxiliares.
 Mais séries ainda rendem crescimento, cada uma um pouco menos que a anterior (Pelland et al., 2026).
 
 ## Perguntas frequentes

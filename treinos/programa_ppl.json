@@ -61,7 +61,6 @@
           "series": 4, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true,
           "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025); o programa alterna os dois só para variar.",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Sem balançar o tronco"]
@@ -72,7 +71,6 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true,
           "porque": "Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos apontados para a frente", "Desça até alongar bem atrás da cabeça", "Estenda totalmente sem mexer os ombros"]
@@ -107,7 +105,6 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
-          "aquecimento": true,
           "porque": "Com o peito apoiado, a lombar não segura o peso e as costas podem ir até perto da falha. A vantagem disso para o crescimento não foi testada.",
           "evidencia": "nao-testado",
           "dicas": ["Peito colado no banco o tempo todo", "Deixe as escápulas abrirem embaixo", "Puxe até os cotovelos passarem do tronco"]
@@ -128,7 +125,6 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide posterior"],
           "secundarios": ["Meio das costas"],
-          "aquecimento": true,
           "porque": "O deltoide posterior puxa o braço para trás, o contrário dos supinos, e o crucifixo inverso foca nesse movimento. O crescimento com ele não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Cabos cruzados na altura do ombro", "Abra os braços sem encolher os ombros", "Controle a volta"]
@@ -139,7 +135,6 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true,
           "porque": "Mais um estímulo de deltoide lateral, com o ombro descansado. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
@@ -150,7 +145,6 @@
           "series": 3, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true,
           "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025). Por isso uma fica no Pull A e a outra no Pull B.",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
@@ -205,7 +199,6 @@
           "series": 4, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Posteriores de coxa"],
           "secundarios": ["Panturrilha"],
-          "aquecimento": true,
           "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). O agachamento não fez o posterior crescer (Kubo et al., 2019).",
           "evidencia": "crescimento",
           "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
@@ -216,7 +209,6 @@
           "series": 4, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true,
           "porque": "Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos", "Pausa de 1–2 s embaixo, bem alongado", "Suba o máximo, sem quicar"]
@@ -261,7 +253,6 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Deltoide anterior"],
           "secundarios": ["Deltoide lateral", "Tríceps"],
-          "aquecimento": true,
           "porque": "O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento.",
           "evidencia": "ativacao",
           "dicas": ["Sentado, com encosto quase vertical", "Halteres descem até a altura do queixo", "Não arqueie demais a lombar"]
@@ -282,7 +273,6 @@
           "series": 4, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true,
           "porque": "Halteres e cabo fizeram o deltoide lateral crescer igual (Larsen et al., 2025). A troca de equipamento entre os dias é só para variar.",
           "evidencia": "crescimento",
           "dicas": ["Tronco levemente inclinado à frente", "Suba até a linha do ombro", "Desça devagar, sem balanço"]
@@ -293,7 +283,6 @@
           "series": 3, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true,
           "porque": "O braço fica elevado, perto da posição do tríceps acima da cabeça, que rendeu mais em Maeo et al. (2023). A testa em si não foi testada.",
           "evidencia": "nao-testado",
           "dicas": ["Leve a barra para trás da cabeça", "Cotovelos apontados para o teto", "Estenda sem abrir os cotovelos"]
@@ -328,7 +317,7 @@
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
           "aquecimento": true,
-          "porque": "Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento.",
+          "porque": "Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas.",
           "evidencia": "nao-testado",
           "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
         },
@@ -358,7 +347,6 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide posterior"],
           "secundarios": ["Meio das costas"],
-          "aquecimento": true,
           "porque": "Segundo estímulo da semana para o deltoide posterior, que puxa o braço para trás. O crescimento com ele não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Pegadores na altura do ombro", "Abra os braços sem encolher os ombros", "Pausa de 1 s atrás"]
@@ -369,7 +357,6 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true,
           "porque": "A Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025). Treinar o começo do movimento, com o cotovelo quase estendido, rendeu mais que o fim (Pedrosa et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Axilas encaixadas no apoio", "Desça até quase estender o cotovelo", "Suba sem tirar os braços do apoio"]
@@ -401,7 +388,7 @@
         {
           "nome": "Stiff (terra romeno)",
           "imagem": "Romanian_Deadlift",
-          "series": 3, "reps": "6–10", "rir": "1–2", "descanso": "3 min",
+          "series": 4, "reps": "6–10", "rir": "1–2", "descanso": "3 min",
           "primarios": ["Posteriores de coxa", "Glúteo"],
           "secundarios": ["Eretores da coluna"],
           "aquecimento": true,
@@ -446,7 +433,6 @@
           "series": 4, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true,
           "porque": "Joelho estendido, como em pé: assim a panturrilha cresceu bem mais do que sentado, que quase não fez o gastrocnêmio crescer (Kinoshita et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos, sem travar", "Só a ponta dos pés na plataforma", "Pausa de 1–2 s embaixo, bem alongado"]

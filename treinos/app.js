@@ -44,7 +44,7 @@
   const EVIDENCIAS = {
     crescimento: ['Estudo de crescimento', 'um estudo mediu o músculo crescendo'],
     ativacao: ['Estudo de ativação', 'só mediu o quanto o músculo trabalha no exercício'],
-    'nao-testado': ['Não testado', 'vem da anatomia ou de estudos com exercícios parecidos'],
+    'nao-testado': ['Princípios gerais', 'nenhum estudo mediu o crescimento com este exercício em si; ele trabalha o músculo com carga, amplitude e perto da falha, o que faz qualquer músculo crescer'],
   };
 
   // Avatar de menina usa o treino com foco em pernas e glúteo; o de menino, o PPL.
@@ -63,7 +63,7 @@
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {},
+    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {},
     perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
@@ -131,6 +131,18 @@
     const selo = h('span', { class: `selo ${classe || ''}`, title: 'Semelhança com o exercício original' }, `${porcentagem}%`);
     selo.style.backgroundColor = corSemelhanca(porcentagem);
     return selo;
+  }
+
+  // Motivo do exercício com a etiqueta da base. Sem estudo próprio não quer dizer sem efeito.
+  function blocoPorque(ex) {
+    if (!ex.porque) return null;
+    return [
+      h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, 'Por quê'), seloEvidencia(ex.evidencia)),
+      h('p', { class: 'porque' }, ex.porque),
+      ex.evidencia === 'nao-testado' && !programa.mobilidade
+        ? h('p', { class: 'nota-evidencia' }, 'Funciona? Sim: o músculo cresce com séries perto da falha (Robinson et al., 2024) e com mais séries na semana (Pelland et al., 2026), em qualquer exercício que o trabalhe com carga. O que falta é um estudo comparando este exercício com outro.')
+        : null,
+    ];
   }
 
   function seloEvidencia(tipo) {
@@ -216,6 +228,7 @@
       aquecidos: s.aquecidos && typeof s.aquecidos === 'object' ? s.aquecidos : {},
       cargas: s.cargas && typeof s.cargas === 'object' ? s.cargas : {},
       ajuste: s.ajuste && typeof s.ajuste === 'object' ? { descanso: Number(s.ajuste.descanso) || 0, carga: Number(s.ajuste.carga) || 0 } : { descanso: 0, carga: 0 },
+      aquecer: typeof s.aquecer === 'boolean' || s.aquecer === null ? s.aquecer : true,
     };
   }
 
@@ -234,7 +247,7 @@
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
-      cargas: {}, ajustes: {},
+      cargas: {}, ajustes: {}, extrasProximo: {},
       perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, configurado }, atualizado: Number(e.atualizado) || 0,
     };
     // Carga usada por exercício (id da foto), para a próxima vez.
@@ -269,6 +282,8 @@
       }
       const extras = e.extras && e.extras[treino.id];
       if (Array.isArray(extras) && extras.every(extraValido) && extras.length) limpo.extras[treino.id] = extras.slice(0, 12);
+      const proximo = e.extrasProximo && e.extrasProximo[treino.id];
+      if (Array.isArray(proximo) && proximo.every(extraValido) && proximo.length) limpo.extrasProximo[treino.id] = proximo.slice(0, 12);
     }
     if (e.plano && typeof e.plano.semana === 'string' && Array.isArray(e.plano.dias) && e.plano.dias.length === 7) {
       limpo.plano = { semana: e.plano.semana, dias: e.plano.dias.map(Boolean) };
@@ -527,6 +542,7 @@
     const treino = programa.treinos[treinoIdx];
     const ids = treino.exercicios.map((_, slot) => exercicio(treinoIdx, slot).imagem);
     for (const x of estado.extras[treino.id] || []) ids.push(x.id);
+    for (const x of estado.extrasProximo[treino.id] || []) ids.push(x.id);
     if (estado.sessao && estado.sessao.treino === treinoIdx) {
       for (const x of estado.sessao.extras) if (!x.removido) ids.push(x.id);
     }
@@ -593,8 +609,9 @@
     const extra = { id: item.id, ...prescricao };
     return h('div', { class: 'bib-acoes' },
       h('p', { class: 'aviso' }, `Entra com ${prescricao.series} × ${prescricao.reps}, RIR ${prescricao.rir} e ${prescricao.descanso} de descanso.`),
-      naSessao ? h('button', { class: 'botao primario', onclick: () => adicionarExtra(treinoIdx, extra, false) }, 'Adicionar só hoje') : null,
-      h('button', { class: naSessao ? 'botao secundario' : 'botao primario', onclick: () => adicionarExtra(treinoIdx, extra, true) },
+      h('button', { class: 'botao primario', onclick: () => adicionarExtra(treinoIdx, extra, false) },
+        naSessao ? 'Adicionar só hoje' : `Adicionar só no próximo ${treino.titulo}`),
+      h('button', { class: 'botao secundario', onclick: () => adicionarExtra(treinoIdx, extra, true) },
         `Adicionar sempre no ${treino.titulo}`));
   }
 
@@ -602,14 +619,18 @@
     const treino = programa.treinos[treinoIdx];
     if (sempre) estado.extras[treino.id] = [...(estado.extras[treino.id] || []), extra];
     const sessao = estado.sessao;
-    if (sessao && sessao.treino === treinoIdx) {
+    const naSessao = sessao && sessao.treino === treinoIdx;
+    if (naSessao) {
       sessao.fila.push(treino.exercicios.length + sessao.extras.length);
       sessao.extras.push({ ...extra });
+    } else if (!sempre) {
+      // Fora do treino, "só uma vez" vale para a próxima vez que este treino começar.
+      estado.extrasProximo[treino.id] = [...(estado.extrasProximo[treino.id] || []), extra];
     }
     salvar();
     fecharBiblioteca();
     render();
-    avisar(sempre ? `Adicionado ao ${treino.titulo}` : 'Adicionado no fim do treino de hoje');
+    avisar(sempre ? `Adicionado ao ${treino.titulo}` : naSessao ? 'Adicionado no fim do treino de hoje' : `Adicionado só no próximo ${treino.titulo}`);
   }
 
   function removerExtraFixo(treinoId, j) {
@@ -1094,14 +1115,14 @@
     const fase = window.Ofensiva.fase(of);
     const p = window.Avatar.personagem(estado.perfil.personagem);
     return h('section', { class: 'perfil' },
-      h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: abrirPerfil },
+      h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: () => abrirPerfil('personagem') },
         imagemDoPersonagem(fase)),
       h('div', { class: 'perfil-texto' },
         h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
         h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto'))),
-        h('button', { class: 'link', onclick: abrirPerfil }, 'Personagem e treino')));
+        h('button', { class: 'link', onclick: () => abrirPerfil('treino') }, 'Trocar treino')));
   }
 
   function trocarPrograma(depois) {
@@ -1120,9 +1141,11 @@
     avisar(programa.titulo);
   }
 
-  function abrirPerfil() {
+  // aba: 'treino' ou 'personagem', para não precisar rolar uma tela longa até a outra parte.
+  function abrirPerfil(aba) {
     const of = ofensivaAtual();
     const fase = window.Ofensiva.fase(of);
+    let abaAtual = aba === 'treino' ? 'treino' : 'personagem';
     let confirmando = null; // programa esperando confirmação, com treino em andamento
     const fechar = () => modal.remove();
     const caixa = h('div', { class: 'modal-caixa folha perfil-folha' });
@@ -1158,14 +1181,10 @@
         h('div', { class: `personagem-palco fase-${fase} entrando` }, h('img', { src: window.Avatar.imagem(p.id, fase), alt: '' })),
         h('div', null, h('strong', null, p.nome), h('p', null, p.descricao)));
     }
-    function desenhar() {
-      caixa.replaceChildren(...[
-        h('h2', null, 'Personagem e treino'),
-        linhaOfensiva(of, estadoDaChama(of)),
-        h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
-        h('p', { class: 'rotulo' }, 'Seu treino'),
+    function abaTreino() {
+      return [
+        h('p', { class: 'rotulo' }, 'Você é'),
         h('div', { class: 'escolha-sexo', role: 'group', 'aria-label': 'Sugestões de treino para' },
-          h('span', null, 'Sugestões para'),
           [['m', 'Homem'], ['f', 'Mulher']].map(([valor, rotulo]) => h('button', {
             'aria-pressed': String(estado.perfil.sexo === valor),
             onclick: () => {
@@ -1173,8 +1192,8 @@
               salvar();
               desenhar();
             },
-          }, rotulo))),
-        listaDeProgramas(estado.perfil.sexo, escolherPrograma, estado.perfil.programa),
+          }, rotulo)),
+          h('span', null, 'Muda só a ordem das sugestões.')),
         confirmando
           ? h('div', { class: 'confirmar-troca' },
             h('p', null, `Trocar de treino encerra o ${programa.treinos[estado.sessao.treino].titulo} em andamento.`),
@@ -1193,15 +1212,21 @@
               },
             }, 'Cancelar'))
           : null,
-        h('p', { class: 'rotulo' }, 'Seu personagem'),
-        h('p', { class: 'grupo-descricao' }, 'Qualquer personagem combina com qualquer treino. Ele muda de pose conforme a ofensiva: começando, no auge, afastado ou de volta.'),
+        listaDeProgramas(estado.perfil.sexo, escolherPrograma, estado.perfil.programa),
+      ];
+    }
+    function abaPersonagem() {
+      return [
+        linhaOfensiva(of, estadoDaChama(of)),
+        h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
         destaquePersonagem(),
         h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((p) => h('button', {
           class: 'opcao-personagem',
           'aria-pressed': String(p.id === estado.perfil.personagem),
           'aria-label': `${p.nome}: ${p.descricao}`,
           onclick: () => escolherPersonagem(p.id),
-        }, h('img', { src: window.Avatar.imagem(p.id, 'auge'), alt: '', loading: 'lazy' }), h('span', null, p.nome)))),
+        }, h('img', { src: window.Avatar.imagem(p.id, 'auge'), alt: '' }), h('span', null, p.nome)))),
+        h('p', { class: 'grupo-descricao' }, 'Qualquer personagem combina com qualquer treino. Ele muda de pose conforme a ofensiva: começando, no auge, afastado ou de volta.'),
         h('details', { class: 'regras-ofensiva' },
           h('summary', null, 'Como funciona a ofensiva'),
           h('ul', null,
@@ -1209,12 +1234,30 @@
             h('li', null, 'Ela apaga quando não dá mais para bater a meta da semana. Semana sem meta pede 1 treino.'),
             h('li', null, 'Com 15 dias de ofensiva, o personagem chega no auge.'),
             h('li', null, 'Com 4 dias ou mais sem treinar, ele aparece afastado; no primeiro treino depois disso, fica "de volta" por uma semana.'))),
+      ];
+    }
+    function desenhar() {
+      const abas = [['treino', 'Treino'], ['personagem', 'Personagem']];
+      caixa.replaceChildren(...[
+        h('div', { class: 'abas', role: 'tablist', 'aria-label': 'Personagem e treino' }, abas.map(([id, rotulo]) => h('button', {
+          role: 'tab',
+          id: `aba-${id}`,
+          'aria-selected': String(abaAtual === id),
+          onclick: () => {
+            abaAtual = id;
+            desenhar();
+            caixa.scrollTop = 0;
+            caixa.querySelector(`#aba-${id}`).focus();
+          },
+        }, rotulo))),
+        h('div', { class: 'aba-conteudo', role: 'tabpanel', 'aria-labelledby': `aba-${abaAtual}` },
+          abaAtual === 'treino' ? abaTreino() : abaPersonagem()),
         h('button', { class: 'link', onclick: fechar }, 'Fechar'),
       ].flat(Infinity).filter(Boolean));
     }
     desenhar();
     document.body.append(modal);
-    caixa.querySelector('.opcao-programa[aria-pressed="true"]').focus();
+    caixa.querySelector('[role="tab"][aria-selected="true"]').focus();
   }
 
   // ---------- telas ----------
@@ -1296,6 +1339,7 @@
 
   function render() {
     if (!estado.perfil.configurado) renderBoasVindas();
+    else if (tela === 'aquecimento' && estado.sessao) renderAquecimento();
     else if (tela === 'treino' && estado.sessao) renderTreino();
     else if (tela === 'fim' && resumoFinal) renderFim();
     else {
@@ -1383,8 +1427,10 @@
     const exercicios = h('ol', { class: 'exercicios-treino' }, treino.exercicios.map((_, slot) => {
       const ex = exercicio(i, slot);
       return h('li', null,
-        miniatura(ex),
-        h('span', { class: 'ex-texto' },
+        h('button', { class: 'ex-previa', 'aria-label': `Ver ${ex.nome}`, onclick: () => abrirExercicio(i, slot) },
+          miniatura(ex),
+          h('span', { class: 'ex-play', 'aria-hidden': 'true' }, '▶')),
+        h('button', { class: 'ex-texto', onclick: () => abrirExercicio(i, slot) },
           h('span', { class: 'ex-nome' }, ex.nome),
           h('span', { class: 'ex-meta' }, ex.trocado && ex.semelhanca !== null
             ? `${ex.series} × ${ex.reps} · trocado, ${ex.semelhanca}% semelhante`
@@ -1404,9 +1450,30 @@
           h('span', { class: 'ex-meta' }, `${x.series} × ${x.reps} · extra`)),
         h('button', { class: 'trocar-linha', 'aria-label': `Tirar ${ex.nome} do treino`, onclick: () => removerExtraFixo(treino.id, j) }, 'Tirar')));
     });
+    const extrasProximo = emAndamento ? [] : estado.extrasProximo[treino.id] || [];
+    extrasProximo.forEach((x, j) => {
+      const ex = extraComoExercicio(x);
+      if (!ex) return;
+      exercicios.append(h('li', null,
+        miniatura(ex),
+        h('span', { class: 'ex-texto' },
+          h('span', { class: 'ex-nome' }, ex.nome),
+          h('span', { class: 'ex-meta' }, `${x.series} × ${x.reps} · só no próximo`)),
+        h('button', {
+          class: 'trocar-linha',
+          'aria-label': `Tirar ${ex.nome} do próximo treino`,
+          onclick: () => {
+            const lista = extrasProximo.filter((_, n) => n !== j);
+            if (lista.length) estado.extrasProximo[treino.id] = lista;
+            else delete estado.extrasProximo[treino.id];
+            salvar();
+            renderInicio();
+          },
+        }, 'Tirar')));
+    });
 
-    const totalExercicios = treino.exercicios.length + extrasFixos.length;
-    const series = totalSeries(treino) + extrasFixos.reduce((soma, x) => soma + x.series, 0);
+    const totalExercicios = treino.exercicios.length + extrasFixos.length + extrasProximo.length;
+    const series = totalSeries(treino) + [...extrasFixos, ...extrasProximo].reduce((soma, x) => soma + x.series, 0);
     return h('article', { class: 'hero' },
       h('p', { class: 'etiqueta' }, etiqueta),
       h('h2', { class: treino.titulo.length > 7 ? 'longo' : null }, treino.titulo),
@@ -1425,26 +1492,71 @@
       biblioteca ? h('button', { class: 'botao secundario', icone: 'mais', onclick: () => abrirAdicionar(i, false) }, 'Adicionar exercício') : null);
   }
 
-  function botaoRecomecar(i) {
-    let armado = false;
-    let espera = null;
-    const botao = h('button', {
-      class: 'link',
-      onclick: () => {
-        if (!armado) {
-          armado = true;
-          botao.textContent = 'Toque de novo para recomeçar do zero';
-          espera = setTimeout(() => {
-            armado = false;
-            botao.textContent = 'Recomeçar do zero';
-          }, 3000);
-          return;
-        }
-        clearTimeout(espera);
-        comecar(i);
+  // Prévia de um exercício antes de começar: fotos em movimento, séries, técnica, motivo e o trecho do vídeo.
+  function abrirExercicio(i, slot) {
+    const ex = exercicio(i, slot);
+    const t = ex.tecnica && TECNICAS[ex.tecnica.tipo];
+    const fechar = () => modal.remove();
+    const modal = h('div', {
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': ex.nome,
+      onclick: (e) => {
+        if (e.target === modal) fechar();
       },
-    }, 'Recomeçar do zero');
-    return botao;
+    }, h('div', { class: 'modal-caixa folha previa' },
+      figura(ex, doisDigitos(slot + 1), null),
+      h('h2', null, ex.nome),
+      h('div', { class: 'numeros' },
+        h('div', null, h('span', { class: 'rotulo' }, programa.mobilidade ? 'Séries × tempo' : 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),
+        programa.mobilidade ? null : h('div', null, h('span', { class: 'rotulo' }, 'RIR'), h('strong', null, ex.rir)),
+        h('div', null, h('span', { class: 'rotulo' }, 'Descanso'), h('strong', null, ex.descanso))),
+      t ? h('div', { class: `tecnica tecnica-${ex.tecnica.tipo}` },
+        h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, `${t.nome}${ex.tecnica.grupo ? ` ${ex.tecnica.grupo}` : ''}`), seloEvidencia(t.evidencia)),
+        h('p', { class: 'porque' }, t.texto)) : null,
+      ex.aquecimento && !programa.mobilidade ? h('p', { class: 'aviso' }, 'Tem aquecimento antes: 6 repetições com 40% e 6 com 80% da carga.') : null,
+      blocoPorque(ex),
+      h('p', { class: 'rotulo' }, daBiblioteca(ex) ? 'Passo a passo' : 'Execução'),
+      daBiblioteca(ex) ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d))) : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d))),
+      ex.trocado ? h('p', { class: 'aviso' }, 'Exercício trocado: o vídeo do treino mostra o original.') : h('button', {
+        class: 'botao primario', icone: 'play',
+        onclick: () => {
+          fechar();
+          abrirVideo(i, slot);
+        },
+      }, 'Ver no vídeo'),
+      h('button', { class: 'link', onclick: fechar }, 'Fechar')));
+    document.body.append(modal);
+    modal.querySelector('.link').focus();
+  }
+
+  function botaoRecomecar(i) {
+    return h('button', { class: 'link', onclick: () => confirmarRecomecar(i) }, 'Recomeçar do zero');
+  }
+
+  function confirmarRecomecar(i) {
+    const treino = programa.treinos[i];
+    const fechar = () => modal.remove();
+    const modal = h('div', {
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Recomeçar o treino',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, h('div', { class: 'modal-caixa folha' },
+      h('h2', null, `Recomeçar o ${treino.titulo}?`),
+      h('p', null, 'As séries marcadas hoje e o tempo voltam para o zero. As cargas anotadas continuam salvas.'),
+      h('button', {
+        class: 'botao primario',
+        onclick: () => {
+          // Os exercícios adicionados só para hoje continuam no treino recomeçado.
+          const fixos = (estado.extras[treino.id] || []).length;
+          const deHoje = estado.sessao ? estado.sessao.extras.slice(fixos).filter((x) => !x.removido) : [];
+          const ajuste = estado.sessao ? estado.sessao.ajuste : null;
+          fechar();
+          comecar(i, deHoje, ajuste);
+        },
+      }, 'Recomeçar do zero'),
+      h('button', { class: 'link', onclick: fechar }, 'Cancelar')));
+    document.body.append(modal);
+    modal.querySelector('.botao').focus();
   }
 
   function renderTreino() {
@@ -1658,17 +1770,14 @@
         h('ul', { class: 'musculos', 'aria-label': 'Músculos trabalhados' },
           ex.primarios.map((m) => h('li', { class: 'principal' }, m)),
           ex.secundarios.map((m) => h('li', { class: 'auxiliar' }, m))),
-        ex.porque
-          ? [h('div', { class: 'porque-topo' }, h('p', { class: 'rotulo' }, 'Por quê'), seloEvidencia(ex.evidencia)),
-            h('p', { class: 'porque' }, ex.porque)]
-          : null,
+        blocoPorque(ex),
         h('p', { class: 'rotulo' }, daBiblioteca(ex) ? 'Passo a passo' : 'Execução'),
         daBiblioteca(ex)
           ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d)))
           : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d)))),
       mobilidade ? null : h('div', { class: 'carga-e-aquecimento' },
         campoCarga(i, ex),
-        ex.aquecimento ? blocoAquecimento(i, ex) : null),
+        ex.aquecimento && estado.sessao.aquecer !== false ? blocoAquecimento(i, ex) : null),
       h('footer', { class: 'series' },
         h('div', { class: 'anilhas', role: 'group', 'aria-label': 'Séries: toque no cronômetro ao terminar cada uma' },
           Array.from({ length: ex.series }, (_, k) => h('button', {
@@ -2068,9 +2177,12 @@
 
   // ---------- ações do treino ----------
 
-  function comecar(i) {
+  // deHoje e ajuste: ao recomeçar, os extras só de hoje e o ajuste de carga e descanso continuam.
+  function comecar(i, deHoje, ajusteAnterior) {
     const treino = programa.treinos[i];
-    const extras = (estado.extras[treino.id] || []).map((x) => ({ ...x }));
+    // Extras fixos do treino e os que valem só para esta vez.
+    const extras = [...(estado.extras[treino.id] || []), ...(estado.extrasProximo[treino.id] || []), ...(deHoje || [])].map((x) => ({ ...x, removido: undefined }));
+    delete estado.extrasProximo[treino.id];
     estado.sessao = {
       treino: i,
       fila: [...Array(treino.exercicios.length + extras.length).keys()],
@@ -2082,7 +2194,8 @@
       aquecidos: {},
       cargas: {},
       // O ajuste pedido no fim da última vez vale para esta sessão e sai da fila de ajustes.
-      ajuste: estado.ajustes[treino.id] || { descanso: 0, carga: 0 },
+      ajuste: ajusteAnterior || estado.ajustes[treino.id] || { descanso: 0, carga: 0 },
+      aquecer: null, // decidido na tela de aquecimento
     };
     delete estado.ajustes[treino.id];
     selecionado = i;
@@ -2091,8 +2204,52 @@
     abrirTreino();
   }
 
-  function abrirTreino() {
+  // Exercícios do treino de hoje que têm aquecimento antes (os do programa).
+  function exerciciosComAquecimento() {
+    if (!estado.sessao || programa.mobilidade) return [];
+    const treino = programa.treinos[estado.sessao.treino];
+    return treino.exercicios.map((e, slot) => (e.aquecimento ? slot : -1)).filter((slot) => slot >= 0);
+  }
+
+  function decidirAquecimento(aquecer) {
+    estado.sessao.aquecer = aquecer;
+    estado.sessao.inicio = Date.now(); // o tempo de treino conta a partir daqui
+    salvar();
     tela = 'treino';
+    render();
+  }
+
+  // Antes do treino: o aquecimento de hoje, com a opção de pular.
+  function renderAquecimento() {
+    const treino = programa.treinos[estado.sessao.treino];
+    const lista = exerciciosComAquecimento();
+    app.replaceChildren(h('section', { class: 'aquecimento-tela' },
+      h('header', { class: 'barra' },
+        h('button', { class: 'icone-botao', icone: 'voltar', 'aria-label': 'Voltar ao início', onclick: voltarInicio }),
+        h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo), h('span', { class: 'contador' }, 'Antes de começar'))),
+      h('h1', null, 'Aquecimento'),
+      h('p', { class: 'grupo-descricao' }, 'Antes dos exercícios abaixo, 2 séries leves que não contam no treino: 6 repetições com 40% e 6 com 80% da carga. Elas deixam as primeiras repetições mais rápidas (Ribeiro et al., 2021). Os outros exercícios já pegam músculos aquecidos.'),
+      h('ol', { class: 'exercicios-treino' }, lista.map((slot) => {
+        const ex = exercicio(estado.sessao.treino, slot);
+        const ultima = estado.cargas[ex.imagem];
+        const kg = ultima ? (estado.sessao.ajuste.carga ? arredondarCarga(ultima.kg * (1 + estado.sessao.ajuste.carga / 100)) : ultima.kg) : null;
+        return h('li', null,
+          miniatura(ex),
+          h('span', { class: 'ex-texto' },
+            h('span', { class: 'ex-nome' }, ex.nome),
+            h('span', { class: 'ex-meta' }, kg
+              ? `6 × ${textoKg(arredondarCarga(kg * 0.4))} e 6 × ${textoKg(arredondarCarga(kg * 0.8))}`
+              : '6 × 40% e 6 × 80% da carga (anote a carga no cartão)')));
+      })),
+      h('p', { class: 'aviso' }, 'No cartão de cada um, toque nas séries de aquecimento: cada uma dá 1 min de descanso. Quer soltar o corpo antes? 5 min de bicicleta leve ou a rotina de Mobilidade.'),
+      h('button', { class: 'botao primario', onclick: () => decidirAquecimento(true) }, 'Começar com aquecimento'),
+      h('button', { class: 'botao secundario', onclick: () => decidirAquecimento(false) }, 'Pular o aquecimento de hoje')));
+    window.scrollTo(0, 0);
+  }
+
+  function abrirTreino() {
+    tela = estado.sessao && estado.sessao.aquecer === null && exerciciosComAquecimento().length ? 'aquecimento' : 'treino';
+    if (tela === 'treino' && estado.sessao && estado.sessao.aquecer === null) estado.sessao.aquecer = true;
     pedirTravaTela();
     render();
   }
@@ -2494,9 +2651,28 @@
     travaTela = null;
   }
 
-  function abrirVideo(i) {
+  // Tempo de cada exercício no vídeo do treino (gerar_videos.py): abertura de 5 s, depois 8 s por exercício.
+  const VIDEO_INTRO = 5;
+  const VIDEO_EXERCICIO = 8;
+
+  // slot: mostra só o trecho daquele exercício.
+  function abrirVideo(i, slot) {
     const treino = programa.treinos[i];
-    const video = h('video', { src: `videos/${treino.id}.mp4`, controls: true, playsinline: true, preload: 'metadata' });
+    const inicio = Number.isInteger(slot) ? VIDEO_INTRO + slot * VIDEO_EXERCICIO : 0;
+    // O trecho vai também no endereço (#t=), que o navegador já entende sozinho.
+    const trecho = Number.isInteger(slot) ? `#t=${inicio},${inicio + VIDEO_EXERCICIO}` : '';
+    const video = h('video', { src: `videos/${treino.id}.mp4${trecho}`, controls: true, playsinline: true, preload: 'metadata' });
+    if (Number.isInteger(slot)) {
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = inicio;
+      }, { once: true });
+      video.addEventListener('timeupdate', () => {
+        if (video.currentTime >= inicio + VIDEO_EXERCICIO - 0.3) {
+          video.pause();
+          video.currentTime = inicio;
+        }
+      });
+    }
     const fechar = () => {
       video.pause();
       modal.remove();
@@ -2511,7 +2687,7 @@
       },
     }, h('div', { class: 'modal-caixa' },
       video,
-      h('p', { class: 'aviso' }, 'O vídeo mostra o treino original, sem as trocas.'),
+      h('p', { class: 'aviso' }, Number.isInteger(slot) ? 'Trecho do vídeo do treino. Toque no play para ver de novo.' : 'O vídeo mostra o treino original, sem as trocas.'),
       h('button', { class: 'botao secundario', onclick: fechar }, 'Fechar vídeo')));
     document.body.append(modal);
     modal.querySelector('.botao').focus();

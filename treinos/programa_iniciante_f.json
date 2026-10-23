@@ -39,7 +39,6 @@
           "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Glúteo"],
           "secundarios": ["Posteriores de coxa"],
-          "aquecimento": true,
           "porque": "Fez o glúteo crescer tanto quanto o agachamento (Plotkin et al., 2023). Numa revisão de estudos, é o exercício indicado para priorizar o glúteo (Krause Neto et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Costas apoiadas no banco, na altura das escápulas", "Suba até alinhar quadril e tronco", "Queixo para baixo, sem arquear a lombar"]
@@ -114,6 +113,7 @@
           "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Quadríceps"],
           "secundarios": ["Glúteo", "Adutores"],
+          "aquecimento": true,
           "porque": "Mais volume de quadríceps e glúteo com a lombar apoiada. Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Desça fundo sem tirar a lombar do encosto", "Pés na largura do quadril", "Não trave os joelhos no topo"]
@@ -125,17 +125,16 @@
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
           "aquecimento": true,
-          "porque": "Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento.",
+          "porque": "Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas.",
           "evidencia": "nao-testado",
           "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
         },
         {
           "nome": "Elevação lateral no cabo",
           "imagem": "Cable_Seated_Lateral_Raise",
-          "series": 2, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
+          "series": 3, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true,
           "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
@@ -156,7 +155,6 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true,
           "porque": "Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha.",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos colados ao corpo", "Estenda totalmente embaixo", "Volte controlando"]
@@ -210,7 +208,6 @@
           "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Deltoide anterior"],
           "secundarios": ["Deltoide lateral", "Tríceps"],
-          "aquecimento": true,
           "porque": "O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento.",
           "evidencia": "ativacao",
           "dicas": ["Sentado, com encosto quase vertical", "Halteres descem até a altura do queixo", "Não arqueie demais a lombar"]
@@ -221,10 +218,20 @@
           "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "1–2 min",
           "primarios": ["Posteriores de coxa"],
           "secundarios": ["Panturrilha"],
-          "aquecimento": true,
           "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021).",
           "evidencia": "crescimento",
           "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
+        },
+        {
+          "nome": "Supino inclinado com halteres",
+          "imagem": "Incline_Dumbbell_Press",
+          "series": 2, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Peitoral maior"],
+          "secundarios": ["Deltoide anterior", "Tríceps"],
+          "aquecimento": true,
+          "porque": "Quem fez supino inclinado teve mais crescimento na parte de cima do peito do que quem fez o reto (Chaves et al., 2020). Entre os ângulos testados, 30° foi o que mais ativou essa parte (Rodríguez-Ridao et al., 2020).",
+          "evidencia": "crescimento",
+          "dicas": ["Banco a ~30°", "Desça até sentir o peito alongar", "Cotovelos a ~45° do tronco"]
         },
         {
           "nome": "Rosca inclinada com halteres",
@@ -232,7 +239,6 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true,
           "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]

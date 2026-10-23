@@ -62,7 +62,6 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1–2 min",
           "primarios": ["Posteriores de coxa"],
           "secundarios": ["Panturrilha"],
-          "aquecimento": true,
           "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021).",
           "evidencia": "crescimento",
           "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
@@ -70,7 +69,7 @@
         {
           "nome": "Elevação lateral com halteres",
           "imagem": "Side_Lateral_Raise",
-          "series": 2, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
+          "series": 3, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
           "porque": "Trabalha direto o deltoide lateral. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025).",
@@ -128,7 +127,7 @@
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
           "aquecimento": true,
-          "porque": "Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento.",
+          "porque": "Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas.",
           "evidencia": "nao-testado",
           "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
         },
@@ -138,6 +137,7 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Quadríceps"],
           "secundarios": ["Glúteo", "Adutores"],
+          "aquecimento": true,
           "porque": "Mais volume de quadríceps e glúteo com a lombar apoiada. Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Desça fundo sem tirar a lombar do encosto", "Pés na largura do quadril", "Não trave os joelhos no topo"]
@@ -148,7 +148,6 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true,
           "porque": "Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha.",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos colados ao corpo", "Estenda totalmente embaixo", "Volte controlando"]
@@ -159,10 +158,19 @@
           "series": 2, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true,
           "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
+        },
+        {
+          "nome": "Crucifixo inverso na máquina",
+          "imagem": "Reverse_Machine_Flyes",
+          "series": 2, "reps": "12–20", "rir": "1–2", "descanso": "1 min",
+          "primarios": ["Deltoide posterior"],
+          "secundarios": ["Meio das costas"],
+          "porque": "O deltoide posterior puxa o braço para trás, o contrário dos supinos. O crescimento com a máquina não foi medido.",
+          "evidencia": "nao-testado",
+          "dicas": ["Pegadores na altura do ombro", "Abra os braços sem encolher os ombros", "Pausa de 1 s atrás"]
         }
       ]
     },
@@ -224,7 +232,6 @@
           "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "1 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true,
           "porque": "Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos", "Pausa de 1–2 s embaixo, bem alongado", "Suba o máximo, sem quicar"]

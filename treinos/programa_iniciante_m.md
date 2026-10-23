@@ -24,37 +24,58 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 
 - **Crescimento:** um estudo mediu o músculo crescendo com esse exercício ou com essa escolha.
 - **Ativação:** só há estudo de ativação (EMG), que nem sempre prevê o crescimento.
-- **Não testado:** vem da anatomia ou de estudos com exercícios parecidos.
+- **Princípios gerais:** nenhum estudo mediu o crescimento com o exercício em si. Isso não quer dizer que ele não funcione: ele trabalha o músculo com carga e perto da falha, que é o que faz qualquer músculo crescer (Robinson et al., 2024; Pelland et al., 2026). Falta só a comparação com outros exercícios.
 
-### Treino A: agachamento, supino e puxada (15 séries, ~50 min)
+### Treino A: agachamento, supino e puxada (16 séries, ~50 min)
 | # | Exercício | Séries × reps | Técnica | Por quê | Base |
 |---|---|---|---|---|---|
 | 1 | Agachamento livre (ou hack) *(aquecimento)* | 3 × 8–10 | — | O agachamento profundo fez glúteo e adutores crescerem mais que o meio agachamento; o quadríceps cresceu igual nos dois (Kubo et al., 2019). | Crescimento |
 | 2 | Supino reto com barra *(aquecimento)* | 3 × 8–10 | — | Reto e inclinado fizeram o meio e a parte de baixo do peito crescerem de forma parecida (Chaves et al., 2020). O reto vem primeiro porque aceita mais carga. | Crescimento |
-| 3 | Puxada frontal *(aquecimento)* | 3 × 10–12 | — | O dorsal é o principal músculo da puxada, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa. | Não testado |
-| 4 | Mesa flexora sentada *(aquecimento)* | 2 × 10–15 | — | Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). | Crescimento |
-| 5 | Elevação lateral com halteres | 2 × 12–20 | — | Trabalha direto o deltoide lateral. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025). | Crescimento |
-| 6 | Abdominal na polia | 2 × 10–15 | — | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Não testado |
+| 3 | Puxada frontal *(aquecimento)* | 3 × 10–12 | — | O dorsal é o principal músculo da puxada, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa. | Princípios gerais |
+| 4 | Mesa flexora sentada | 2 × 10–15 | — | Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). | Crescimento |
+| 5 | Elevação lateral com halteres | 3 × 12–20 | — | Trabalha direto o deltoide lateral. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025). | Crescimento |
+| 6 | Abdominal na polia | 2 × 10–15 | — | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Princípios gerais |
 
-### Treino B: stiff, desenvolvimento e remada (15 séries, ~50 min)
+### Treino B: stiff, desenvolvimento e remada (17 séries, ~50 min)
 | # | Exercício | Séries × reps | Técnica | Por quê | Base |
 |---|---|---|---|---|---|
 | 1 | Stiff (terra romeno) *(aquecimento)* | 3 × 8–10 | — | O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Num exercício de quadril, a cabeça longa do bíceps femoral cresceu mais que no nórdico, que é de joelho (Bourne et al., 2017). | Crescimento |
 | 2 | Desenvolvimento com halteres *(aquecimento)* | 3 × 8–12 | — | O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento. | Ativação |
-| 3 | Remada sentada no cabo *(aquecimento)* | 3 × 10–12 | — | Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento. | Não testado |
-| 4 | Leg press | 2 × 10–15 | — | Mais volume de quadríceps e glúteo com a lombar apoiada. Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025). | Crescimento |
-| 5 | Tríceps na polia *(aquecimento)* | 2 × 10–15 | — | Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha. | Crescimento |
-| 6 | Rosca inclinada com halteres *(aquecimento)* | 2 × 10–15 | — | A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025). | Crescimento |
+| 3 | Remada sentada no cabo *(aquecimento)* | 3 × 10–12 | — | Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas. | Princípios gerais |
+| 4 | Leg press *(aquecimento)* | 2 × 10–15 | — | Mais volume de quadríceps e glúteo com a lombar apoiada. Numa revisão de estudos, o leg press também fez o glúteo crescer (Krause Neto et al., 2025). | Crescimento |
+| 5 | Tríceps na polia | 2 × 10–15 | — | Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha. | Crescimento |
+| 6 | Rosca inclinada com halteres | 2 × 10–15 | — | A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025). | Crescimento |
+| 7 | Crucifixo inverso na máquina | 2 × 12–20 | — | O deltoide posterior puxa o braço para trás, o contrário dos supinos. O crescimento com a máquina não foi medido. | Princípios gerais |
 
 ### Treino C: hack, supino inclinado e remada (16 séries, ~50 min)
 | # | Exercício | Séries × reps | Técnica | Por quê | Base |
 |---|---|---|---|---|---|
 | 1 | Agachamento hack *(aquecimento)* | 3 × 8–12 | — | Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023). Desça fundo, como no agachamento profundo, que rendeu mais glúteo (Kubo et al., 2019). | Crescimento |
 | 2 | Supino inclinado com halteres *(aquecimento)* | 3 × 8–12 | — | Quem fez supino inclinado teve mais crescimento na parte de cima do peito do que quem fez o reto (Chaves et al., 2020). Entre os ângulos testados, 30° foi o que mais ativou essa parte (Rodríguez-Ridao et al., 2020). | Crescimento |
-| 3 | Remada com apoio no peito *(aquecimento)* | 3 × 8–12 | — | Com o peito apoiado, a lombar não segura o peso e as costas podem ir até perto da falha. A vantagem disso para o crescimento não foi testada. | Não testado |
+| 3 | Remada com apoio no peito *(aquecimento)* | 3 × 8–12 | — | Com o peito apoiado, a lombar não segura o peso e as costas podem ir até perto da falha. A vantagem disso para o crescimento não foi testada. | Princípios gerais |
 | 4 | Cadeira extensora | 2 × 12–15 | — | O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez ele crescer mais que o resto do quadríceps (Ema et al., 2013). | Crescimento |
-| 5 | Panturrilha em pé *(aquecimento)* | 3 × 10–15 | — | Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023). | Crescimento |
+| 5 | Panturrilha em pé | 3 × 10–15 | — | Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023). | Crescimento |
 | 6 | Tríceps acima da cabeça no cabo | 2 × 10–15 | — | Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023). | Crescimento |
+
+## Volume semanal
+
+Fazendo cada treino uma vez (3 treinos). Músculo principal conta a série inteira e auxiliar, meia série, o método que melhor previu o crescimento (Pelland et al., 2026). Veja a [análise de volume](analise_hipertrofia.md).
+
+| Músculo | Séries na semana | Máximo numa sessão |
+|---|---|---|
+| Quadríceps | 10 | 5 |
+| Dorsal | 9 | 3 |
+| Glúteo | 8,5 | 4 |
+| Tríceps | 8,5 | 3,5 |
+| Meio das costas | 7 | 4 |
+| Bíceps | 6,5 | 3,5 |
+| Peitoral maior | 6 | 3 |
+| Deltoide anterior | 6 | 3 |
+| Posteriores de coxa | 5 | 3 |
+| Deltoide posterior | 5 | 3,5 |
+| Deltoide lateral | 4,5 | 3 |
+| Adutores | 4 | 1,5 |
+| Gastrocnêmio | 3 | 3 |
 
 ## Referências principais
 

@@ -4,8 +4,8 @@
   "marca": "Bi-set · Tri-set · Cluster · Drop",
   "publico": "f",
   "nivel": "Avançado",
-  "dias": "4 dias por semana",
-  "resumo": "Glúteo três vezes na semana, com bi-sets, tri-sets, cluster, rest-pause e drop-set. Parte de cima uma vez, em tri-set.",
+  "dias": "4 a 5 dias por semana",
+  "resumo": "Glúteo três vezes na semana e parte de cima duas, com bi-sets, tri-sets, cluster, rest-pause e drop-set.",
   "regras": [
     "Bi-set e tri-set: sem descanso dentro do grupo",
     "Cluster, rest-pause e drop-set: só onde marcado",
@@ -39,7 +39,6 @@
           "series": 3, "reps": "8–10", "rir": "1–2", "descanso": "2–3 min",
           "primarios": ["Posteriores de coxa", "Glúteo"],
           "secundarios": ["Eretores da coluna"],
-          "aquecimento": true,
           "porque": "O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Num exercício de quadril, a cabeça longa do bíceps femoral cresceu mais que no nórdico, que é de joelho (Bourne et al., 2017).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos levemente flexionados e fixos", "Quadril para trás, barra rente às pernas", "Desça até alongar o posterior, coluna neutra"]
@@ -50,7 +49,7 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Quadríceps", "Glúteo"],
           "secundarios": ["Adutores"],
-          "tecnica": {"tipo": "biset", "grupo": "A"},
+          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "A"},
           "porque": "Quadríceps e glúteo, uma perna por vez. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o búlgaro em si não foi testado.",
           "evidencia": "nao-testado",
           "dicas": ["Repetições contadas por perna", "Tronco levemente à frente puxa mais glúteo", "Desça até o joelho de trás quase tocar o chão"]
@@ -76,17 +75,6 @@
           "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021).",
           "evidencia": "crescimento",
           "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
-        },
-        {
-          "nome": "Coice de glúteo com caneleira",
-          "imagem": "Glute_Kickback",
-          "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1 min",
-          "primarios": ["Glúteo"],
-          "secundarios": ["Posteriores de coxa"],
-          "tecnica": {"tipo": "restpause", "pausa": 15},
-          "porque": "Numa revisão de estudos, a extensão de quadril ajoelhada também fez o glúteo crescer (Krause Neto et al., 2025). Use caneleira ou o cabo para ter carga.",
-          "evidencia": "crescimento",
-          "dicas": ["Repetições contadas por perna", "Leve a perna para trás e para cima sem arquear a lombar", "Segure 1 s em cima, apertando o glúteo"]
         }
       ]
     },
@@ -95,7 +83,7 @@
       "extras": [
         {"imagem": "Cable_Crunch", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "evidencia": "nao-testado", "motivo": "Hoje não tem abdômen. Quase não há estudos medindo o crescimento do abdômen; a polia deixa a carga fácil de aumentar."}
       ],
-      "titulo": "SUPERIOR",
+      "titulo": "SUPERIOR A",
       "foco": "Peito, costas e ombros, com tri-set",
       "duracao": "~55 min",
       "exercicios": [
@@ -128,7 +116,7 @@
           "primarios": ["Meio das costas", "Dorsal"],
           "secundarios": ["Deltoide posterior", "Bíceps"],
           "tecnica": {"tipo": "biset", "grupo": "A"},
-          "porque": "Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento.",
+          "porque": "Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas.",
           "evidencia": "nao-testado",
           "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
         },
@@ -149,7 +137,7 @@
           "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true, "tecnica": {"tipo": "triset", "grupo": "B"},
+          "tecnica": {"tipo": "triset", "grupo": "B"},
           "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
@@ -171,7 +159,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true, "tecnica": {"tipo": "triset", "grupo": "B"},
+          "tecnica": {"tipo": "triset", "grupo": "B"},
           "porque": "Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos apontados para a frente", "Desça até alongar bem atrás da cabeça", "Estenda totalmente sem mexer os ombros"]
@@ -182,7 +170,7 @@
           "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true, "tecnica": {"tipo": "drop"},
+          "tecnica": {"tipo": "drop"},
           "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
@@ -236,7 +224,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Posteriores de coxa"],
           "secundarios": ["Panturrilha"],
-          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "A"},
+          "tecnica": {"tipo": "biset", "grupo": "A"},
           "porque": "Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021).",
           "evidencia": "crescimento",
           "dicas": ["Quadril bem encaixado no banco", "Tronco levemente à frente alonga mais", "Controle a volta até estender"]
@@ -247,7 +235,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true, "tecnica": {"tipo": "restpause", "pausa": 15},
+          "tecnica": {"tipo": "restpause", "pausa": 15},
           "porque": "Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos", "Pausa de 1–2 s embaixo, bem alongado", "Suba o máximo, sem quicar"]
@@ -270,7 +258,7 @@
         {"imagem": "Standing_Calf_Raises", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1–2 min", "evidencia": "crescimento", "motivo": "Hoje não tem panturrilha. Com o joelho estendido, ela cresceu bem mais do que sentado (Kinoshita et al., 2023)."}
       ],
       "titulo": "GLÚTEO B",
-      "foco": "Glúteo, com tri-set",
+      "foco": "Glúteo, com bi-set",
       "duracao": "~55 min",
       "exercicios": [
         {
@@ -290,7 +278,6 @@
           "series": 3, "reps": "10–15", "rir": "1–2", "descanso": "1–2 min",
           "primarios": ["Glúteo", "Posteriores de coxa"],
           "secundarios": ["Eretores da coluna"],
-          "aquecimento": true,
           "porque": "Num estudo, este exercício de extensão de quadril fez a cabeça longa do bíceps femoral crescer mais que o nórdico (Bourne et al., 2017). O glúteo não foi medido.",
           "evidencia": "crescimento",
           "dicas": ["Quadril na borda do apoio", "Desça até alongar o posterior", "Suba até alinhar o corpo, sem arquear a lombar"]
@@ -301,21 +288,10 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Glúteo", "Quadríceps"],
           "secundarios": ["Adutores"],
-          "tecnica": {"tipo": "triset", "grupo": "A"},
+          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "A"},
           "porque": "Glúteo e quadríceps, uma perna por vez, variando em relação ao búlgaro. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o afundo em si não foi testado.",
           "evidencia": "nao-testado",
           "dicas": ["Repetições contadas por perna", "Passo grande para trás, joelho quase no chão", "Volte empurrando com o pé da frente"]
-        },
-        {
-          "nome": "Coice de glúteo com caneleira",
-          "imagem": "Glute_Kickback",
-          "series": 3, "reps": "12–15", "rir": "0–1", "descanso": "2 min",
-          "primarios": ["Glúteo"],
-          "secundarios": ["Posteriores de coxa"],
-          "tecnica": {"tipo": "triset", "grupo": "A"},
-          "porque": "Numa revisão de estudos, a extensão de quadril ajoelhada também fez o glúteo crescer (Krause Neto et al., 2025). Use caneleira ou o cabo para ter carga.",
-          "evidencia": "crescimento",
-          "dicas": ["Repetições contadas por perna", "Leve a perna para trás e para cima sem arquear a lombar", "Segure 1 s em cima, apertando o glúteo"]
         },
         {
           "nome": "Abdução de quadril na máquina",
@@ -323,7 +299,7 @@
           "series": 3, "reps": "15–20", "rir": "0–1", "descanso": "2 min",
           "primarios": ["Glúteo médio"],
           "secundarios": [],
-          "tecnica": {"tipo": "triset", "grupo": "A"},
+          "tecnica": {"tipo": "biset", "grupo": "A"},
           "porque": "Agachamento e hip thrust quase não fizeram crescer o glúteo médio e o mínimo, na lateral do quadril (Plotkin et al., 2023). O crescimento com a abdução não foi medido.",
           "evidencia": "nao-testado",
           "dicas": ["Costas apoiadas e quadril encaixado no banco", "Abra até o fim e segure 1 s", "Volte devagar, sem deixar o peso bater"]
@@ -334,7 +310,6 @@
           "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
           "primarios": ["Quadríceps"],
           "secundarios": ["Glúteo", "Adutores"],
-          "aquecimento": true,
           "porque": "Máquina e peso livre fizeram os músculos crescerem de forma parecida (Haugen et al., 2023). Desça fundo, como no agachamento profundo, que rendeu mais glúteo (Kubo et al., 2019).",
           "evidencia": "crescimento",
           "dicas": ["Costas e quadril apoiados no encosto", "Desça o mais fundo que conseguir com controle", "Joelhos na direção dos pés"]
@@ -348,6 +323,105 @@
           "porque": "Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen.",
           "evidencia": "nao-testado",
           "dicas": ["Enrole o quadril, não só levante as pernas", "Sem balanço", "Difícil demais? Faça com os joelhos dobrados"]
+        }
+      ]
+    },
+    {
+      "id": "avf_sup_b",
+      "extras": [
+        {"imagem": "Cable_Crunch", "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min", "evidencia": "nao-testado", "motivo": "Hoje não tem abdômen. Quase não há estudos medindo o crescimento do abdômen; a polia deixa a carga fácil de aumentar."}
+      ],
+      "titulo": "SUPERIOR B",
+      "foco": "Ombros e costas, com bi-sets",
+      "duracao": "~55 min",
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento com halteres",
+          "imagem": "Dumbbell_Shoulder_Press",
+          "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Deltoide anterior"],
+          "secundarios": ["Deltoide lateral", "Tríceps"],
+          "aquecimento": true,
+          "porque": "O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento.",
+          "evidencia": "ativacao",
+          "dicas": ["Sentado, com encosto quase vertical", "Halteres descem até a altura do queixo", "Não arqueie demais a lombar"]
+        },
+        {
+          "nome": "Remada unilateral com halter (serrote)",
+          "imagem": "One-Arm_Dumbbell_Row",
+          "series": 3, "reps": "10–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Dorsal", "Meio das costas"],
+          "secundarios": ["Deltoide posterior", "Bíceps"],
+          "aquecimento": true,
+          "porque": "Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada.",
+          "evidencia": "nao-testado",
+          "dicas": ["Mão e joelho apoiados no banco", "Deixe o halter descer bem", "Puxe o cotovelo em direção ao quadril"]
+        },
+        {
+          "nome": "Puxada com pegada fechada",
+          "imagem": "Close-Grip_Front_Lat_Pulldown",
+          "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Dorsal"],
+          "secundarios": ["Bíceps", "Meio das costas"],
+          "tecnica": {"tipo": "biset", "grupo": "A"},
+          "porque": "Segunda puxada da semana, com outra pegada. Não há estudo comparando o crescimento entre pegadas.",
+          "evidencia": "nao-testado",
+          "dicas": ["Mãos na largura dos ombros", "Puxe a barra até o alto do peito", "Suba devagar até esticar os braços"]
+        },
+        {
+          "nome": "Crucifixo no cabo ou peck deck",
+          "imagem": "Cable_Crossover",
+          "series": 3, "reps": "12–15", "rir": "0–1", "descanso": "2 min",
+          "primarios": ["Peitoral maior"],
+          "secundarios": ["Deltoide anterior"],
+          "tecnica": {"tipo": "biset", "grupo": "A"},
+          "porque": "Num estudo só com peck deck, a parte de cima e a de baixo do peito cresceram cerca de 20% em 12 semanas, em iniciantes (Pinto et al., 2025). Aqui ele soma volume depois dos supinos.",
+          "evidencia": "crescimento",
+          "dicas": ["Cotovelos levemente flexionados e fixos", "Abra até alongar bem o peito", "Pausa de 1 s com as mãos juntas"]
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
+          "primarios": ["Deltoide lateral"],
+          "secundarios": ["Trapézio superior"],
+          "tecnica": {"tipo": "biset", "grupo": "B"},
+          "porque": "Trabalha direto o deltoide lateral. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Tronco levemente inclinado à frente", "Suba até a linha do ombro", "Desça devagar, sem balanço"]
+        },
+        {
+          "nome": "Crucifixo inverso no cabo",
+          "imagem": "Cable_Rear_Delt_Fly",
+          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1–2 min",
+          "primarios": ["Deltoide posterior"],
+          "secundarios": ["Meio das costas"],
+          "tecnica": {"tipo": "biset", "grupo": "B"},
+          "porque": "O deltoide posterior puxa o braço para trás, o contrário dos supinos, e o crucifixo inverso foca nesse movimento. O crescimento com ele não foi medido.",
+          "evidencia": "nao-testado",
+          "dicas": ["Cabos cruzados na altura do ombro", "Abra os braços sem encolher os ombros", "Controle a volta"]
+        },
+        {
+          "nome": "Rosca Scott com barra W",
+          "imagem": "Preacher_Curl",
+          "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
+          "primarios": ["Bíceps"],
+          "secundarios": ["Braquial"],
+          "tecnica": {"tipo": "biset", "grupo": "C"},
+          "porque": "A Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025). Treinar o começo do movimento, com o cotovelo quase estendido, rendeu mais que o fim (Pedrosa et al., 2023).",
+          "evidencia": "crescimento",
+          "dicas": ["Axilas encaixadas no apoio", "Desça até quase estender o cotovelo", "Suba sem tirar os braços do apoio"]
+        },
+        {
+          "nome": "Tríceps na polia",
+          "imagem": "Triceps_Pushdown",
+          "series": 2, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
+          "primarios": ["Tríceps"],
+          "secundarios": [],
+          "tecnica": {"tipo": "biset", "grupo": "C"},
+          "porque": "Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha.",
+          "evidencia": "crescimento",
+          "dicas": ["Cotovelos colados ao corpo", "Estenda totalmente embaixo", "Volte controlando"]
         }
       ]
     }

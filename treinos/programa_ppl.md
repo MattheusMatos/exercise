@@ -28,7 +28,7 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 
 - **Crescimento:** um estudo mediu o músculo crescendo com esse exercício ou com essa escolha.
 - **Ativação:** só há estudo de ativação (EMG), que mede o quanto o músculo trabalha durante o exercício e nem sempre prevê o crescimento.
-- **Não testado:** vem da anatomia ou de estudos com exercícios parecidos.
+- **Princípios gerais:** nenhum estudo mediu o crescimento com o exercício em si. Isso não quer dizer que ele não funcione: ele trabalha o músculo com carga e perto da falha, que é o que faz qualquer músculo crescer (Robinson et al., 2024; Pelland et al., 2026). Falta só a comparação com outros exercícios.
 
 ### Push A: peito (15 séries, ~50 min)
 | # | Exercício | Séries × reps | Por quê | Base |
@@ -42,10 +42,10 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 ### Pull A: costas, puxadas verticais (17 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
-| 1 | Barra fixa (com carga ou assistida) | 3 × 6–10 | O dorsal é o principal músculo da barra fixa. Não há estudo comparando o crescimento dela com o da puxada na máquina. | Não testado |
-| 2 | Remada com apoio no peito | 3 × 8–12 | Com o peito apoiado, a lombar não segura o peso e as costas podem ir até perto da falha. A vantagem disso para o crescimento não foi testada. | Não testado |
-| 3 | Pullover no cabo | 2 × 12–15 | Trabalha o dorsal sem dobrar o cotovelo, com o músculo alongado no começo do movimento. O crescimento com ele não foi medido. | Não testado |
-| 4 | Crucifixo inverso no cabo | 3 × 12–20 | O deltoide posterior puxa o braço para trás, o contrário dos supinos, e o crucifixo inverso foca nesse movimento. O crescimento com ele não foi medido. | Não testado |
+| 1 | Barra fixa (com carga ou assistida) | 3 × 6–10 | O dorsal é o principal músculo da barra fixa. Não há estudo comparando o crescimento dela com o da puxada na máquina. | Princípios gerais |
+| 2 | Remada com apoio no peito | 3 × 8–12 | Com o peito apoiado, a lombar não segura o peso e as costas podem ir até perto da falha. A vantagem disso para o crescimento não foi testada. | Princípios gerais |
+| 3 | Pullover no cabo | 2 × 12–15 | Trabalha o dorsal sem dobrar o cotovelo, com o músculo alongado no começo do movimento. O crescimento com ele não foi medido. | Princípios gerais |
+| 4 | Crucifixo inverso no cabo | 3 × 12–20 | O deltoide posterior puxa o braço para trás, o contrário dos supinos, e o crucifixo inverso foca nesse movimento. O crescimento com ele não foi medido. | Princípios gerais |
 | 5 | Elevação lateral no cabo | 3 × 12–20 | Mais um estímulo de deltoide lateral, com o ombro descansado. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025). | Crescimento |
 | 6 | Rosca inclinada com halteres | 3 × 8–12 | A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025). Por isso uma fica no Pull A e a outra no Pull B. | Crescimento |
 
@@ -57,7 +57,7 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 | 3 | Cadeira extensora | 3 × 10–15 | O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez ele crescer mais que o resto do quadríceps (Ema et al., 2013). Na última série, parciais na metade de baixo (Pedrosa et al., 2022). | Crescimento |
 | 4 | Mesa flexora sentada | 4 × 8–12 | Sentada, com o posterior mais alongado, rendeu mais crescimento que a deitada (Maeo et al., 2021). O agachamento não fez o posterior crescer (Kubo et al., 2019). | Crescimento |
 | 5 | Panturrilha em pé | 4 × 8–12 | Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023). | Crescimento |
-| 6 | Abdominal na polia | 3 × 10–15 | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Não testado |
+| 6 | Abdominal na polia | 3 × 10–15 | Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen. | Princípios gerais |
 
 ### Push B: ombro e peito superior (17 séries, ~55 min)
 | # | Exercício | Séries × reps | Por quê | Base |
@@ -66,28 +66,28 @@ A coluna **Base** diz o que sustenta cada motivo, com as mesmas etiquetas do app
 | 2 | Desenvolvimento com halteres, sentado | 3 × 8–12 | O deltoide anterior foi mais ativado no desenvolvimento do que no supino (Campos et al., 2020). Não há estudo comparando o crescimento. | Ativação |
 | 3 | Paralelas com tronco inclinado (ou supino máquina) | 2 × 8–12 | Peito, tríceps e deltoide anterior trabalham juntos nas paralelas (McKenzie et al., 2022). Não há estudo de crescimento com elas; se incomodar o ombro, o supino máquina serve. | Ativação |
 | 4 | Elevação lateral com halteres | 4 × 12–20 | Halteres e cabo fizeram o deltoide lateral crescer igual (Larsen et al., 2025). A troca de equipamento entre os dias é só para variar. | Crescimento |
-| 5 | Tríceps testa com barra W, descendo atrás da cabeça | 3 × 8–12 | O braço fica elevado, perto da posição do tríceps acima da cabeça, que rendeu mais em Maeo et al. (2023). A testa em si não foi testada. | Não testado |
+| 5 | Tríceps testa com barra W, descendo atrás da cabeça | 3 × 8–12 | O braço fica elevado, perto da posição do tríceps acima da cabeça, que rendeu mais em Maeo et al. (2023). A testa em si não foi testada. | Princípios gerais |
 | 6 | Tríceps na polia | 2 × 10–15 | Mais volume de tríceps. Por série, rendeu menos que o acima da cabeça (Maeo et al., 2023), mas também faz as três cabeças crescerem e é fácil de levar perto da falha. | Crescimento |
 
 ### Pull B: costas, remadas (16 séries, ~50 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
-| 1 | Remada sentada no cabo, pegada neutra | 3 × 8–12 | Remada com carga estável e fácil de ajustar. A ideia de que remada dá espessura e puxada dá largura ainda não foi testada em estudo de crescimento. | Não testado |
-| 2 | Puxada frontal | 3 × 8–12 | A puxada vertical do Pull B, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa. | Não testado |
-| 3 | Remada unilateral com halter (serrote) | 2 × 10–12 | Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada. | Não testado |
-| 4 | Crucifixo inverso na máquina | 3 × 12–20 | Segundo estímulo da semana para o deltoide posterior, que puxa o braço para trás. O crescimento com ele não foi medido. | Não testado |
+| 1 | Remada sentada no cabo, pegada neutra | 3 × 8–12 | Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas. | Princípios gerais |
+| 2 | Puxada frontal | 3 × 8–12 | A puxada vertical do Pull B, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa. | Princípios gerais |
+| 3 | Remada unilateral com halter (serrote) | 2 × 10–12 | Um lado de cada vez, com o halter descendo bem, o que alonga o dorsal no começo. A vantagem disso para o crescimento das costas não foi testada. | Princípios gerais |
+| 4 | Crucifixo inverso na máquina | 3 × 12–20 | Segundo estímulo da semana para o deltoide posterior, que puxa o braço para trás. O crescimento com ele não foi medido. | Princípios gerais |
 | 5 | Rosca Scott com barra W | 3 × 10–15 | A Scott fez a parte de baixo do braço crescer mais que a rosca inclinada (Stavinski et al., 2025). Treinar o começo do movimento, com o cotovelo quase estendido, rendeu mais que o fim (Pedrosa et al., 2023). | Crescimento |
 | 6 | Rosca martelo | 2 × 10–15 | Mais volume para o braço com outra pegada. Num estudo de ativação, a pegada neutra trabalhou parecido com a comum; só a pronada mudou o braquiorradial (Kleiber et al., 2015). | Ativação |
 
-### Legs B: posterior e glúteo (18 séries, ~60 min)
+### Legs B: posterior e glúteo (19 séries, ~60 min)
 | # | Exercício | Séries × reps | Por quê | Base |
 |---|---|---|---|---|
-| 1 | Stiff (levantamento terra romeno) | 3 × 6–10 | O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Num exercício de quadril, a cabeça longa do bíceps femoral cresceu mais que no nórdico, que é de joelho (Bourne et al., 2017). | Crescimento |
-| 2 | Agachamento búlgaro | 3 × 8–12 por perna | Quadríceps e glúteo, uma perna por vez, variando em relação ao agachamento do Legs A. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o búlgaro em si não foi testado. | Não testado |
+| 1 | Stiff (levantamento terra romeno) | 4 × 6–10 | O stiff fez o posterior crescer em 9 semanas (Morin et al., 2025). Num exercício de quadril, a cabeça longa do bíceps femoral cresceu mais que no nórdico, que é de joelho (Bourne et al., 2017). | Crescimento |
+| 2 | Agachamento búlgaro | 3 × 8–12 por perna | Quadríceps e glúteo, uma perna por vez, variando em relação ao agachamento do Legs A. Variar os exercícios fez todas as partes do quadríceps crescerem (Fonseca et al., 2014); o búlgaro em si não foi testado. | Princípios gerais |
 | 3 | Mesa flexora sentada | 3 × 10–15 | Segundo estímulo da semana. Sentada rendeu mais crescimento que deitada (Maeo et al., 2021). | Crescimento |
 | 4 | Cadeira extensora | 2 × 12–15 | Segundo estímulo da semana para o reto femoral, que o agachamento não fez crescer (Kubo et al., 2019) e a extensora fez (Ema et al., 2013). | Crescimento |
 | 5 | Panturrilha no leg press | 4 × 10–15 | Joelho estendido, como em pé: assim a panturrilha cresceu bem mais do que sentado, que quase não fez o gastrocnêmio crescer (Kinoshita et al., 2023). | Crescimento |
-| 6 | Elevação de pernas na barra | 3 × 10–15 | Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen. | Não testado |
+| 6 | Elevação de pernas na barra | 3 × 10–15 | Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen. | Princípios gerais |
 
 Para priorizar glúteo, acrescente **hip thrust 3 × 8–12** depois do búlgaro. No estudo de Plotkin et al. (2023), ele fez o glúteo crescer tanto quanto o agachamento, mas não mais. Os adutores já crescem com o agachamento profundo (Kubo et al., 2019).
 
@@ -105,8 +105,8 @@ Exercício indireto conta como meia série, método que melhor previu a hipertro
 | Tríceps | 8 | ~15 |
 | Bíceps | 8 | ~15 |
 | Quadríceps | 13 | 13 |
-| Posterior de coxa | 10 | 10 |
-| Glúteo | 0 | ~10 (agachamento, búlgaro, stiff e leg press) |
+| Posterior de coxa | 11 | 11 |
+| Glúteo | 0 | ~10,5 (agachamento, búlgaro, stiff e leg press) |
 | Panturrilha | 8 | 8 |
 | Abdômen | 6 | 6 |
 

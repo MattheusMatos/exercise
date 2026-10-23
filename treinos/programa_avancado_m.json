@@ -69,10 +69,10 @@
         {
           "nome": "Elevação lateral no cabo",
           "imagem": "Cable_Seated_Lateral_Raise",
-          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
+          "series": 4, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Deltoide lateral"],
           "secundarios": ["Trapézio superior"],
-          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "B"},
+          "tecnica": {"tipo": "biset", "grupo": "B"},
           "porque": "Trabalha direto o deltoide lateral. Cabo e halteres fizeram esse músculo crescer igual (Larsen et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Suba até a linha do ombro", "Conduza o movimento com os cotovelos", "Ombro descansado: tente progredir aqui"]
@@ -80,7 +80,7 @@
         {
           "nome": "Crucifixo inverso no cabo",
           "imagem": "Cable_Rear_Delt_Fly",
-          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
+          "series": 4, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Deltoide posterior"],
           "secundarios": ["Meio das costas"],
           "tecnica": {"tipo": "biset", "grupo": "B"},
@@ -94,7 +94,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Tríceps"],
           "secundarios": [],
-          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "C"},
+          "tecnica": {"tipo": "biset", "grupo": "C"},
           "porque": "Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais do que com o braço ao lado do corpo, nas três cabeças (Maeo et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Cotovelos apontados para a frente", "Desça até alongar bem atrás da cabeça", "Estenda totalmente sem mexer os ombros"]
@@ -105,7 +105,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Bíceps"],
           "secundarios": ["Braquial"],
-          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "C"},
+          "tecnica": {"tipo": "biset", "grupo": "C"},
           "porque": "A rosca inclinada fez a parte de cima do braço crescer mais, e a Scott, a parte de baixo (Stavinski et al., 2025).",
           "evidencia": "crescimento",
           "dicas": ["Banco a 45–60°, braços pendurados", "Cotovelos parados, apontando para o chão", "Desça até estender totalmente"]
@@ -182,10 +182,32 @@
           "series": 3, "reps": "8–12", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true, "tecnica": {"tipo": "restpause", "pausa": 15},
+          "tecnica": {"tipo": "restpause", "pausa": 15},
           "porque": "Com o joelho estendido, a panturrilha cresceu bem mais do que sentado (Kinoshita et al., 2023). Parciais na parte de baixo, alongada, renderam mais que a amplitude completa (Kassiano et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos", "Pausa de 1–2 s embaixo, bem alongado", "Suba o máximo, sem quicar"]
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
+          "primarios": ["Deltoide lateral"],
+          "secundarios": ["Trapézio superior"],
+          "tecnica": {"tipo": "biset", "grupo": "B"},
+          "porque": "Trabalha direto o deltoide lateral. Halteres e cabo fizeram esse músculo crescer igual (Larsen et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": ["Tronco levemente inclinado à frente", "Suba até a linha do ombro", "Desça devagar, sem balanço"]
+        },
+        {
+          "nome": "Abdominal na polia",
+          "imagem": "Cable_Crunch",
+          "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
+          "primarios": ["Abdômen"],
+          "secundarios": [],
+          "tecnica": {"tipo": "biset", "grupo": "B"},
+          "porque": "Flexão do tronco com carga fácil de aumentar. Quase não há estudos medindo o crescimento do abdômen.",
+          "evidencia": "nao-testado",
+          "dicas": ["Quadril parado, enrole a coluna", "Leve os cotovelos em direção às coxas", "Pode fazer em bi-set com a panturrilha"]
         }
       ]
     },
@@ -196,7 +218,7 @@
       ],
       "titulo": "SUPERIOR B",
       "foco": "Ombros e braços, com tri-set",
-      "duracao": "~60 min",
+      "duracao": "~65 min",
       "exercicios": [
         {
           "nome": "Supino inclinado com barra",
@@ -219,6 +241,16 @@
           "porque": "O dorsal é o principal músculo da puxada, com carga fácil de ajustar. Não há estudo comparando o crescimento dela com o da barra fixa.",
           "evidencia": "nao-testado",
           "dicas": ["Braços totalmente estendidos em cima", "Puxe a barra até o alto do peito", "Peito alto, sem jogar o tronco para trás"]
+        },
+        {
+          "nome": "Remada sentada no cabo",
+          "imagem": "Seated_Cable_Rows",
+          "series": 3, "reps": "8–12", "rir": "1–2", "descanso": "2 min",
+          "primarios": ["Meio das costas", "Dorsal"],
+          "secundarios": ["Deltoide posterior", "Bíceps"],
+          "porque": "Trabalha dorsal, meio das costas e deltoide posterior com carga estável, fácil de levar perto da falha. Nenhum estudo comparou o crescimento das costas entre remada e puxada; por isso o programa usa as duas.",
+          "evidencia": "nao-testado",
+          "dicas": ["Pegada neutra (triângulo)", "Deixe as escápulas irem à frente no início", "Tronco parado; puxe até o abdômen"]
         },
         {
           "nome": "Desenvolvimento com halteres",
@@ -278,7 +310,7 @@
         {
           "nome": "Crucifixo no cabo ou peck deck",
           "imagem": "Cable_Crossover",
-          "series": 2, "reps": "12–15", "rir": "0–1", "descanso": "1–2 min",
+          "series": 3, "reps": "12–15", "rir": "0–1", "descanso": "1–2 min",
           "primarios": ["Peitoral maior"],
           "secundarios": ["Deltoide anterior"],
           "tecnica": {"tipo": "drop"},
@@ -357,7 +389,7 @@
           "series": 3, "reps": "10–15", "rir": "0–1", "descanso": "1 min",
           "primarios": ["Gastrocnêmio"],
           "secundarios": ["Sóleo"],
-          "aquecimento": true, "tecnica": {"tipo": "biset", "grupo": "B"},
+          "tecnica": {"tipo": "biset", "grupo": "B"},
           "porque": "Joelho estendido, como em pé: assim a panturrilha cresceu bem mais do que sentado, que quase não fez o gastrocnêmio crescer (Kinoshita et al., 2023).",
           "evidencia": "crescimento",
           "dicas": ["Joelhos estendidos, sem travar", "Só a ponta dos pés na plataforma", "Pausa de 1–2 s embaixo, bem alongado"]
@@ -372,6 +404,17 @@
           "porque": "Trabalha o abdômen sem carga externa, com os flexores do quadril fazendo boa parte do movimento. Quase não há estudos medindo o crescimento do abdômen.",
           "evidencia": "nao-testado",
           "dicas": ["Enrole o quadril, não só levante as pernas", "Sem balanço", "Difícil demais? Faça com os joelhos dobrados"]
+        },
+        {
+          "nome": "Crucifixo inverso no cabo",
+          "imagem": "Cable_Rear_Delt_Fly",
+          "series": 3, "reps": "12–20", "rir": "0–1", "descanso": "1 min",
+          "primarios": ["Deltoide posterior"],
+          "secundarios": ["Meio das costas"],
+          "tecnica": {"tipo": "drop"},
+          "porque": "O deltoide posterior puxa o braço para trás, o contrário dos supinos, e o crucifixo inverso foca nesse movimento. O crescimento com ele não foi medido.",
+          "evidencia": "nao-testado",
+          "dicas": ["Cabos cruzados na altura do ombro", "Abra os braços sem encolher os ombros", "Controle a volta"]
         }
       ]
     }

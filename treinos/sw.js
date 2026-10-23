@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v7';
+const VERSAO = 'treino-ppl-v8';
 const PROGRAMAS = [
   'programa_ppl.json',
   'programa_feminino.json',

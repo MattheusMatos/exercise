@@ -1074,3 +1074,25 @@ svg { width: 22px; height: 22px; flex: none; }
 .ajustes { display: flex; flex-wrap: wrap; gap: 8px; }
 .ajuste { min-height: 44px; padding: 0 14px; border: 2px solid var(--laranja); border-radius: 12px; background: none; color: var(--laranja); font-weight: 700; cursor: pointer; }
 .ajuste.ligado { background: var(--laranja); color: var(--tinta); }
+
+/* Abas da folha de personagem e treino */
+.abas { position: sticky; top: -1px; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: var(--fundo); }
+.abas button { min-height: 44px; border: 0; border-radius: 10px; background: none; color: var(--apagado); font: 800 20px/1 var(--fonte-titulo); letter-spacing: 0.02em; cursor: pointer; }
+.abas [aria-selected="true"] { background: var(--superficie-2); color: var(--texto); box-shadow: inset 0 -3px 0 var(--laranja); }
+.aba-conteudo { display: flex; flex-direction: column; gap: 12px; }
+.escolha-sexo span { flex-basis: 100%; font-size: 13px; }
+.escolha-sexo { flex-wrap: wrap; }
+
+/* Prévia dos exercícios na tela inicial */
+.ex-previa { position: relative; flex: none; padding: 0; border: 0; background: none; cursor: pointer; }
+.ex-play { position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--laranja); color: var(--tinta); font-size: 10px; }
+.exercicios-treino .ex-texto { flex: 1; min-width: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.previa { overflow-y: auto; gap: 12px; }
+.previa .foto { max-height: none; border-radius: 16px; }
+.previa h2 { margin: 0; font: 700 30px/1.02 var(--fonte-titulo); }
+.nota-evidencia { margin: 0; padding: 8px 10px; border-radius: 10px; background: var(--superficie-2); color: var(--apagado); font-size: 13px; line-height: 1.4; }
+
+/* Tela de aquecimento antes do treino */
+.aquecimento-tela { display: flex; flex-direction: column; gap: 14px; }
+.aquecimento-tela h1 { margin: 4px 0 0; font: 800 clamp(44px, 13vw, 60px)/0.95 var(--fonte-titulo); }
+.aquecimento-tela .exercicios-treino { margin: 0; }
