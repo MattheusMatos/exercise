@@ -1495,14 +1495,18 @@
   function abrirExercicio(i, slot) {
     const ex = exercicio(i, slot);
     const t = ex.tecnica && TECNICAS[ex.tecnica.tipo];
-    const fechar = () => modal.remove();
+    const fechar = () => {
+      const video = modal.querySelector('video');
+      if (video) video.pause();
+      modal.remove();
+    };
     const modal = h('div', {
       class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': ex.nome,
       onclick: (e) => {
         if (e.target === modal) fechar();
       },
     }, h('div', { class: 'modal-caixa folha previa' },
-      figura(ex, doisDigitos(slot + 1), null),
+      ex.trocado ? figura(ex, doisDigitos(slot + 1), null) : videoDoExercicio(i, slot, true),
       h('h2', null, ex.nome),
       h('div', { class: 'numeros' },
         h('div', null, h('span', { class: 'rotulo' }, programa.mobilidade ? 'Séries × tempo' : 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),
@@ -1515,13 +1519,7 @@
       blocoPorque(ex),
       h('p', { class: 'rotulo' }, daBiblioteca(ex) ? 'Passo a passo' : 'Execução'),
       daBiblioteca(ex) ? h('ol', { class: 'passos' }, ex.dicas.map((d) => h('li', null, d))) : h('ul', { class: 'dicas' }, ex.dicas.map((d) => h('li', null, d))),
-      ex.trocado ? h('p', { class: 'aviso' }, 'Exercício trocado: o vídeo do treino mostra o original.') : h('button', {
-        class: 'botao primario', icone: 'play',
-        onclick: () => {
-          fechar();
-          abrirVideo(i, slot);
-        },
-      }, 'Ver no vídeo'),
+      ex.trocado ? h('p', { class: 'aviso' }, 'Exercício trocado: sem vídeo, as fotos mostram o movimento.') : null,
       h('button', { class: 'link', onclick: fechar }, 'Fechar')));
     document.body.append(modal);
     modal.querySelector('.link').focus();
@@ -2657,24 +2655,31 @@
   const VIDEO_INTRO = 5;
   const VIDEO_EXERCICIO = 8;
 
-  // Mostra só o trecho do exercício slot no vídeo do treino.
+  // Só o trecho do exercício slot no vídeo do treino. repetir: sem som e em loop, para a prévia.
+  function videoDoExercicio(i, slot, repetir) {
+    const treino = programa.treinos[i];
+    const inicio = VIDEO_INTRO + slot * VIDEO_EXERCICIO;
+    // O trecho vai também no endereço (#t=), que o navegador já entende sozinho.
+    const video = h('video', {
+      class: 'video-trecho', src: `videos/${treino.id}.mp4#t=${inicio},${inicio + VIDEO_EXERCICIO}`,
+      controls: true, playsinline: true, preload: 'metadata', muted: repetir, autoplay: repetir,
+    });
+    if (repetir) video.muted = true;
+    video.addEventListener('loadedmetadata', () => {
+      video.currentTime = inicio;
+    }, { once: true });
+    video.addEventListener('timeupdate', () => {
+      if (video.currentTime >= inicio + VIDEO_EXERCICIO - 0.3) {
+        video.currentTime = inicio;
+        if (!repetir) video.pause();
+      }
+    });
+    return video;
+  }
+
   function abrirVideo(i, slot) {
     const treino = programa.treinos[i];
-    const inicio = Number.isInteger(slot) ? VIDEO_INTRO + slot * VIDEO_EXERCICIO : 0;
-    // O trecho vai também no endereço (#t=), que o navegador já entende sozinho.
-    const trecho = Number.isInteger(slot) ? `#t=${inicio},${inicio + VIDEO_EXERCICIO}` : '';
-    const video = h('video', { src: `videos/${treino.id}.mp4${trecho}`, controls: true, playsinline: true, preload: 'metadata' });
-    if (Number.isInteger(slot)) {
-      video.addEventListener('loadedmetadata', () => {
-        video.currentTime = inicio;
-      }, { once: true });
-      video.addEventListener('timeupdate', () => {
-        if (video.currentTime >= inicio + VIDEO_EXERCICIO - 0.3) {
-          video.pause();
-          video.currentTime = inicio;
-        }
-      });
-    }
+    const video = videoDoExercicio(i, slot, false);
     const fechar = () => {
       video.pause();
       modal.remove();
@@ -2689,7 +2694,7 @@
       },
     }, h('div', { class: 'modal-caixa' },
       video,
-      h('p', { class: 'aviso' }, Number.isInteger(slot) ? 'Trecho do vídeo do treino. Toque no play para ver de novo.' : 'O vídeo mostra o treino original, sem as trocas.'),
+      h('p', { class: 'aviso' }, 'Toque no play para ver de novo.'),
       h('button', { class: 'botao secundario', onclick: fechar }, 'Fechar vídeo')));
     document.body.append(modal);
     modal.querySelector('.botao').focus();
