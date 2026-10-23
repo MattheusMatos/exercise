@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v8';
+const VERSAO = 'treino-ppl-v9';
 const PROGRAMAS = [
   'programa_ppl.json',
   'programa_feminino.json',
@@ -29,7 +29,8 @@ const ESSENCIAIS = [
 self.addEventListener('install', (evento) => {
   evento.waitUntil((async () => {
     const cache = await caches.open(VERSAO);
-    await cache.addAll(ESSENCIAIS);
+    // cache: 'reload' pula o cache do navegador (o GitHub Pages guarda arquivos por 10 min).
+    await cache.addAll(ESSENCIAIS.map((url) => new Request(url, { cache: 'reload' })));
     try {
       // Fotos de todos os programas, para o treino abrir completo mesmo sem sinal.
       const programas = await Promise.all(PROGRAMAS.map(async (arquivo) => (await cache.match(arquivo)).json()));
@@ -77,7 +78,9 @@ async function cachePrimeiro(pedido) {
 
 async function redePrimeiro(pedido) {
   const cache = await caches.open(VERSAO);
-  const daRede = fetch(pedido).then((resposta) => {
+  // no-cache: pergunta ao servidor se o arquivo mudou, em vez de usar a cópia do navegador.
+  // Pelo endereço: um pedido de navegação não aceita opções extras.
+  const daRede = fetch(pedido.url, { cache: 'no-cache' }).then((resposta) => {
     if (resposta.ok) cache.put(pedido, resposta.clone());
     return resposta;
   });

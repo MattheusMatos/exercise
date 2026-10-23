@@ -41,7 +41,7 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 
 ### Primeira abertura e programas
 
-Na primeira vez, o app pergunta se a pessoa é homem ou mulher (só para ordenar as sugestões), depois o personagem, com a descrição de cada um, e por fim o treino. A lista mostra primeiro os recomendados, depois a mobilidade e por fim os do outro sexo, que qualquer pessoa pode escolher:
+Na primeira vez, o app pergunta como a pessoa quer ser chamada, se é homem ou mulher (só para ordenar as sugestões), depois o personagem, com a descrição de cada um, e por fim o treino. A lista mostra primeiro os recomendados, depois a mobilidade e por fim os do outro sexo, que qualquer pessoa pode escolher:
 
 | Programa | Público sugerido | Nível | Dias |
 |---|---|---|---|
@@ -66,6 +66,8 @@ Depois, **Como foi o treino?** (Leve, Na medida, Pesado ou No limite) dá uma su
 - **No limite:** botões para **+30 s de descanso** (Schoenfeld et al., 2016; Singer et al., 2024) e **baixar 10% da carga** no próximo treino igual. O ajuste aparece no treino, vale uma vez e pode ser desfeito.
 
 ### Personagem, ofensiva e treino
+
+Ao lado do personagem fica uma frase do dia com o nome, como "Bora, Ana! Dia bom pra treinar." ou "Vencendo o cara do espelho, João." Ela muda a cada dia e conforme a ofensiva: treino feito, ofensiva em risco ou volta depois de dias parado. O nome se troca na aba **Personagem**.
 
 Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos de treino, como no Duolingo:
 

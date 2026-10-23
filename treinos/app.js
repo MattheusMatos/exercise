@@ -64,7 +64,7 @@
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
     aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {},
-    perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, configurado: false }, atualizado: 0,
+    perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, nome: '', configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
   let selecionado = 0;
@@ -248,7 +248,7 @@
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
       cargas: {}, ajustes: {}, extrasProximo: {},
-      perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, configurado }, atualizado: Number(e.atualizado) || 0,
+      perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     };
     // Carga usada por exercício (id da foto), para a próxima vez.
     if (e.cargas && typeof e.cargas === 'object') {
@@ -1076,6 +1076,58 @@
     return h('img', { class: 'personagem-momento', src: window.Avatar.imagemDoMomento(p.id, momento), alt: `${p.nome}, ${textos[momento]}` });
   }
 
+  const limparNome = (texto) => (typeof texto === 'string' ? texto.replace(/\s+/g, ' ').trim().slice(0, 24) : '');
+
+  // Frase do dia ao lado do personagem, com o nome. Muda conforme o dia e a situação da ofensiva;
+  // num mesmo dia fica a mesma frase.
+  function fraseMotivacional(of) {
+    const nome = estado.perfil.nome;
+    const n = (texto) => (nome ? texto.replace('{nome}', nome) : texto.replace(/,? ?\{nome\},? ?/, '').trim().replace(/^\w/, (c) => c.toUpperCase()));
+    const espelho = estado.perfil.sexo === 'f' ? 'Vencendo a garota do espelho, {nome}.' : 'Vencendo o cara do espelho, {nome}.';
+    let lista;
+    if (of.treinouHoje) {
+      lista = ['Missão cumprida, {nome}! Agora é comer bem e descansar.', 'Treino feito, {nome}. O músculo cresce no descanso.', 'Mais um dia na conta, {nome}.'];
+    } else if (of.risco) {
+      lista = ['{nome}, hoje é dia de salvar a ofensiva!', 'Bora, {nome}: a ofensiva depende do treino de hoje.'];
+    } else if (of.diasSemTreinar !== null && of.diasSemTreinar >= 4) {
+      lista = ['Bora voltar, {nome}? O primeiro treino é o mais difícil.', 'Recomeçar também é progresso, {nome}.'];
+    } else {
+      lista = [
+        'Bora, {nome}! Dia bom pra treinar.',
+        '{nome}, um pouquinho melhor que ontem.',
+        espelho,
+        'Constância vence motivação, {nome}.',
+        'Uma série de cada vez, {nome}.',
+        'Hoje conta, {nome}.',
+        '{nome}, o treino de hoje é o resultado de amanhã.',
+        'Sem pressa e sem pausa, {nome}.',
+        'Você contra você de ontem, {nome}.',
+        'Disciplina é lembrar o que você quer, {nome}.',
+        'Feito é melhor que perfeito, {nome}.',
+        'Cada repetição conta, {nome}.',
+      ];
+    }
+    const hoje = dataLocal(new Date());
+    const dia = Math.round(new Date(`${hoje}T12:00:00`).getTime() / 86400000);
+    return n(lista[dia % lista.length]);
+  }
+
+  // Campo para trocar o nome, na aba Personagem.
+  function campoNome() {
+    return h('label', { class: 'editar-nome' },
+      h('span', { class: 'rotulo' }, 'Seu nome'),
+      h('input', {
+        class: 'campo-nome', type: 'text', maxlength: '24', autocomplete: 'given-name', autocapitalize: 'words',
+        placeholder: 'Como quer ser chamado?', value: estado.perfil.nome,
+        onchange: (e) => {
+          estado.perfil = { ...estado.perfil, nome: limparNome(e.target.value) };
+          e.target.value = estado.perfil.nome;
+          salvar();
+          renderInicio();
+        },
+      }));
+  }
+
   function iconeChama(estadoChama) {
     const el = h('span', { class: 'chama-icone', 'aria-hidden': 'true' });
     el.innerHTML = window.Avatar.chama(estadoChama);
@@ -1118,6 +1170,8 @@
       h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: () => abrirPerfil('personagem') },
         imagemDoPersonagem(fase)),
       h('div', { class: 'perfil-texto' },
+        h('p', { class: 'saudacao' }, fraseMotivacional(of)),
+        estado.perfil.nome ? null : h('button', { class: 'link', onclick: () => abrirPerfil('personagem') }, 'Como quer ser chamado?'),
         h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
@@ -1217,6 +1271,7 @@
     }
     function abaPersonagem() {
       return [
+        campoNome(),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
         destaquePersonagem(),
@@ -1275,22 +1330,44 @@
       },
     }, 'Voltar') : null;
     const topo = h('header', { class: 'boas-vindas-topo' },
-      h('p', { class: 'etiqueta' }, `Passo ${passo} de 3`),
-      h('div', { class: 'passos-boas-vindas', 'aria-hidden': 'true' }, [1, 2, 3].map((n) => h('span', { class: n <= passo ? 'feito' : '' }))));
+      h('p', { class: 'etiqueta' }, `Passo ${passo} de 4`),
+      h('div', { class: 'passos-boas-vindas', 'aria-hidden': 'true' }, [1, 2, 3, 4].map((n) => h('span', { class: n <= passo ? 'feito' : '' }))));
     let corpo;
     if (passo === 1) {
+      const seguir = () => {
+        boasVindas = { ...boasVindas, passo: 2, nome: limparNome(campo.value) };
+        renderBoasVindas();
+      };
+      const campo = h('input', {
+        class: 'campo-nome', type: 'text', maxlength: '24', autocomplete: 'given-name', autocapitalize: 'words',
+        placeholder: 'Seu nome ou apelido', value: boasVindas.nome || '', 'aria-label': 'Como quer ser chamado?',
+        onkeydown: (e) => {
+          if (e.key === 'Enter') seguir();
+        },
+      });
       corpo = [
         h('h1', null, 'Bem-vindo!'),
+        h('p', { class: 'grupo-descricao' }, 'Como quer ser chamado?'),
+        campo,
+        h('button', { class: 'botao primario', onclick: seguir }, 'Continuar'),
+      ];
+      app.replaceChildren(h('section', { class: 'boas-vindas' }, topo, corpo));
+      campo.focus();
+      return;
+    }
+    if (passo === 2) {
+      corpo = [
+        h('h1', null, boasVindas.nome ? `Prazer, ${boasVindas.nome}!` : 'Prazer!'),
         h('p', { class: 'grupo-descricao' }, 'Para sugerir os treinos certos: você é homem ou mulher? Dá para escolher qualquer treino depois.'),
         h('div', { class: 'opcoes-sexo' }, [['m', 'Homem'], ['f', 'Mulher']].map(([valor, rotulo]) => h('button', {
           class: 'opcao-sexo',
           onclick: () => {
-            boasVindas = { ...boasVindas, passo: 2, sexo: valor };
+            boasVindas = { ...boasVindas, passo: 3, sexo: valor };
             renderBoasVindas();
           },
         }, rotulo))),
       ];
-    } else if (passo === 2) {
+    } else if (passo === 3) {
       const escolhido = boasVindas.personagem || estado.perfil.personagem;
       const p = window.Avatar.personagem(escolhido);
       corpo = [
@@ -1311,7 +1388,7 @@
         h('button', {
           class: 'botao primario fixo',
           onclick: () => {
-            boasVindas = { ...boasVindas, passo: 3, personagem: escolhido };
+            boasVindas = { ...boasVindas, passo: 4, personagem: escolhido };
             renderBoasVindas();
             window.scrollTo(0, 0);
           },
@@ -1322,7 +1399,7 @@
         h('h1', null, 'Escolha seu treino'),
         h('p', { class: 'grupo-descricao' }, 'Os primeiros são os recomendados para você. Cada exercício mostra o estudo que justifica a escolha.'),
         listaDeProgramas(boasVindas.sexo, (id) => {
-          estado.perfil = { personagem: boasVindas.personagem, programa: id, sexo: boasVindas.sexo, configurado: true };
+          estado.perfil = { personagem: boasVindas.personagem, programa: id, sexo: boasVindas.sexo, nome: boasVindas.nome || '', configurado: true };
           programa = programas[id];
           estado.proximo = estado.proximos[id] || 0;
           selecionado = estado.proximo;
@@ -1873,6 +1950,7 @@
     app.replaceChildren(h('section', { class: 'fim' },
       h('div', { class: 'fim-destaque' },
         h('p', { class: 'rotulo' }, `${treino.titulo} concluído`),
+        h('p', { class: 'fim-parabens' }, estado.perfil.nome ? `Mandou bem, ${estado.perfil.nome}!` : 'Mandou bem!'),
         h('div', { class: `personagem-solto${subiu ? ' subiu' : ''}` }, imagemDoMomento('comemora')),
         h('p', { class: 'fim-tempo' }, resumoFinal.segundos ? tempoLongo(resumoFinal.segundos) : '—'),
         h('p', { class: 'fim-tempo-rotulo' }, 'de treino, com os descansos'),
@@ -2778,7 +2856,8 @@
   }
 
   if ('serviceWorker' in navigator && window.isSecureContext && !dentroDeOutraPagina) {
-    navigator.serviceWorker.register('sw.js').catch(() => {
+    // updateViaCache: 'none' faz o celular buscar o sw.js novo a cada abertura.
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {
       // Sem service worker, o app funciona normal, só não abre sem internet.
     });
   }
