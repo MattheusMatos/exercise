@@ -17,7 +17,7 @@
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
-| [`videos/`](videos/) | Um vídeo vertical por treino (1080×1920, ~1 min) |
+| [`videos/`](videos/) | Um vídeo vertical por treino (1080×1920, ~1 min); o app mostra só o trecho de cada exercício |
 | [`gerar_videos.py`](gerar_videos.py) | Gera os vídeos |
 | [`copiar_fotos.py`](copiar_fotos.py) | Copia e reduz as fotos do programa para o app |
 | [`gerar_biblioteca.py`](gerar_biblioteca.py) | Monta a biblioteca do app |
@@ -29,7 +29,7 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - cada série é um cronômetro no pé do cartão: toque nele ao terminar a série e o descanso começa sozinho;
 - anote a **carga** de cada exercício: ela fica salva para a próxima vez, junto com a data;
 - ao tocar em **Começar treino**, abre a tela de **aquecimento**: mostra quais exercícios têm 6 repetições com 40% e 6 com 80% da carga anotada antes (Ribeiro et al., 2021), com a opção de pular o aquecimento daquele dia. Só aquece o primeiro exercício de cada região que ainda não trabalhou no treino, nem como músculo auxiliar: o supino já aquece tríceps e ombro;
-- na tela inicial, toque num exercício da lista para ver a prévia: fotos em movimento, séries, técnica, motivo e o trecho dele no vídeo do treino;
+- na tela inicial, toque num exercício da lista para ver a prévia: fotos em movimento, séries, técnica, motivo e o trecho dele no vídeo do treino. Durante o treino, **Ver vídeo** no cartão mostra o mesmo trecho;
 - nos programas avançados, cada técnica aparece no cartão com como fazer e o estudo: no **bi-set** e no **tri-set**, marcar a série traz o próximo exercício do grupo sem descanso, e o descanso começa depois do último; **cluster** e **rest-pause** têm o botão **Mini-pausa**;
 - o topo do treino mostra o tempo desde o começo, com os descansos;
 - arraste o cartão para a direita quando terminar o exercício;

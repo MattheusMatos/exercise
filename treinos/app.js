@@ -1482,12 +1482,11 @@
         h('li', null, h('strong', null, totalExercicios), 'exercícios'),
         h('li', null, h('strong', null, series), 'séries'),
         h('li', null, h('strong', null, treino.duracao.replace(' min', '')), 'min')),
-      h('div', { class: 'hero-acoes' },
-        h('button', { class: 'botao primario', onclick: () => (emAndamento ? abrirTreino() : comecar(i)) },
-          emAndamento ? `Continuar (${sessao.feitos.length + 1} de ${indicesDaSessao().length})` : 'Começar treino'),
-        h('button', { class: 'botao secundario', icone: 'play', onclick: () => abrirVideo(i) }, 'Vídeo')),
+      h('button', { class: 'botao primario', onclick: () => (emAndamento ? abrirTreino() : comecar(i)) },
+        emAndamento ? `Continuar (${sessao.feitos.length + 1} de ${indicesDaSessao().length})` : 'Começar treino'),
       extras,
       h('p', { class: 'rotulo' }, 'Exercícios'),
+      h('p', { class: 'dica-semana' }, 'Toque num exercício para ver como fazer e o vídeo dele.'),
       exercicios,
       biblioteca ? h('button', { class: 'botao secundario', icone: 'mais', onclick: () => abrirAdicionar(i, false) }, 'Adicionar exercício') : null);
   }
@@ -1568,8 +1567,7 @@
         h('span', { class: 'personagem-mini' }, imagemDoPersonagem(window.Ofensiva.fase(ofensivaAtual()))),
         h('div', { class: 'barra-titulo' }, h('strong', null, treino.titulo),
           h('span', { class: 'contador-linha' }, h('span', { class: 'contador' }), ' · ', h('span', { class: 'tempo-treino', role: 'timer', 'aria-label': 'Tempo de treino' }))),
-        h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) }),
-        h('button', { class: 'icone-botao', icone: 'play', 'aria-label': `Ver vídeo do ${treino.titulo}`, onclick: () => abrirVideo(estado.sessao.treino) })),
+        h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) })),
       h('div', { class: 'segmentos', 'aria-hidden': 'true' }, indicesDaSessao().map((i) => h('span', { 'data-i': i }))),
       pilha,
       h('div', { class: 'descanso', hidden: true }),
@@ -1762,6 +1760,10 @@
       figura(ex, ex.extra ? 'Extra' : doisDigitos(i + 1), botao),
       h('div', { class: 'corpo' },
         h('h2', null, ex.nome),
+        // O vídeo do treino tem os exercícios do programa, sem as trocas.
+        i < programa.treinos[treinoIdx].exercicios.length && !ex.trocado
+          ? h('button', { class: 'link video-exercicio', icone: 'play', onclick: () => abrirVideo(treinoIdx, i) }, 'Ver vídeo')
+          : null,
         h('div', { class: 'numeros' },
           h('div', null, h('span', { class: 'rotulo' }, mobilidade ? 'Séries × tempo' : 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),
           mobilidade ? null : h('div', null, h('span', { class: 'rotulo' }, 'RIR'), h('strong', null, ex.rir)),
@@ -2655,7 +2657,7 @@
   const VIDEO_INTRO = 5;
   const VIDEO_EXERCICIO = 8;
 
-  // slot: mostra só o trecho daquele exercício.
+  // Mostra só o trecho do exercício slot no vídeo do treino.
   function abrirVideo(i, slot) {
     const treino = programa.treinos[i];
     const inicio = Number.isInteger(slot) ? VIDEO_INTRO + slot * VIDEO_EXERCICIO : 0;
