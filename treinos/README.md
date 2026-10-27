@@ -34,6 +34,8 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 - o topo do treino mostra o tempo desde o começo, com os descansos;
 - arraste o cartão para a direita quando terminar o exercício;
 - arraste para a esquerda para deixar para depois (ele volta no fim da fila);
+- logo depois de marcar Feito ou Depois, aparece **Desfazer** por 6 segundos;
+- no topo, **A seguir** mostra os próximos exercícios; tocar num deles traz ele para a frente (o aparelho vagou, por exemplo);
 - toque em **Trocar** para escolher outro exercício na biblioteca: os mais parecidos com o original vêm primeiro, com a porcentagem de semelhança numa escala de vermelho (pouco parecido) a verde (muito parecido);
 - toque em **Adicionar exercício** (na tela inicial ou no **+** durante o treino) para incluir extras: cada treino tem recomendados com o motivo de cada um (campo `extras` de `programa_ppl.json`), e dá para escolher qualquer exercício da biblioteca, só na próxima vez (ou só hoje, durante o treino) ou sempre naquele treino;
 - cada exercício do programa e cada recomendado mostra **Por quê**, com uma etiqueta da base do motivo (campos `porque`/`motivo` e `evidencia`): **Estudo de crescimento**, **Estudo de ativação** (EMG, que nem sempre prevê crescimento) ou **Princípios gerais** (nenhum estudo mediu o crescimento com o exercício em si; ele segue o que faz qualquer músculo crescer: carga, volume e séries perto da falha);

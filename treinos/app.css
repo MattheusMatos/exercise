@@ -539,7 +539,7 @@ svg { width: 22px; height: 22px; flex: none; }
   font-weight: 700;
 }
 
-.acoes { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; }
+.acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .acao {
   min-height: 58px;
   display: flex;
@@ -551,8 +551,7 @@ svg { width: 22px; height: 22px; flex: none; }
   font-weight: 700;
   font-size: 17px;
 }
-.acao.depois, .acao.desfazer { background: var(--superficie); color: var(--texto); }
-.acao.desfazer { width: 58px; }
+.acao.depois { background: var(--superficie); color: var(--texto); }
 .acao.feito { background: var(--verde); color: var(--tinta); }
 
 /* Fim */
@@ -1108,3 +1107,15 @@ svg { width: 22px; height: 22px; flex: none; }
 .editar-nome { display: flex; flex-direction: column; gap: 6px; }
 .editar-nome .campo-nome { min-height: 44px; font-size: 17px; background: var(--fundo); }
 .fim-parabens { margin: -4px 0 0; font: 800 28px/1 var(--fonte-titulo); }
+
+/* Próximos exercícios e desfazer */
+.proximos { flex: none; display: flex; align-items: center; gap: 6px; margin: -4px 0 0; overflow-x: auto; scrollbar-width: none; }
+.proximos::-webkit-scrollbar { display: none; }
+.proximos[hidden] { display: none; }
+.proximos .rotulo { flex: none; margin-right: 2px; }
+.proximo-chip { flex: none; display: inline-flex; align-items: center; gap: 6px; max-width: 60vw; min-height: 34px; padding: 0 12px 0 4px; border: 1px solid var(--linha); border-radius: 999px; background: var(--superficie); color: var(--texto); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.proximo-numero { display: grid; place-items: center; min-width: 24px; height: 24px; border-radius: 50%; background: var(--superficie-2); color: var(--apagado); font: 700 13px/1 var(--fonte-titulo); }
+.desfazer-aviso { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 14px; border-radius: 14px; background: var(--superficie-2); font-size: 14px; }
+.desfazer-aviso[hidden] { display: none; }
+.desfazer-aviso span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.desfazer-aviso .link { flex: none; color: var(--laranja); font-weight: 700; }

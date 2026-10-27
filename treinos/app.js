@@ -1644,11 +1644,12 @@
           h('span', { class: 'contador-linha' }, h('span', { class: 'contador' }), ' · ', h('span', { class: 'tempo-treino', role: 'timer', 'aria-label': 'Tempo de treino' }))),
         h('button', { class: 'icone-botao', icone: 'mais', 'aria-label': 'Adicionar exercício', onclick: () => abrirAdicionar(estado.sessao.treino, true) })),
       h('div', { class: 'segmentos', 'aria-hidden': 'true' }, indicesDaSessao().map((i) => h('span', { 'data-i': i }))),
+      h('div', { class: 'proximos', role: 'list', 'aria-label': 'Próximos exercícios' }),
       pilha,
+      h('div', { class: 'desfazer-aviso', hidden: true, role: 'status' }),
       h('div', { class: 'descanso', hidden: true }),
       h('div', { class: 'acoes' },
         h('button', { class: 'acao depois', icone: 'depois', onclick: () => acaoBotao('depois') }, 'Depois'),
-        h('button', { class: 'acao desfazer', icone: 'desfazer', 'aria-label': 'Desfazer', onclick: desfazer }),
         h('button', { class: 'acao feito', icone: 'feito', onclick: () => acaoBotao('feito') }, 'Feito'))));
     montarPilha(pilha, false);
     atualizarCabecalho();
@@ -1679,7 +1680,24 @@
       const i = Number(seg.dataset.i);
       seg.className = sessao.feitos.includes(i) ? 'feito' : i === sessao.fila[0] ? 'atual' : '';
     });
-    app.querySelector('.acao.desfazer').disabled = !sessao.historico.length;
+    // Os próximos da fila; tocar num deles traz para a frente (aparelho livre, por exemplo).
+    const proximos = app.querySelector('.proximos');
+    if (proximos) {
+      const resto = sessao.fila.slice(1);
+      proximos.hidden = !resto.length;
+      proximos.replaceChildren(...(resto.length ? [h('span', { class: 'rotulo' }, 'A seguir')] : []),
+        ...resto.map((j) => {
+          const ex = exercicioDaSessao(j);
+          return h('button', {
+            class: 'proximo-chip', role: 'listitem',
+            'aria-label': `${ex ? ex.nome : 'Exercício'}: fazer agora`,
+            onclick: () => {
+              trazerParaFrente(j);
+              avisar(`Agora: ${ex ? ex.nome : 'exercício'}`);
+            },
+          }, h('span', { class: 'proximo-numero' }, j + 1), ex ? ex.nome : '…');
+        }));
+    }
   }
 
   function montarPilha(pilha, animar) {
@@ -2434,6 +2452,34 @@
     }
     montarPilha(app.querySelector('.pilha'), !semMovimento.matches);
     atualizarCabecalho();
+    mostrarDesfazer(i, direcao);
+  }
+
+  // Desfazer aparece por alguns segundos logo depois de marcar, em vez de um botão fixo
+  // entre Depois e Feito, fácil de tocar sem querer.
+  let esperaDesfazer = null;
+  function mostrarDesfazer(i, direcao) {
+    const aviso = app.querySelector('.desfazer-aviso');
+    if (!aviso) return;
+    const ex = exercicioDaSessao(i);
+    clearTimeout(esperaDesfazer);
+    aviso.replaceChildren(
+      h('span', null, `${ex ? ex.nome : 'Exercício'}: ${direcao === 'feito' ? 'feito' : 'para depois'}`),
+      h('button', {
+        class: 'link',
+        onclick: () => {
+          esconderDesfazer();
+          desfazer();
+        },
+      }, 'Desfazer'));
+    aviso.hidden = false;
+    esperaDesfazer = setTimeout(esconderDesfazer, 6000);
+  }
+
+  function esconderDesfazer() {
+    clearTimeout(esperaDesfazer);
+    const aviso = app.querySelector('.desfazer-aviso');
+    if (aviso) aviso.hidden = true;
   }
 
   function desfazer() {
@@ -2799,13 +2845,15 @@
       if (e.key === 'Escape') alternarDescanso();
       return;
     }
+    // Digitando a carga, as teclas são do campo, não atalhos do treino.
+    if (e.target.closest && e.target.closest('input, textarea, select')) return;
     if (e.key === 'ArrowRight') {
       e.preventDefault();
       acaoBotao('feito');
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       acaoBotao('depois');
-    } else if (e.key === 'Backspace' || (e.key === 'z' && (e.ctrlKey || e.metaKey))) {
+    } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       desfazer();
     }
