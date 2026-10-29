@@ -1,0 +1,14 @@
+{
+  "name": "treino-ppl",
+  "private": true,
+  "description": "Testes do app Treino PPL (o app em si não precisa de build: são arquivos estáticos em treinos/).",
+  "scripts": {
+    "test": "npm run test:unidade && npm run test:e2e",
+    "test:unidade": "node --test testes/unidade/*.test.js",
+    "test:e2e": "playwright test",
+    "servir": "python3 -m http.server 4173"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}
