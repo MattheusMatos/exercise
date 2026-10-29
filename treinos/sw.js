@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v10';
+const VERSAO = 'treino-ppl-v11';
 const PROGRAMAS = [
   'programa_ppl.json',
   'programa_feminino.json',
@@ -14,7 +14,21 @@ const ESSENCIAIS = [
   './',
   'index.html',
   'app.css',
-  'app.js',
+  'app/nucleo.js',
+  'app/estado.js',
+  'app/biblioteca.js',
+  'app/semana.js',
+  'app/loja.js',
+  'app/perfil.js',
+  'app/telas.js',
+  'app/cartao.js',
+  'app/fim.js',
+  'app/retrospectiva-telas.js',
+  'app/compartilhar.js',
+  'app/aerobico-telas.js',
+  'app/sessao.js',
+  'app/descanso.js',
+  'app/inicio.js',
   'semelhanca.js',
   'ofensiva.js',
   'avatar.js',

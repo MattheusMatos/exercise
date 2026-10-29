@@ -10,7 +10,7 @@
 | [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
 | [`retrospectiva.js`](retrospectiva.js) | Calcula a retrospectiva do mês ou do ano |
 | [`analise_hipertrofia.md`](analise_hipertrofia.md) | O que a literatura diz sobre volume, frequência e divisão do treino, e o volume de cada programa |
-| [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
+| [`index.html`](index.html), [`app.css`](app.css), [`app/`](app/) | App de cartões para seguir o treino no celular (o código, dividido por assunto; ver [Código e testes](#código-e-testes)) |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
 | [`avatar.js`](avatar.js), [`personagens/`](personagens/) | Os 11 personagens, com descrição e imagens sem fundo (fases, descanso, comemoração), e o fogo da ofensiva |
@@ -167,6 +167,44 @@ Para testar no computador:
 python3 -m http.server -d treinos 8000
 # abra http://localhost:8000
 ```
+
+## Código e testes
+
+O app não tem build: são arquivos estáticos. O código fica em [`app/`](app/), um arquivo por assunto, carregados em ordem pelo `index.html`:
+
+| Arquivo | O que faz |
+|---|---|
+| `nucleo.js` | Constantes, estado em memória e utilidades (`h()` para montar a tela, datas, avisos) |
+| `estado.js` | O estado salvo no aparelho: validação, versão e migração |
+| `biblioteca.js` | Exercícios do treino, trocas, extras e a biblioteca |
+| `semana.js` | Plano da semana, dia que faltou e lembrete |
+| `loja.js` | Bloqueio de ofensiva e a loja de pontos |
+| `perfil.js` | Ofensiva, personagem, pontos, bordas, armário do dia e a folha do perfil |
+| `telas.js` | Primeira abertura, tela inicial e tela do treino |
+| `cartao.js` | O cartão de cada exercício: técnicas, aquecimento e carga |
+| `fim.js` | Fim do treino: tempo, calorias e "Como foi o treino?" |
+| `retrospectiva-telas.js` | Telas da retrospectiva e a imagem de resumo |
+| `compartilhar.js` | Imagem do treino para postar |
+| `aerobico-telas.js` | Aeróbico e o cronômetro em tela cheia |
+| `sessao.js` | Ações durante o treino: séries, Feito/Depois, desfazer, arrastar |
+| `descanso.js` | Descanso, som, vibração, tela ligada e vídeo |
+| `inicio.js` | Instalar como app e o começo: carrega os programas e desenha a primeira tela |
+
+São scripts comuns (não módulos), então dividem o mesmo escopo global: um nome declarado num arquivo é visto nos outros e não pode se repetir. Um arquivo novo entra no `index.html` (antes do `inicio.js`) e no `ESSENCIAIS` do `sw.js`; o teste de estrutura avisa se faltar.
+
+**Estado salvo.** Tudo fica no `localStorage`, na chave `ppl:estado`, com um número de versão (`VERSAO_ESTADO` em `estado.js`). Para mudar o formato: suba o número e acrescente em `MIGRACOES` a função que converte da versão anterior. Antes de migrar, o app guarda o original em `ppl:estado:v<versão>`; texto que não dá para ler vai para `ppl:estado:ilegivel`. Assim nenhuma mudança apaga dados.
+
+**Testes.** Na raiz do repositório:
+
+```bash
+npm install
+npx playwright install chromium   # só na primeira vez
+npm test                          # tudo
+npm run test:unidade              # lógica: ofensiva, bloqueios, aeróbico, retrospectiva, estrutura dos arquivos
+npm run test:e2e                  # telas, num Chromium com tela de celular
+```
+
+Os testes de tela abrem o app com dados e datas fixos e falham se a página tiver qualquer erro de JavaScript. Eles rodam sozinhos no GitHub a cada push ([`.github/workflows/testes.yml`](../.github/workflows/testes.yml)); se falharem, o relatório fica nos artefatos da execução.
 
 ## Publicar como site (GitHub Pages)
 
