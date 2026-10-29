@@ -2683,6 +2683,18 @@
           r.maiorEvolucao ? h('p', { class: 'retro-destaque' }, `Maior evolução: ${r.maiorEvolucao.nome}, de ${fmt(r.maiorEvolucao.de)} para ${fmt(r.maiorEvolucao.para)} kg (+${r.maiorEvolucao.pct}%)`) : null],
       }
       : { cor: 'laranja', corpo: [h('p', { class: 'retro-rotulo' }, 'Evolução de carga'), big('💪'), h('p', null, 'Anote a carga de cada exercício no treino: na próxima retrospectiva, aparece quantas vezes você subiu o peso.')] });
+    if (r.recordes.length) {
+      telas.push({
+        cor: 'roxo',
+        corpo: [h('p', { class: 'retro-rotulo' }, 'Recordes de carga'),
+          r.recordesNovos ? big(`🏆 ${r.recordesNovos}`) : big('🏆'),
+          h('p', { class: 'retro-sub' }, r.recordesNovos ? (r.recordesNovos === 1 ? 'recorde novo' : 'recordes novos') : 'suas maiores cargas'),
+          h('ol', { class: 'retro-lista' }, r.recordes.map((x) => h('li', null,
+            h('span', null, `${x.novo && x.antes !== null ? '🏆 ' : ''}${x.nome}`),
+            h('strong', null, `${fmt(x.kg)} kg`)))),
+          r.recordes.some((x) => x.novo && x.antes !== null) ? h('p', { class: 'aviso' }, '🏆 = passou da maior carga que você já tinha anotado.') : null],
+      });
+    }
     const borda = bordaDa(r.maiorOfensiva);
     telas.push({
       cor: 'fogo',
@@ -2717,7 +2729,7 @@
     }
     telas.push({ cor: 'laranja', final: true, corpo: [h('p', { class: 'retro-rotulo' }, `Resumo · ${r.nome}`), img('comemora'),
       h('dl', { class: 'retro-resumo' },
-        [['Treinos', r.treinos], ['Horas', fmt(r.minutos / 60)], ['Subiu a carga', r.aumentos], ['Maior ofensiva', `${r.maiorOfensiva} d`]]
+        [['Treinos', r.treinos], ['Horas', fmt(r.minutos / 60)], ['Recordes novos', r.recordesNovos], ['Maior ofensiva', `${r.maiorOfensiva} d`]]
           .map(([k, v]) => h('div', null, h('dt', null, k), h('dd', null, v))))] });
     return telas;
   }
@@ -2758,13 +2770,14 @@
       ['Treino favorito', r.favoritos[0] ? r.favoritos[0].titulo : '—'],
       ['Músculo mais treinado', r.topMusculos[0] ? r.topMusculos[0].nome : '—'],
       ['Vezes que subiu a carga', String(r.aumentos)],
+      ['Recordes de carga novos', String(r.recordesNovos)],
       ['Maior ofensiva', `${r.maiorOfensiva} dias`],
     ];
     linhas.forEach(([k, v], i) => {
-      const y = 1000 + i * 140;
+      const y = 960 + i * 128;
       c.fillStyle = 'rgba(255, 255, 255, 0.07)';
       c.beginPath();
-      c.roundRect(80, y - 80, W - 160, 116, 28);
+      c.roundRect(80, y - 76, W - 160, 108, 28);
       c.fill();
       c.textAlign = 'left';
       c.fillStyle = '#9aa1ad';

@@ -124,6 +124,7 @@ Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela ini
 - treinos, dias e horas de treino, comparando com o período anterior;
 - treinos favoritos e músculos que mais trabalharam (em séries);
 - quantas vezes subiu a carga e a maior evolução (por exemplo, supino de 60 para 70 kg, +17%);
+- recordes de carga: as 5 maiores cargas do período, com 🏆 nas que passaram da maior já anotada;
 - maior ofensiva e a borda alcançada, e dias protegidos por bloqueio;
 - minutos de aeróbico, calorias e aparelho favorito;
 - variação do peso do corpo (com o aviso de que a balança mistura músculo, gordura e água);

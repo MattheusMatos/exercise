@@ -79,6 +79,17 @@
     }
     let aumentos = 0;
     let maiorEvolucao = null;
+    // Recordes: a maior carga de cada exercício no período; "novo" se passou de tudo antes dele.
+    const recordes = [];
+    for (const [ex, lista] of porExercicio) {
+      const noPeriodoR = lista.filter((r) => dentro(r.data));
+      if (!noPeriodoR.length) continue;
+      const maior = noPeriodoR.reduce((m, r) => (r.kg > m.kg ? r : m));
+      const antesR = lista.filter((r) => r.data < inicio);
+      const recordeAntes = antesR.length ? Math.max(...antesR.map((r) => r.kg)) : null;
+      if (maior.kg > 0) recordes.push({ nome: nomes.get(ex) || ex, kg: maior.kg, data: maior.data, novo: recordeAntes === null || maior.kg > recordeAntes, antes: recordeAntes });
+    }
+    recordes.sort((a, b) => b.kg - a.kg);
     for (const [ex, lista] of porExercicio) {
       // A referência é a última carga antes do período (ou a primeira dentro dele).
       const antes = lista.filter((r) => r.data < inicio).pop();
@@ -125,6 +136,7 @@
       treinos: sessoes.length, dias: dias.size, minutos, kcal, series,
       favoritos, topMusculos, diaFavorito,
       aumentos, maiorEvolucao,
+      recordes: recordes.slice(0, 5), recordesNovos: recordes.filter((r) => r.novo && r.antes !== null).length,
       minutosAerobico, kcalAerobico, aerobicoFavorito: aerobicoFavorito ? { tipo: aerobicoFavorito[0], minutos: aerobicoFavorito[1] } : null,
       peso, maiorOfensiva, bloqueiosUsados,
       esforcos: Object.fromEntries(esforcos),
