@@ -1139,3 +1139,6 @@ svg { width: 22px; height: 22px; flex: none; }
 .compartilhar-folha { overflow-y: auto; align-items: stretch; }
 .card-previa { display: block; width: auto; max-width: 100%; max-height: 58vh; margin: 0 auto; border-radius: 16px; box-shadow: 0 10px 30px var(--sombra); }
 .compartilhar-folha a.botao { display: grid; place-items: center; text-decoration: none; }
+.bloqueio-hoje { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 10px 12px; border-radius: 12px; background: var(--fundo); }
+.bloqueio-hoje .link { padding: 0; font-size: 14px; }
+.usar-bloqueio { align-self: flex-start; padding: 0; color: var(--azul); font-size: 14px; text-align: left; }

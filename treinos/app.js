@@ -905,6 +905,29 @@
     avisar(`🧊 ${usados === 1 ? 'Bloqueio usado' : `${usados} bloqueios usados`}: sua ofensiva de ${plural(dias, 'dia')} continua!`);
   }
 
+  const hojeProtegido = () => diasProtegidos().includes(dataLocal(new Date()));
+  const treinouHoje = () => estado.historico.some((x) => x.data === dataLocal(new Date()));
+
+  // Usar na hora: protege o dia de hoje (conta para a meta, sem somar ofensiva).
+  function usarBloqueioHoje() {
+    if (hojeProtegido() || treinouHoje()) return false;
+    const livre = estado.bloqueios.filter((b) => !b.usado).sort((a, b) => a.comprado.localeCompare(b.comprado))[0];
+    if (!livre) return false;
+    livre.usado = dataLocal(new Date());
+    salvar();
+    return true;
+  }
+
+  // Mudou de ideia no mesmo dia: o bloqueio volta a ficar guardado.
+  function devolverBloqueioHoje() {
+    const hoje = dataLocal(new Date());
+    const usado = estado.bloqueios.find((b) => b.usado === hoje);
+    if (!usado) return false;
+    usado.usado = null;
+    salvar();
+    return true;
+  }
+
   function comprarBloqueio() {
     if (pontosAtuais() < PRECO_BLOQUEIO || bloqueiosGuardados() >= MAX_BLOQUEIOS) return false;
     estado.bloqueios = [...estado.bloqueios, { comprado: dataLocal(new Date()), usado: null }];
@@ -927,9 +950,34 @@
         h('span', { class: 'bloqueio-icones', 'aria-label': `${guardados} de ${MAX_BLOQUEIOS} guardados` },
           Array.from({ length: MAX_BLOQUEIOS }, (_, k) => h('span', { class: k < guardados ? 'cheio' : '' }, '🧊')))),
       estado.bloqueios.some((b) => b.gratis && !b.usado) ? h('p', { class: 'presente' }, '🎁 Você ganhou 2 bloqueios de presente.') : null,
-      h('p', null, 'Vai viajar ou não vai conseguir treinar? Com um bloqueio guardado, o dia sem treino conta para a meta da semana e a ofensiva não apaga. Ele é usado sozinho, só se a ofensiva fosse apagar; o dia protegido não soma dia de ofensiva.'),
+      h('p', null, 'Vai viajar ou não vai conseguir treinar? Use um bloqueio: o dia sem treino conta para a meta da semana e a ofensiva não apaga, mas também não soma dia de ofensiva. Se esquecer, o app usa sozinho no dia em que a ofensiva apagaria.'),
+      hojeProtegido()
+        ? h('div', { class: 'bloqueio-hoje' },
+          h('p', null, h('strong', null, '🧊 Hoje está protegido.'), ' A ofensiva não apaga por causa de hoje.'),
+          treinouHoje() ? null : h('button', {
+            class: 'link',
+            onclick: () => {
+              if (devolverBloqueioHoje()) {
+                avisar('Bloqueio devolvido: ele continua guardado.');
+                redesenhar();
+                renderInicio();
+              }
+            },
+          }, 'Vou treinar: devolver o bloqueio'))
+        : treinouHoje() ? h('p', { class: 'aviso' }, 'Hoje você já treinou: não precisa de bloqueio.')
+          : h('button', {
+            class: 'botao primario',
+            disabled: !guardados,
+            onclick: () => {
+              if (usarBloqueioHoje()) {
+                avisar('🧊 Bloqueio usado hoje: a ofensiva está protegida.');
+                redesenhar();
+                renderInicio();
+              }
+            },
+          }, guardados ? 'Usar um bloqueio hoje' : 'Sem bloqueio guardado'),
       h('button', {
-        class: 'botao primario',
+        class: 'botao secundario',
         disabled: Boolean(motivo),
         onclick: () => {
           if (comprarBloqueio()) {
@@ -1157,7 +1205,9 @@
     const n = (texto) => (nome ? texto.replace('{nome}', nome) : texto.replace(/,? ?\{nome\},? ?/, '').trim().replace(/^\w/, (c) => c.toUpperCase()));
     const espelho = estado.perfil.sexo === 'f' ? 'Vencendo a garota do espelho, {nome}.' : 'Vencendo o cara do espelho, {nome}.';
     let lista;
-    if (of.treinouHoje) {
+    if (!of.treinouHoje && diasProtegidos().includes(dataLocal(new Date()))) {
+      lista = ['Folga protegida, {nome}. A ofensiva está guardada.'];
+    } else if (of.treinouHoje) {
       lista = ['Missão cumprida, {nome}! Agora é comer bem e descansar.', 'Treino feito, {nome}. O músculo cresce no descanso.', 'Mais um dia na conta, {nome}.'];
     } else if (of.risco) {
       lista = ['{nome}, hoje é dia de salvar a ofensiva!', 'Bora, {nome}: a ofensiva depende do treino de hoje.'];
@@ -1218,6 +1268,7 @@
     // Último dia ativo foi um bloqueio: a ofensiva seguiu, mas não houve treino.
     const ultimoTreino = estado.historico.map((x) => x.data).sort().pop() || '';
     const hoje = dataLocal(new Date());
+    if (diasProtegidos().includes(hoje) && ultimoTreino !== hoje) return '🧊 Hoje está protegido: a ofensiva não apaga. Descanse e volte com tudo.';
     if (diasProtegidos().some((x) => x > ultimoTreino && x <= hoje)) return '🧊 O bloqueio segurou a ofensiva enquanto você esteve fora. Bora voltar?';
     if (dias >= 15) return `${dias} dias parado. ${nome} está largado esperando você.`;
     if (dias >= 4) return `${dias} dias sem treinar. ${nome} está com saudade.`;
@@ -1252,6 +1303,17 @@
         h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
+        of.risco && bloqueiosGuardados() && !hojeProtegido()
+          ? h('button', {
+            class: 'link usar-bloqueio',
+            onclick: () => {
+              if (usarBloqueioHoje()) {
+                avisar('🧊 Bloqueio usado hoje: a ofensiva está protegida.');
+                renderInicio();
+              }
+            },
+          }, `Não vai dar hoje? Usar um bloqueio 🧊 (${bloqueiosGuardados()} guardado${bloqueiosGuardados() === 1 ? '' : 's'})`)
+          : null,
         h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto')),
           bloqueiosGuardados() ? h('span', { class: 'bloqueio-mini', title: 'Bloqueios de ofensiva guardados' }, ` · 🧊 ${bloqueiosGuardados()}`) : null),
         h('button', { class: 'link', onclick: () => abrirPerfil('treino') }, 'Trocar treino')));
