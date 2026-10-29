@@ -8,6 +8,7 @@
 | [`programa_iniciante_m.md`](programa_iniciante_m.md), [`programa_iniciante_f.md`](programa_iniciante_f.md) | Corpo inteiro 3x por semana, para começar (com o `.json` de cada um) |
 | [`programa_avancado_m.md`](programa_avancado_m.md), [`programa_avancado_f.md`](programa_avancado_f.md) | Avançados com bi-set, tri-set, cluster, rest-pause e drop-set |
 | [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
+| [`retrospectiva.js`](retrospectiva.js) | Calcula a retrospectiva do mês ou do ano |
 | [`analise_hipertrofia.md`](analise_hipertrofia.md) | O que a literatura diz sobre volume, frequência e divisão do treino, e o volume de cada programa |
 | [`index.html`](index.html), [`app.css`](app.css), [`app.js`](app.js) | App de cartões para seguir o treino no celular |
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
@@ -115,6 +116,21 @@ Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Acti
 - a corrida diminuiu um pouco o crescimento das fibras do tipo I, e a bicicleta não (Lundberg et al., 2022, evidência preliminar), por isso o app sugere evitar corrida em dia de perna.
 
 Toque no personagem para trocar: a folha tem duas abas, **Treino** (primeiro homem ou mulher, que só muda a ordem das sugestões, e depois a lista de programas) e **Personagem** (o escolhido aparece grande, com a descrição). Cada programa lembra o próprio próximo treino; a ofensiva, o histórico, as cargas e a semana planejada continuam os mesmos.
+
+### Retrospectiva
+
+Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela inicial convida para a **retrospectiva do mês passado**, e entre 26/12 e 10/01, para a **do ano**. Todas ficam também na aba Personagem. São telas que passam com um toque, como stories:
+
+- treinos, dias e horas de treino, comparando com o período anterior;
+- treinos favoritos e músculos que mais trabalharam (em séries);
+- quantas vezes subiu a carga e a maior evolução (por exemplo, supino de 60 para 70 kg, +17%);
+- maior ofensiva e a borda alcançada, e dias protegidos por bloqueio;
+- minutos de aeróbico, calorias e aparelho favorito;
+- variação do peso do corpo (com o aviso de que a balança mistura músculo, gordura e água);
+- dia da semana favorito e calorias dos treinos;
+- um resumo final para compartilhar como imagem.
+
+Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a partir das anotadas no treino) e do peso do corpo (campo **Seu peso** na aba Personagem, que também vale para as calorias).
 
 ### Semana
 
