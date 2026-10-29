@@ -2248,12 +2248,8 @@
       c.fillText(`🔥 ${linha}`, W / 2, 1690);
     }
 
-    c.font = texto(600, 36);
-    c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1790, W - 120);
-    c.font = texto(500, 30);
-    c.globalAlpha = 0.75;
-    c.fillText(new URL('./', location.href).href.replace(/^https?:\/\//, '').replace(/\/$/, ''), W / 2, 1845, W - 120);
-    c.globalAlpha = 1;
+    c.font = texto(600, 38);
+    c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1810, W - 120);
 
     return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
   }

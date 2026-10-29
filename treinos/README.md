@@ -61,7 +61,7 @@ Cada `.md` explica as escolhas com os estudos; cada exercício tem o motivo e a 
 
 O fim mostra um cartão com o personagem comemorando, o tempo total de treino (com os descansos), as séries, os exercícios e uma estimativa de calorias: MET × peso × tempo, com 3,5 METs para musculação, 6,0 se o treino foi pesado e 2,3 para mobilidade (Compendium of Physical Activities, Ainsworth et al., 2011).
 
-**Compartilhar treino** monta um card em formato de story (1080 × 1920) com o personagem comemorando, o treino, o tempo, as séries, as calorias e a ofensiva. No celular, abre o menu de compartilhar (Instagram, WhatsApp e outros); onde isso não existe, dá para salvar a imagem.
+**Compartilhar treino** monta um card em formato de story (1080 × 1920) com o personagem comemorando, o treino, o tempo, as séries, as calorias, a ofensiva e o nome da pessoa, sem link. No celular, abre o menu de compartilhar (Instagram, WhatsApp e outros); onde isso não existe, dá para salvar a imagem.
 
 Depois, **Como foi o treino?** (Leve, Na medida, Pesado ou No limite) dá uma sugestão:
 
