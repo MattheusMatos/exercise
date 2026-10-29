@@ -84,6 +84,8 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 
 ### Aeróbico e pontos
 
+**Baú do dia:** uma vez por dia, a tela inicial tem um baú para abrir. Ele dá +5, +10 ou +20 pontos, pontos do treino em dobro ou em triplo naquele dia (se treinar) ou um bloqueio de ofensiva (vira pontos se já houver 2 guardados). Abrindo 7 dias seguidos, vem o baú de ouro, só com os prêmios melhores: triplo, +30 pontos ou bloqueio.
+
 Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
 
 **Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia de treino.

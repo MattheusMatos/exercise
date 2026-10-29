@@ -64,7 +64,7 @@
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [],
+    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
     perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, nome: '', configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
@@ -248,9 +248,17 @@
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
-      cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [],
+      cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
       perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     };
+    // Baús do dia já abertos, com o prêmio de cada um.
+    if (Array.isArray(e.baus)) {
+      const valido = (b) => b && /^\d{4}-\d{2}-\d{2}$/.test(b.data) && b.premio && (
+        (b.premio.tipo === 'pontos' && Number.isInteger(b.premio.valor) && b.premio.valor > 0 && b.premio.valor <= 100)
+        || (b.premio.tipo === 'multiplicador' && [2, 3].includes(b.premio.valor))
+        || b.premio.tipo === 'bloqueio');
+      limpo.baus = e.baus.filter(valido).map((b) => ({ data: b.data, ouro: Boolean(b.ouro), premio: b.premio })).slice(-400);
+    }
     if (typeof e.faltaResolvida === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.faltaResolvida)) limpo.faltaResolvida = e.faltaResolvida;
     // Bloqueios de ofensiva comprados com pontos; usado é o dia que cada um protegeu.
     const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
@@ -1295,7 +1303,136 @@
   }
 
   // Pontos para gastar: os ganhos com treino e aeróbico, menos os bloqueios comprados.
-  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos) - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;
+  // Pontos para gastar: treino e aeróbico, mais os prêmios dos baús (pontos e treino em dobro ou
+  // triplo no dia do baú), menos os bloqueios comprados.
+  function pontosAtuais() {
+    const treinou = new Set(estado.historico.map((x) => x.data));
+    const dosBaus = estado.baus.reduce((soma, b) => {
+      if (b.premio.tipo === 'pontos') return soma + b.premio.valor;
+      if (b.premio.tipo === 'multiplicador' && treinou.has(b.data)) return soma + (b.premio.valor - 1) * window.Aerobico.PONTOS_TREINO;
+      return soma;
+    }, 0);
+    return window.Aerobico.pontos(estado.historico, estado.aerobicos) + dosBaus - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;
+  }
+
+  // ---------- baú do dia ----------
+
+  // Prêmios e chances (somam 100). No baú de ouro, a cada 7 dias seguidos abrindo o app, só os melhores.
+  const PREMIOS = [
+    [40, { tipo: 'pontos', valor: 5 }],
+    [25, { tipo: 'pontos', valor: 10 }],
+    [18, { tipo: 'multiplicador', valor: 2 }],
+    [8, { tipo: 'pontos', valor: 20 }],
+    [6, { tipo: 'multiplicador', valor: 3 }],
+    [3, { tipo: 'bloqueio' }],
+  ];
+  const PREMIOS_OURO = [
+    [40, { tipo: 'multiplicador', valor: 3 }],
+    [35, { tipo: 'pontos', valor: 30 }],
+    [25, { tipo: 'bloqueio' }],
+  ];
+  const bauDeHoje = () => estado.baus.find((b) => b.data === dataLocal(new Date())) || null;
+
+  // Dias seguidos abrindo o baú, contando hoje se já abriu.
+  function diasSeguidosDeBau() {
+    const datas = new Set(estado.baus.map((b) => b.data));
+    const d = new Date();
+    if (!datas.has(dataLocal(d))) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while (datas.has(dataLocal(d))) {
+      n += 1;
+      d.setDate(d.getDate() - 1);
+    }
+    return n;
+  }
+
+  function sortear(lista) {
+    let r = Math.random() * 100;
+    for (const [chance, premio] of lista) {
+      r -= chance;
+      if (r < 0) return { ...premio };
+    }
+    return { ...lista[0][1] };
+  }
+
+  function abrirBau() {
+    if (bauDeHoje()) return null;
+    const ouro = (diasSeguidosDeBau() + 1) % 7 === 0;
+    let premio = sortear(ouro ? PREMIOS_OURO : PREMIOS);
+    // Bloqueio além do máximo guardado vira pontos.
+    if (premio.tipo === 'bloqueio' && bloqueiosGuardados() >= MAX_BLOQUEIOS) premio = { tipo: 'pontos', valor: ouro ? 30 : 20 };
+    const hoje = dataLocal(new Date());
+    estado.baus = [...estado.baus, { data: hoje, ouro, premio }].slice(-400);
+    if (premio.tipo === 'bloqueio') estado.bloqueios = [...estado.bloqueios, { comprado: hoje, usado: null, gratis: true }];
+    salvar();
+    return { ouro, premio };
+  }
+
+  function textoDoPremio(p) {
+    if (p.tipo === 'pontos') return { titulo: `+${p.valor} pontos`, detalhe: 'Já estão no seu saldo.' };
+    if (p.tipo === 'multiplicador') {
+      return {
+        titulo: `Pontos em ${p.valor === 2 ? 'dobro' : 'triplo'} hoje!`,
+        detalhe: `Treine hoje e ganhe ${p.valor * window.Aerobico.PONTOS_TREINO} pontos pelo treino, em vez de ${window.Aerobico.PONTOS_TREINO}.`,
+      };
+    }
+    return { titulo: 'Bloqueio de ofensiva!', detalhe: 'Ficou guardado: protege a ofensiva num dia sem treino.' };
+  }
+  const iconeDoPremio = (p) => (p.tipo === 'pontos' ? '⭐' : p.tipo === 'multiplicador' ? (p.valor === 2 ? '⚡' : '🔥') : '🧊');
+
+  // Multiplicador de hoje ainda valendo (não treinou ainda).
+  function multiplicadorDeHoje() {
+    const b = bauDeHoje();
+    return b && b.premio.tipo === 'multiplicador' ? b.premio.valor : 1;
+  }
+
+  // Na tela inicial: o baú fechado para abrir, ou o que ele deu hoje.
+  function cartaoBau() {
+    const b = bauDeHoje();
+    const seguidos = diasSeguidosDeBau();
+    if (b) {
+      const t = textoDoPremio(b.premio);
+      const treinou = estado.historico.some((x) => x.data === b.data);
+      if (b.premio.tipo !== 'multiplicador') return null;
+      return h('div', { class: 'bau-cartao aberto' },
+        h('span', { class: 'bau-icone', 'aria-hidden': 'true' }, iconeDoPremio(b.premio)),
+        h('div', null,
+          h('strong', null, t.titulo),
+          h('span', null, treinou ? `Treino de hoje valeu ${b.premio.valor * window.Aerobico.PONTOS_TREINO} pontos.` : t.detalhe)));
+    }
+    const ouro = (seguidos + 1) % 7 === 0;
+    const diaDaSerie = ((seguidos) % 7) + 1;
+    return h('button', { class: `bau-cartao fechado${ouro ? ' ouro' : ''}`, onclick: mostrarBau },
+      h('span', { class: 'bau-icone', 'aria-hidden': 'true' }, '🎁'),
+      h('div', null,
+        h('strong', null, ouro ? 'Baú de ouro do dia!' : 'Baú do dia'),
+        h('span', null, ouro ? '7 dias seguidos: prêmio melhor. Toque para abrir.'
+          : `Toque para abrir. Dia ${diaDaSerie} de 7 seguidos: no 7º, baú de ouro.`)));
+  }
+
+  function mostrarBau() {
+    const resultado = abrirBau();
+    if (!resultado) return;
+    const t = textoDoPremio(resultado.premio);
+    const fechar = () => {
+      modal.remove();
+      renderInicio();
+    };
+    const modal = h('div', {
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Baú do dia',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, h('div', { class: `modal-caixa folha bau-folha${resultado.ouro ? ' ouro' : ''}` },
+      h('p', { class: 'rotulo' }, resultado.ouro ? 'Baú de ouro' : 'Baú do dia'),
+      h('div', { class: 'bau-premio', 'aria-hidden': 'true' }, iconeDoPremio(resultado.premio)),
+      h('h2', null, t.titulo),
+      h('p', null, t.detalhe),
+      h('p', { class: 'aviso' }, `Volte amanhã para outro baú. ${plural(diasSeguidosDeBau(), 'dia')} seguido${diasSeguidosDeBau() === 1 ? '' : 's'}.`),
+      h('button', { class: 'botao primario', onclick: fechar }, 'Boa!')));
+    document.body.append(modal);
+    modal.querySelector('.botao').focus();
+  }
 
   function linhaOfensiva(of, estadoChama) {
     return h('p', { class: `ofensiva ${estadoChama}` },
@@ -1605,6 +1742,7 @@
     app.replaceChildren(h('section', { class: 'inicio' },
       h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
       cartaoPerfil(),
+      cartaoBau(),
       ofensivaAtual().treinouHoje ? cartaoAerobico() : null,
       cartaoSemana(true),
       cartaoInstalar(),
@@ -2164,7 +2302,7 @@
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
           h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)),
-          h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje · ${plural(pontosAtuais(), 'ponto')} no total`)),
+          h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje${multiplicadorDeHoje() > 1 ? ` (treino em ${multiplicadorDeHoje() === 2 ? 'dobro ⚡' : 'triplo 🔥'})` : ''} · ${plural(pontosAtuais(), 'ponto')} no total`)),
         h('button', { class: 'botao compartilhar', icone: 'compartilhar', onclick: () => abrirCompartilhar(resumoFinal, treino) }, 'Compartilhar treino')),
       h('article', { class: 'esforco-cartao' },
         h('h2', null, 'Como foi o treino?'),
