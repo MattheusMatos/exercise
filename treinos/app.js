@@ -8,6 +8,7 @@
   const semMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const ICONES = {
+    compartilhar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
     voltar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>',
     desfazer: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5L4 9l4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h10a5 5 0 0 1 0 10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
@@ -2058,7 +2059,8 @@
         h('div', { class: 'fim-ofensiva' },
           linhaOfensiva(of, estadoDaChama(of)),
           h('p', { class: subiu ? 'subiu-texto' : 'nivel' }, subiu ? `Subiu para o nível ${of.nivel}: mais forte!` : textoDoNivel(of)),
-          h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje · ${plural(pontosAtuais(), 'ponto')} no total`))),
+          h('p', { class: 'pontos-fim' }, `+${pontosAtuais() - resumoFinal.pontosAntes} pontos hoje · ${plural(pontosAtuais(), 'ponto')} no total`)),
+        h('button', { class: 'botao compartilhar', icone: 'compartilhar', onclick: () => abrirCompartilhar(resumoFinal, treino) }, 'Compartilhar treino')),
       h('article', { class: 'esforco-cartao' },
         h('h2', null, 'Como foi o treino?'),
         h('div', { class: 'opcoes-esforco', role: 'group', 'aria-label': 'Esforço do treino' }, Object.entries(ESFORCOS).map(([valor, e]) => h('button', {
@@ -2082,6 +2084,155 @@
         },
       }, 'Voltar ao início')));
     window.scrollTo(0, rolagem);
+  }
+
+  // ---------- compartilhar ----------
+
+  const carregarImagem = (src) => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+
+  // Card do treino em formato de story (1080 × 1920), para Instagram, WhatsApp e afins.
+  async function desenharCard(r, treino) {
+    const W = 1080;
+    const H = 1920;
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const c = canvas.getContext('2d');
+    await document.fonts.ready.catch(() => {});
+    const titulo = (peso, tamanho) => `${peso} ${tamanho}px "Barlow Condensed", "Arial Narrow", sans-serif`;
+    const texto = (peso, tamanho) => `${peso} ${tamanho}px Barlow, system-ui, sans-serif`;
+    const TINTA = '#12141a';
+
+    const fundo = c.createLinearGradient(0, 0, 0, H);
+    fundo.addColorStop(0, '#ffb37a');
+    fundo.addColorStop(0.45, '#ff6b35');
+    fundo.addColorStop(1, '#c93d12');
+    c.fillStyle = fundo;
+    c.fillRect(0, 0, W, H);
+    // Brilho atrás do personagem.
+    const brilho = c.createRadialGradient(W / 2, 760, 40, W / 2, 760, 560);
+    brilho.addColorStop(0, 'rgba(255, 240, 220, 0.55)');
+    brilho.addColorStop(1, 'rgba(255, 240, 220, 0)');
+    c.fillStyle = brilho;
+    c.fillRect(0, 200, W, 1100);
+
+    c.fillStyle = TINTA;
+    c.textAlign = 'center';
+    c.font = titulo(800, 44);
+    c.fillText('TREINO FEITO', W / 2, 150);
+    c.font = titulo(800, 150);
+    c.fillText(treino.titulo, W / 2, 300, W - 120);
+    c.font = texto(600, 40);
+    c.fillText(treino.foco, W / 2, 360, W - 120);
+
+    try {
+      const p = window.Avatar.personagem(estado.perfil.personagem);
+      const img = await carregarImagem(window.Avatar.imagemDoMomento(p.id, 'comemora'));
+      const alto = 720;
+      const largo = Math.min(W - 160, (img.width / img.height) * alto);
+      const altura = (img.height / img.width) * largo;
+      c.save();
+      c.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      c.shadowBlur = 30;
+      c.shadowOffsetY = 16;
+      c.drawImage(img, (W - largo) / 2, 400 + (alto - altura), largo, altura);
+      c.restore();
+    } catch (e) {
+      // Sem a imagem do personagem, o card sai só com os números.
+    }
+
+    c.fillStyle = TINTA;
+    c.font = titulo(800, 200);
+    c.fillText(r.segundos ? tempoLongo(r.segundos) : '—', W / 2, 1310);
+    c.font = texto(600, 40);
+    c.fillText('de treino', W / 2, 1365);
+
+    // Três caixas: séries, exercícios e calorias.
+    const kcal = caloriasDoTreino(r);
+    const caixas = [['Séries', `${r.series}/${r.totalSeries}`], ['Exercícios', String(r.exercicios)], ['Calorias', kcal ? `~${kcal}` : '—']];
+    const gap = 24;
+    const cw = (W - 120 - gap * 2) / 3;
+    caixas.forEach(([rotulo, valor], k) => {
+      const x = 60 + k * (cw + gap);
+      c.fillStyle = 'rgba(18, 20, 26, 0.14)';
+      c.beginPath();
+      c.roundRect(x, 1420, cw, 170, 32);
+      c.fill();
+      c.fillStyle = TINTA;
+      c.font = texto(600, 34);
+      c.fillText(rotulo, x + cw / 2, 1478);
+      c.font = titulo(800, 76);
+      c.fillText(valor, x + cw / 2, 1562, cw - 30);
+    });
+
+    // Ofensiva com o fogo.
+    const of = ofensivaAtual();
+    const linha = `${plural(of.dias, 'dia')} de ofensiva`;
+    c.font = titulo(800, 64);
+    const larguraLinha = c.measureText(linha).width;
+    try {
+      const svg = new Blob([window.Avatar.chama(of.dias ? 'acesa' : 'apagada')], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(svg);
+      const fogo = await carregarImagem(url);
+      URL.revokeObjectURL(url);
+      c.drawImage(fogo, (W - larguraLinha) / 2 - 80, 1632, 70, 70);
+      c.fillText(linha, W / 2 + 40, 1690);
+    } catch (e) {
+      c.fillText(`🔥 ${linha}`, W / 2, 1690);
+    }
+
+    c.font = texto(600, 36);
+    c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1790, W - 120);
+    c.font = texto(500, 30);
+    c.globalAlpha = 0.75;
+    c.fillText(new URL('./', location.href).href.replace(/^https?:\/\//, '').replace(/\/$/, ''), W / 2, 1845, W - 120);
+    c.globalAlpha = 1;
+
+    return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+  }
+
+  async function abrirCompartilhar(r, treino) {
+    const fechar = () => {
+      if (url) URL.revokeObjectURL(url);
+      modal.remove();
+    };
+    const caixa = h('div', { class: 'modal-caixa folha compartilhar-folha' }, h('p', { class: 'carregando' }, 'Montando o card…'));
+    const modal = h('div', {
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Compartilhar treino',
+      onclick: (e) => {
+        if (e.target === modal) fechar();
+      },
+    }, caixa);
+    document.body.append(modal);
+    let url = null;
+    const blob = await desenharCard(r, treino);
+    if (!blob || !modal.isConnected) return;
+    url = URL.createObjectURL(blob);
+    const nomeArquivo = `treino-${treino.id}-${dataLocal(new Date())}.png`;
+    const arquivo = new File([blob], nomeArquivo, { type: 'image/png' });
+    const podeCompartilhar = Boolean(navigator.canShare && navigator.canShare({ files: [arquivo] }));
+    caixa.replaceChildren(...[
+      h('img', { class: 'card-previa', src: url, alt: `Card do ${treino.titulo} para compartilhar` }),
+      podeCompartilhar ? h('button', {
+        class: 'botao primario', icone: 'compartilhar',
+        onclick: async () => {
+          try {
+            await navigator.share({ files: [arquivo], text: `${treino.titulo} feito! 💪` });
+          } catch (e) {
+            // A pessoa fechou o menu de compartilhar.
+          }
+        },
+      }, 'Compartilhar') : null,
+      h('a', { class: podeCompartilhar ? 'botao secundario' : 'botao primario', href: url, download: nomeArquivo }, 'Salvar imagem'),
+      h('p', { class: 'aviso' }, podeCompartilhar ? 'Compartilhar abre o menu do celular: Instagram, WhatsApp e outros.' : 'Salve a imagem e poste no Instagram, no status do WhatsApp ou onde quiser.'),
+      h('button', { class: 'link', onclick: fechar }, 'Fechar'),
+    ].filter(Boolean));
+    caixa.querySelector('.botao').focus();
   }
 
   // ---------- aeróbico ----------

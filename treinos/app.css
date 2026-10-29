@@ -1132,3 +1132,10 @@ svg { width: 22px; height: 22px; flex: none; }
 .dia.protegido { border-color: var(--azul); }
 .dia.protegido .dia-treino { color: var(--azul); }
 .bloqueio-cartao .presente { color: var(--azul); font-weight: 700; }
+
+/* Compartilhar o treino */
+.fim-destaque .compartilhar { width: 100%; margin-top: 4px; background: var(--tinta); color: var(--texto); }
+.botao.compartilhar svg, .compartilhar-folha .botao svg { width: 20px; height: 20px; margin-right: 6px; vertical-align: -4px; }
+.compartilhar-folha { overflow-y: auto; align-items: stretch; }
+.card-previa { display: block; width: auto; max-width: 100%; max-height: 58vh; margin: 0 auto; border-radius: 16px; box-shadow: 0 10px 30px var(--sombra); }
+.compartilhar-folha a.botao { display: grid; place-items: center; text-decoration: none; }
