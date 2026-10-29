@@ -1131,3 +1131,4 @@ svg { width: 22px; height: 22px; flex: none; }
 .bloqueio-mini { font-weight: 700; color: var(--azul); }
 .dia.protegido { border-color: var(--azul); }
 .dia.protegido .dia-treino { color: var(--azul); }
+.bloqueio-cartao .presente { color: var(--azul); font-weight: 700; }

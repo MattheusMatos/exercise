@@ -254,7 +254,13 @@
     const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
     if (Array.isArray(e.bloqueios)) {
       limpo.bloqueios = e.bloqueios.filter((b) => b && ehData(b.comprado) && (b.usado === null || ehData(b.usado)))
-        .map((b) => ({ comprado: b.comprado, usado: b.usado })).slice(-100);
+        .map((b) => ({ comprado: b.comprado, usado: b.usado, ...(b.gratis ? { gratis: true } : {}) })).slice(-100);
+    }
+    // Todo usuário, novo ou antigo, ganha 2 bloqueios de presente, uma vez só.
+    limpo.bloqueiosPresente = true;
+    if (!e.bloqueiosPresente) {
+      const hoje = dataLocal(new Date());
+      limpo.bloqueios = [...limpo.bloqueios, { comprado: hoje, usado: null, gratis: true }, { comprado: hoje, usado: null, gratis: true }];
     }
     // Carga usada por exercício (id da foto), para a próxima vez.
     if (e.cargas && typeof e.cargas === 'object') {
@@ -919,6 +925,7 @@
         h('p', { class: 'rotulo' }, 'Bloqueio de ofensiva'),
         h('span', { class: 'bloqueio-icones', 'aria-label': `${guardados} de ${MAX_BLOQUEIOS} guardados` },
           Array.from({ length: MAX_BLOQUEIOS }, (_, k) => h('span', { class: k < guardados ? 'cheio' : '' }, '🧊')))),
+      estado.bloqueios.some((b) => b.gratis && !b.usado) ? h('p', { class: 'presente' }, '🎁 Você ganhou 2 bloqueios de presente.') : null,
       h('p', null, 'Vai viajar ou não vai conseguir treinar? Com um bloqueio guardado, o dia sem treino conta para a meta da semana e a ofensiva não apaga. Ele é usado sozinho, só se a ofensiva fosse apagar; o dia protegido não soma dia de ofensiva.'),
       h('button', {
         class: 'botao primario',
@@ -1224,7 +1231,7 @@
   }
 
   // Pontos para gastar: os ganhos com treino e aeróbico, menos os bloqueios comprados.
-  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos) - estado.bloqueios.length * PRECO_BLOQUEIO;
+  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos) - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;
 
   function linhaOfensiva(of, estadoChama) {
     return h('p', { class: `ofensiva ${estadoChama}` },
@@ -2998,6 +3005,7 @@
     .then((lista) => {
       programas = Object.fromEntries(lista);
       estado = carregarLocal();
+      salvar(); // grava o que a validação acrescentou, como os bloqueios de presente
       programa = programas[estado.perfil.programa];
       selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
