@@ -113,43 +113,51 @@
    * quebra que aconteceu depois de comprado. Se os bloqueios guardados não bastam para salvar a
    * semana, nenhum é gasto. Devolve { bloqueios, salvos: [{ data, dias, usados }] }.
    */
+  /**
+   * Dias sem treino da semana da quebra a proteger para que ela não apague mais, no máximo maxDias.
+   * Devolve a lista de dias, ou null se não der.
+   */
+  function diasParaSalvar(historico, planos, hoje, protegidos, dataDaQuebra, maxDias) {
+    const treinou = new Set(historico.map((x) => x.data));
+    const semanaDe = (dia) => chave(domingo(data(dia)));
+    const semana = semanaDe(dataDaQuebra);
+    const usados = [];
+    for (let passo = 0; passo <= maxDias; passo++) {
+      const todos = [...protegidos, ...usados];
+      const q = calcular(historico, planos, hoje, todos).quebras.find((x) => semanaDe(x.data) === semana);
+      if (!q) return usados;
+      if (usados.length >= maxDias) return null;
+      // O dia mais recente da semana, até o da quebra, sem treino e sem bloqueio.
+      const d = data(q.data);
+      let dia = null;
+      for (let k = 0; k <= d.getDay() && !dia; k++) {
+        const c = chave(somarDias(d, -k));
+        if (!treinou.has(c) && !todos.includes(c)) dia = c;
+      }
+      if (!dia) return null;
+      usados.push(dia);
+    }
+    return null;
+  }
+
   function aplicarBloqueios(historico, planos, hoje, bloqueios) {
     let lista = bloqueios.map((b) => ({ ...b }));
     const salvos = [];
-    const treinou = new Set(historico.map((x) => x.data));
     const usadosEm = (l) => l.filter((b) => b.usado).map((b) => b.usado);
-    const semanaDe = (dia) => chave(domingo(data(dia)));
     for (let volta = 0; volta < 60; volta++) {
       const r = calcular(historico, planos, hoje, usadosEm(lista));
       // A primeira quebra que algum bloqueio guardado pode salvar.
       const quebra = r.quebras.find((q) => lista.some((b) => !b.usado && b.comprado <= q.data));
       if (!quebra) break;
-      // Tenta salvar a semana inteira; se faltar bloqueio em algum dia dela, não gasta nenhum.
-      const semana = semanaDe(quebra.data);
-      const tentativa = lista.map((b) => ({ ...b }));
-      const usados = [];
-      let salvou = false;
-      for (let passo = 0; passo < 7; passo++) {
-        const q = calcular(historico, planos, hoje, usadosEm(tentativa)).quebras.find((x) => semanaDe(x.data) === semana);
-        if (!q) {
-          salvou = true;
-          break;
-        }
-        // O dia mais recente da semana, até o da quebra, sem treino e sem bloqueio.
-        const d = data(q.data);
-        let dia = null;
-        for (let k = 0; k <= d.getDay() && !dia; k++) {
-          const c = chave(somarDias(d, -k));
-          if (!treinou.has(c) && !usadosEm(tentativa).includes(c)) dia = c;
-        }
-        const livre = tentativa.find((b) => !b.usado && b.comprado <= q.data);
-        if (!dia || !livre) break;
-        livre.usado = dia;
-        usados.push(dia);
-      }
-      if (!salvou) break;
-      lista = tentativa;
-      salvos.push({ data: quebra.data, dias: quebra.dias, usados });
+      // Salva a semana inteira; se faltar bloqueio em algum dia dela, não gasta nenhum.
+      const livres = lista.filter((b) => !b.usado && b.comprado <= quebra.data);
+      const dias = diasParaSalvar(historico, planos, hoje, usadosEm(lista), quebra.data, livres.length);
+      if (!dias) break;
+      dias.forEach((dia, k) => {
+        livres[k].usado = dia;
+      });
+      lista = lista.map((b) => ({ ...b }));
+      salvos.push({ data: quebra.data, dias: quebra.dias, usados: dias });
     }
     return { bloqueios: lista, salvos };
   }
@@ -168,7 +176,7 @@
     return 'comecando';
   }
 
-  const api = { calcular, aplicarBloqueios, nivel, humor, fase, faltamParaSubir, NIVEIS };
+  const api = { calcular, aplicarBloqueios, diasParaSalvar, nivel, humor, fase, faltamParaSubir, NIVEIS };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Ofensiva = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -84,7 +84,15 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 
 ### Aeróbico e pontos
 
-**Baú do dia:** uma vez por dia, a tela inicial tem um baú para abrir. Ele dá +5, +10 ou +20 pontos, pontos do treino em dobro ou em triplo naquele dia (se treinar) ou um bloqueio de ofensiva (vira pontos se já houver 2 guardados). Abrindo 7 dias seguidos, vem o baú de ouro, só com os prêmios melhores: triplo, +30 pontos ou bloqueio.
+**Armário do dia:** uma vez por dia, a tela inicial tem um armário para abrir. Ele dá +5, +10 ou +20 pontos, pontos do treino em dobro ou em triplo naquele dia (se treinar) ou um bloqueio de ofensiva (vira pontos se já houver 2 guardados). Abrindo 7 dias seguidos, vem o armário VIP, só com os prêmios melhores: triplo, +30 pontos ou bloqueio.
+
+**Loja** (terceira aba da folha do personagem; tocar nos pontos abre ela):
+
+- **Bloqueio de ofensiva**, 50 pontos, até 2 guardados;
+- **Reparar ofensiva**, 150 pontos: se a ofensiva apagou sem bloqueio, dá para recuperá-la em até 2 dias. Os dias que faltaram para a meta ficam protegidos (`diasParaSalvar` em `ofensiva.js`);
+- **Dobro ou nada**, 50 pontos: com a ofensiva acesa por 14 dias, recebe 100; se ela apagar, perde a aposta.
+
+**Bordas da ofensiva:** o cartão do personagem e o card de compartilhar ganham borda conforme os dias de ofensiva: Madeira (3), Ferro (7), Bronze (15), Prata (30), Ouro (60) e Diamante (100). Se a ofensiva apagar, a borda volta junto. As cores do card de compartilhar (Laranja, Noite, Neon, Rosa e Dourado) são grátis, à escolha.
 
 Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
 

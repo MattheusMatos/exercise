@@ -65,6 +65,7 @@
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
     aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
+    compras: [], apostas: [], estiloCard: 'laranja',
     perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, nome: '', configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
@@ -249,9 +250,10 @@
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
       cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
+      compras: [], apostas: [], estiloCard: 'laranja',
       perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     };
-    // Baús do dia já abertos, com o prêmio de cada um.
+    // Armários do dia já abertos, com o prêmio de cada um.
     if (Array.isArray(e.baus)) {
       const valido = (b) => b && /^\d{4}-\d{2}-\d{2}$/.test(b.data) && b.premio && (
         (b.premio.tipo === 'pontos' && Number.isInteger(b.premio.valor) && b.premio.valor > 0 && b.premio.valor <= 100)
@@ -259,12 +261,22 @@
         || b.premio.tipo === 'bloqueio');
       limpo.baus = e.baus.filter(valido).map((b) => ({ data: b.data, ouro: Boolean(b.ouro), premio: b.premio })).slice(-400);
     }
+    // Loja: o que foi gasto, as apostas "dobro ou nada" e os estilos do card de compartilhar.
+    if (Array.isArray(e.compras)) {
+      limpo.compras = e.compras.filter((c) => c && /^\d{4}-\d{2}-\d{2}$/.test(c.data) && typeof c.tipo === 'string'
+        && Number.isInteger(c.pontos) && c.pontos > 0 && c.pontos <= 1000).map((c) => ({ data: c.data, tipo: c.tipo, pontos: c.pontos })).slice(-400);
+    }
+    if (Array.isArray(e.apostas)) {
+      limpo.apostas = e.apostas.filter((a) => a && /^\d{4}-\d{2}-\d{2}$/.test(a.inicio) && ['ativa', 'ganha', 'perdida'].includes(a.status))
+        .map((a) => ({ inicio: a.inicio, status: a.status })).slice(-100);
+    }
+    if (ESTILOS_CARD[e.estiloCard]) limpo.estiloCard = e.estiloCard;
     if (typeof e.faltaResolvida === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.faltaResolvida)) limpo.faltaResolvida = e.faltaResolvida;
     // Bloqueios de ofensiva comprados com pontos; usado é o dia que cada um protegeu.
     const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
     if (Array.isArray(e.bloqueios)) {
       limpo.bloqueios = e.bloqueios.filter((b) => b && ehData(b.comprado) && (b.usado === null || ehData(b.usado)))
-        .map((b) => ({ comprado: b.comprado, usado: b.usado, ...(b.gratis ? { gratis: true } : {}) })).slice(-100);
+        .map((b) => ({ comprado: b.comprado, usado: b.usado, ...(b.gratis ? { gratis: true } : {}), ...(b.reparo ? { reparo: true } : {}) })).slice(-100);
     }
     // Todo usuário, novo ou antigo, ganha 2 bloqueios de presente, uma vez só.
     limpo.bloqueiosPresente = true;
@@ -946,7 +958,156 @@
 
   const dataCurta = (dia) => `${dia.slice(8, 10)}/${dia.slice(5, 7)}`;
 
-  // Na aba Personagem: o que é, quantos tem guardados e o botão de comprar.
+  // ---------- loja ----------
+
+  const PRECO_REPARO = 150;
+  const DIAS_PARA_REPARAR = 2; // depois do dia em que a ofensiva apagou
+  const PRECO_APOSTA = 50;
+  const PREMIO_APOSTA = 100;
+  const DIAS_APOSTA = 14;
+  const somarDiasData = (dia, n) => {
+    const d = new Date(`${dia}T12:00:00`);
+    d.setDate(d.getDate() + n);
+    return dataLocal(d);
+  };
+  const diasDesde = (dia) => Math.round((new Date(`${dataLocal(new Date())}T12:00:00`) - new Date(`${dia}T12:00:00`)) / 86400000);
+
+  function gastar(tipo, pontos) {
+    if (pontosAtuais() < pontos) return false;
+    estado.compras = [...estado.compras, { data: dataLocal(new Date()), tipo, pontos }].slice(-400);
+    return true;
+  }
+
+  // A ofensiva apagou há até 2 dias e dá para reparar: devolve a quebra e os dias a proteger.
+  function reparoDisponivel() {
+    const of = ofensivaAtual();
+    const q = of.quebras[of.quebras.length - 1];
+    if (!q || diasDesde(q.data) > DIAS_PARA_REPARAR) return null;
+    const dias = window.Ofensiva.diasParaSalvar(estado.historico, todosOsPlanos(), dataLocal(new Date()), diasProtegidos(), q.data, 7);
+    return dias && dias.length ? { ...q, protegerDias: dias } : null;
+  }
+
+  function repararOfensiva() {
+    const reparo = reparoDisponivel();
+    if (!reparo || !gastar('reparo', PRECO_REPARO)) return false;
+    estado.bloqueios = [...estado.bloqueios, ...reparo.protegerDias.map((dia) => ({ comprado: reparo.data, usado: dia, gratis: true, reparo: true }))];
+    salvar();
+    return true;
+  }
+
+  // Dobro ou nada: aposta 50 pontos; com a ofensiva acesa por 14 dias seguidos, recebe 100.
+  const apostaAtiva = () => estado.apostas.find((a) => a.status === 'ativa') || null;
+
+  function apostar() {
+    if (apostaAtiva() || !gastar('aposta', PRECO_APOSTA)) return false;
+    estado.apostas = [...estado.apostas, { inicio: dataLocal(new Date()), status: 'ativa' }];
+    salvar();
+    return true;
+  }
+
+  // Confere a aposta ativa: perde se a ofensiva apagou no período; ganha ao completar os 14 dias.
+  function conferirApostas() {
+    const a = apostaAtiva();
+    if (!a) return;
+    const fim = somarDiasData(a.inicio, DIAS_APOSTA);
+    const of = ofensivaAtual();
+    if (of.quebras.some((q) => q.data >= a.inicio && q.data < fim)) {
+      a.status = 'perdida';
+      salvar();
+      avisar('A ofensiva apagou: a aposta dobro ou nada foi perdida.');
+    } else if (dataLocal(new Date()) >= fim) {
+      a.status = 'ganha';
+      salvar();
+      avisar(`🏆 Dobro ou nada: 14 dias de ofensiva! +${PREMIO_APOSTA} pontos.`);
+    }
+  }
+
+  function cartaoReparo(redesenhar) {
+    const reparo = reparoDisponivel();
+    if (!reparo) {
+      return h('div', { class: 'loja-item' },
+        h('div', { class: 'loja-topo' }, h('p', { class: 'rotulo' }, '🔧 Reparar ofensiva'), h('span', { class: 'preco' }, `${PRECO_REPARO} pts`)),
+        h('p', null, `Se a ofensiva apagar e não houver bloqueio guardado, dá para recuperá-la em até ${DIAS_PARA_REPARAR} dias. Aparece aqui quando acontecer.`));
+    }
+    const ate = somarDiasData(reparo.data, DIAS_PARA_REPARAR);
+    const falta = PRECO_REPARO - pontosAtuais();
+    return h('div', { class: 'loja-item destaque' },
+      h('div', { class: 'loja-topo' }, h('p', { class: 'rotulo' }, '🔧 Reparar ofensiva'), h('span', { class: 'preco' }, `${PRECO_REPARO} pts`)),
+      h('p', null, h('strong', null, `Sua ofensiva de ${plural(reparo.dias, 'dia')} apagou.`), ` Dá para recuperá-la até ${dataCurta(ate)}: os dias que faltaram para a meta ficam protegidos.`),
+      h('button', {
+        class: 'botao primario',
+        disabled: falta > 0,
+        onclick: () => {
+          if (repararOfensiva()) {
+            avisar(`🔧 Ofensiva de ${plural(reparo.dias, 'dia')} recuperada!`);
+            redesenhar();
+            renderInicio();
+          }
+        },
+      }, `Reparar por ${PRECO_REPARO} pontos`),
+      falta > 0 ? h('p', { class: 'aviso' }, `Faltam ${plural(falta, 'ponto')}.`) : null);
+  }
+
+  function cartaoAposta(redesenhar) {
+    const a = apostaAtiva();
+    const corpo = a
+      ? [h('p', null, h('strong', null, `Dia ${Math.min(DIAS_APOSTA, diasDesde(a.inicio) + 1)} de ${DIAS_APOSTA}.`),
+        ` Mantenha a ofensiva acesa até ${dataCurta(somarDiasData(a.inicio, DIAS_APOSTA - 1))} e receba ${PREMIO_APOSTA} pontos.`),
+      h('div', { class: 'barra-tempo' }, h('i', { style: `width: ${Math.min(100, ((diasDesde(a.inicio) + 1) / DIAS_APOSTA) * 100)}%` }))]
+      : [h('p', null, `Aposte ${PRECO_APOSTA} pontos: se a ofensiva ficar acesa por ${DIAS_APOSTA} dias, você recebe ${PREMIO_APOSTA}. Bloqueios valem; se ela apagar, perde a aposta.`),
+        h('button', {
+          class: 'botao primario',
+          disabled: pontosAtuais() < PRECO_APOSTA,
+          onclick: () => {
+            if (apostar()) {
+              avisar(`🎲 Aposta feita: ${DIAS_APOSTA} dias de ofensiva valem ${PREMIO_APOSTA} pontos.`);
+              redesenhar();
+              renderInicio();
+            }
+          },
+        }, `Apostar ${PRECO_APOSTA} pontos`),
+        pontosAtuais() < PRECO_APOSTA ? h('p', { class: 'aviso' }, `Faltam ${plural(PRECO_APOSTA - pontosAtuais(), 'ponto')}.`) : null];
+    const ganhas = estado.apostas.filter((x) => x.status === 'ganha').length;
+    return h('div', { class: 'loja-item' },
+      h('div', { class: 'loja-topo' }, h('p', { class: 'rotulo' }, '🎲 Dobro ou nada'), h('span', { class: 'preco' }, a ? 'em andamento' : `${PRECO_APOSTA} pts`)),
+      corpo,
+      ganhas ? h('p', { class: 'aviso' }, `Apostas ganhas: ${ganhas}.`) : null);
+  }
+
+  function amostraEstilo(id) {
+    const e = ESTILOS_CARD[id];
+    const el = h('span', { class: 'amostra-estilo', 'aria-hidden': 'true' });
+    el.style.background = `linear-gradient(180deg, ${e.fundo.join(', ')})`;
+    el.style.color = e.tinta;
+    el.textContent = '52:40';
+    return el;
+  }
+
+  // Cores do card de compartilhar, todas liberadas.
+  function opcoesEstilo(aoMudar) {
+    return h('div', { class: 'opcoes-estilo' }, Object.entries(ESTILOS_CARD).map(([id, e]) => h('button', {
+      class: 'opcao-estilo',
+      'aria-pressed': String(estado.estiloCard === id),
+      onclick: () => {
+        estado.estiloCard = id;
+        salvar();
+        aoMudar();
+      },
+    }, amostraEstilo(id), h('span', null, e.nome))));
+  }
+
+  // Aba Loja: pontos para gastar e o que dá para comprar.
+  function abaLoja(redesenhar) {
+    return [
+      h('p', { class: 'saldo-loja' }, '⭐ ', h('strong', null, plural(pontosAtuais(), 'ponto')), ' para gastar'),
+      h('p', { class: 'grupo-descricao' }, `Cada treino vale ${window.Aerobico.PONTOS_TREINO} pontos; o aeróbico e o armário do dia dão mais.`),
+      cartaoBloqueio(redesenhar),
+      cartaoReparo(redesenhar),
+      cartaoAposta(redesenhar),
+    ];
+  }
+
+  // Na aba Loja: o que é, quantos tem guardados e o botão de comprar.
   function cartaoBloqueio(redesenhar) {
     const guardados = bloqueiosGuardados();
     const saldo = pontosAtuais();
@@ -1303,8 +1464,8 @@
   }
 
   // Pontos para gastar: os ganhos com treino e aeróbico, menos os bloqueios comprados.
-  // Pontos para gastar: treino e aeróbico, mais os prêmios dos baús (pontos e treino em dobro ou
-  // triplo no dia do baú), menos os bloqueios comprados.
+  // Pontos para gastar: treino e aeróbico, mais os prêmios do armário do dia (pontos e treino em dobro ou
+  // triplo no dia), mais as apostas ganhas, menos o que foi gasto na loja.
   function pontosAtuais() {
     const treinou = new Set(estado.historico.map((x) => x.data));
     const dosBaus = estado.baus.reduce((soma, b) => {
@@ -1312,12 +1473,47 @@
       if (b.premio.tipo === 'multiplicador' && treinou.has(b.data)) return soma + (b.premio.valor - 1) * window.Aerobico.PONTOS_TREINO;
       return soma;
     }, 0);
-    return window.Aerobico.pontos(estado.historico, estado.aerobicos) + dosBaus - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;
+    const apostas = estado.apostas.filter((a) => a.status === 'ganha').length * PREMIO_APOSTA;
+    const gastos = estado.compras.reduce((soma, c) => soma + c.pontos, 0);
+    return window.Aerobico.pontos(estado.historico, estado.aerobicos) + dosBaus + apostas - gastos
+      - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;
   }
 
-  // ---------- baú do dia ----------
+  // ---------- bordas da ofensiva ----------
 
-  // Prêmios e chances (somam 100). No baú de ouro, a cada 7 dias seguidos abrindo o app, só os melhores.
+  // A borda do cartão do personagem e do card de compartilhar sobe com os dias de ofensiva.
+  const BORDAS = [
+    { id: 'madeira', nome: 'Madeira', icone: '🪵', dias: 3, cores: ['#d9a066', '#8b5a2b', '#5c3a1a'] },
+    { id: 'ferro', nome: 'Ferro', icone: '⚙️', dias: 7, cores: ['#d5dae1', '#7b8592', '#3f4650'] },
+    { id: 'bronze', nome: 'Bronze', icone: '🥉', dias: 15, cores: ['#f0b27a', '#b06a2c', '#6e3b12'] },
+    { id: 'prata', nome: 'Prata', icone: '🥈', dias: 30, cores: ['#ffffff', '#c3cad3', '#7d8794'] },
+    { id: 'ouro', nome: 'Ouro', icone: '🥇', dias: 60, cores: ['#fff1a8', '#f2c230', '#a8740c'] },
+    { id: 'diamante', nome: 'Diamante', icone: '💎', dias: 100, cores: ['#e6fbff', '#6fd6ff', '#a98bff'] },
+  ];
+  const bordaDa = (dias) => [...BORDAS].reverse().find((b) => dias >= b.dias) || null;
+  const proximaBorda = (dias) => BORDAS.find((b) => dias < b.dias) || null;
+
+  // Na aba Personagem: a borda de agora e as próximas.
+  function cartaoBordas(of) {
+    const atual = bordaDa(of.dias);
+    const proxima = proximaBorda(of.dias);
+    return h('div', { class: 'bordas-cartao' },
+      h('p', { class: 'rotulo' }, 'Borda da ofensiva'),
+      h('p', null, atual ? h('strong', null, `${atual.icone} ${atual.nome}`) : 'Sem borda ainda', proxima ? ` · faltam ${plural(proxima.dias - of.dias, 'dia')} para ${proxima.nome}` : ' · a maior de todas!'),
+      h('div', { class: 'bordas-lista' }, BORDAS.map((b) => {
+        const el = h('span', { class: `borda-amostra${of.dias >= b.dias ? '' : ' travada'}`, title: `${b.nome}: ${b.dias} dias` },
+          h('span', null, b.icone), h('small', null, `${b.dias}d`));
+        el.style.setProperty('--b1', b.cores[0]);
+        el.style.setProperty('--b2', b.cores[1]);
+        el.style.setProperty('--b3', b.cores[2]);
+        return el;
+      })),
+      h('p', { class: 'aviso' }, 'Aparece no cartão do personagem e no card de compartilhar. Se a ofensiva apagar, a borda volta junto com ela.'));
+  }
+
+  // ---------- armário do dia (prêmio por abrir o app) ----------
+
+  // Prêmios e chances (somam 100). No armário VIP, a cada 7 dias seguidos abrindo o app, só os melhores.
   const PREMIOS = [
     [40, { tipo: 'pontos', valor: 5 }],
     [25, { tipo: 'pontos', valor: 10 }],
@@ -1333,7 +1529,7 @@
   ];
   const bauDeHoje = () => estado.baus.find((b) => b.data === dataLocal(new Date())) || null;
 
-  // Dias seguidos abrindo o baú, contando hoje se já abriu.
+  // Dias seguidos abrindo o armário, contando hoje se já abriu.
   function diasSeguidosDeBau() {
     const datas = new Set(estado.baus.map((b) => b.data));
     const d = new Date();
@@ -1386,7 +1582,7 @@
     return b && b.premio.tipo === 'multiplicador' ? b.premio.valor : 1;
   }
 
-  // Na tela inicial: o baú fechado para abrir, ou o que ele deu hoje.
+  // Na tela inicial: o armário fechado para abrir, ou o que ele deu hoje.
   function cartaoBau() {
     const b = bauDeHoje();
     const seguidos = diasSeguidosDeBau();
@@ -1403,11 +1599,11 @@
     const ouro = (seguidos + 1) % 7 === 0;
     const diaDaSerie = ((seguidos) % 7) + 1;
     return h('button', { class: `bau-cartao fechado${ouro ? ' ouro' : ''}`, onclick: mostrarBau },
-      h('span', { class: 'bau-icone', 'aria-hidden': 'true' }, '🎁'),
+      h('span', { class: 'bau-icone', 'aria-hidden': 'true' }, '🔐'),
       h('div', null,
-        h('strong', null, ouro ? 'Baú de ouro do dia!' : 'Baú do dia'),
-        h('span', null, ouro ? '7 dias seguidos: prêmio melhor. Toque para abrir.'
-          : `Toque para abrir. Dia ${diaDaSerie} de 7 seguidos: no 7º, baú de ouro.`)));
+        h('strong', null, ouro ? 'Armário VIP do dia!' : 'Armário do dia'),
+        h('span', null, ouro ? '7 dias seguidos: prêmios melhores. Toque para abrir.'
+          : `Toque para abrir. Dia ${diaDaSerie} de 7 seguidos: no 7º, armário VIP.`)));
   }
 
   function mostrarBau() {
@@ -1419,16 +1615,16 @@
       renderInicio();
     };
     const modal = h('div', {
-      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Baú do dia',
+      class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Armário do dia',
       onclick: (e) => {
         if (e.target === modal) fechar();
       },
     }, h('div', { class: `modal-caixa folha bau-folha${resultado.ouro ? ' ouro' : ''}` },
-      h('p', { class: 'rotulo' }, resultado.ouro ? 'Baú de ouro' : 'Baú do dia'),
+      h('p', { class: 'rotulo' }, resultado.ouro ? 'Armário VIP' : 'Armário do dia'),
       h('div', { class: 'bau-premio', 'aria-hidden': 'true' }, iconeDoPremio(resultado.premio)),
       h('h2', null, t.titulo),
       h('p', null, t.detalhe),
-      h('p', { class: 'aviso' }, `Volte amanhã para outro baú. ${plural(diasSeguidosDeBau(), 'dia')} seguido${diasSeguidosDeBau() === 1 ? '' : 's'}.`),
+      h('p', { class: 'aviso' }, `Volte amanhã para abrir de novo. ${plural(diasSeguidosDeBau(), 'dia')} seguido${diasSeguidosDeBau() === 1 ? '' : 's'}.`),
       h('button', { class: 'botao primario', onclick: fechar }, 'Boa!')));
     document.body.append(modal);
     modal.querySelector('.botao').focus();
@@ -1443,7 +1639,8 @@
     const of = ofensivaAtual();
     const fase = window.Ofensiva.fase(of);
     const p = window.Avatar.personagem(estado.perfil.personagem);
-    return h('section', { class: 'perfil' },
+    const borda = bordaDa(of.dias);
+    const secao = h('section', { class: borda ? `perfil com-borda borda-${borda.id}` : 'perfil' },
       h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: () => abrirPerfil('personagem') },
         imagemDoPersonagem(fase)),
       h('div', { class: 'perfil-texto' },
@@ -1463,9 +1660,17 @@
             },
           }, `Não vai dar hoje? Usar um bloqueio 🧊 (${bloqueiosGuardados()} guardado${bloqueiosGuardados() === 1 ? '' : 's'})`)
           : null,
-        h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto')),
+        reparoDisponivel() ? h('button', { class: 'link usar-bloqueio', onclick: () => abrirPerfil('loja') }, `🔧 A ofensiva apagou: dá para reparar na Loja`) : null,
+        h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('button', { class: 'pontos', onclick: () => abrirPerfil('loja') }, `⭐ ${plural(pontosAtuais(), 'ponto')}`),
           bloqueiosGuardados() ? h('span', { class: 'bloqueio-mini', title: 'Bloqueios de ofensiva guardados' }, ` · 🧊 ${bloqueiosGuardados()}`) : null),
-        h('button', { class: 'link', onclick: () => abrirPerfil('treino') }, 'Trocar treino')));
+        h('button', { class: 'link', onclick: () => abrirPerfil('treino') }, 'Trocar treino')),
+      borda ? h('span', { class: 'selo-borda', title: `Ofensiva ${borda.nome}: ${borda.dias}+ dias` }, `${borda.icone} ${borda.nome}`) : null);
+    if (borda) {
+      secao.style.setProperty('--b1', borda.cores[0]);
+      secao.style.setProperty('--b2', borda.cores[1]);
+      secao.style.setProperty('--b3', borda.cores[2]);
+    }
+    return secao;
   }
 
   function trocarPrograma(depois) {
@@ -1488,7 +1693,7 @@
   function abrirPerfil(aba) {
     const of = ofensivaAtual();
     const fase = window.Ofensiva.fase(of);
-    let abaAtual = aba === 'treino' ? 'treino' : 'personagem';
+    let abaAtual = ['treino', 'loja'].includes(aba) ? aba : 'personagem';
     let confirmando = null; // programa esperando confirmação, com treino em andamento
     const fechar = () => modal.remove();
     const caixa = h('div', { class: 'modal-caixa folha perfil-folha' });
@@ -1563,7 +1768,7 @@
         campoNome(),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
-        cartaoBloqueio(desenhar),
+        cartaoBordas(of),
         destaquePersonagem(),
         h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((p) => h('button', {
           class: 'opcao-personagem',
@@ -1583,7 +1788,7 @@
       ];
     }
     function desenhar() {
-      const abas = [['treino', 'Treino'], ['personagem', 'Personagem']];
+      const abas = [['treino', 'Treino'], ['personagem', 'Personagem'], ['loja', 'Loja']];
       caixa.replaceChildren(...[
         h('div', { class: 'abas', role: 'tablist', 'aria-label': 'Personagem e treino' }, abas.map(([id, rotulo]) => h('button', {
           role: 'tab',
@@ -1597,7 +1802,7 @@
           },
         }, rotulo))),
         h('div', { class: 'aba-conteudo', role: 'tabpanel', 'aria-labelledby': `aba-${abaAtual}` },
-          abaAtual === 'treino' ? abaTreino() : abaPersonagem()),
+          abaAtual === 'treino' ? abaTreino() : abaAtual === 'loja' ? abaLoja(desenhar) : abaPersonagem()),
         h('button', { class: 'link', onclick: fechar }, 'Fechar'),
       ].flat(Infinity).filter(Boolean));
     }
@@ -2331,6 +2536,15 @@
 
   // ---------- compartilhar ----------
 
+  // Cores do card, à escolha (todas grátis): fundo (três cores, de cima para baixo), texto, caixas e brilho.
+  const ESTILOS_CARD = {
+    laranja: { nome: 'Laranja', fundo: ['#ffb37a', '#ff6b35', '#c93d12'], tinta: '#12141a', caixa: 'rgba(18, 20, 26, 0.14)', brilho: 'rgba(255, 240, 220, 0.55)' },
+    noite: { nome: 'Noite', fundo: ['#2b3754', '#151b2b', '#07090f'], tinta: '#f0f2f5', caixa: 'rgba(255, 255, 255, 0.08)', brilho: 'rgba(255, 107, 53, 0.35)' },
+    neon: { nome: 'Neon', fundo: ['#8dffbf', '#2fd27d', '#0b6b3c'], tinta: '#071a10', caixa: 'rgba(7, 26, 16, 0.14)', brilho: 'rgba(230, 255, 240, 0.55)' },
+    rosa: { nome: 'Rosa', fundo: ['#ffc2e2', '#e5559e', '#6e1c5a'], tinta: '#1d0716', caixa: 'rgba(29, 7, 22, 0.14)', brilho: 'rgba(255, 235, 245, 0.55)' },
+    ouro: { nome: 'Dourado', fundo: ['#fff3c2', '#e8b83d', '#7d520b'], tinta: '#1c1404', caixa: 'rgba(28, 20, 4, 0.14)', brilho: 'rgba(255, 250, 225, 0.6)' },
+  };
+
   const carregarImagem = (src) => new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -2339,7 +2553,8 @@
   });
 
   // Card do treino em formato de story (1080 × 1920), para Instagram, WhatsApp e afins.
-  async function desenharCard(r, treino) {
+  async function desenharCard(r, treino, estiloId) {
+    const estilo = ESTILOS_CARD[estiloId] || ESTILOS_CARD.laranja;
     const W = 1080;
     const H = 1920;
     const canvas = document.createElement('canvas');
@@ -2349,18 +2564,18 @@
     await document.fonts.ready.catch(() => {});
     const titulo = (peso, tamanho) => `${peso} ${tamanho}px "Barlow Condensed", "Arial Narrow", sans-serif`;
     const texto = (peso, tamanho) => `${peso} ${tamanho}px Barlow, system-ui, sans-serif`;
-    const TINTA = '#12141a';
+    const TINTA = estilo.tinta;
 
     const fundo = c.createLinearGradient(0, 0, 0, H);
-    fundo.addColorStop(0, '#ffb37a');
-    fundo.addColorStop(0.45, '#ff6b35');
-    fundo.addColorStop(1, '#c93d12');
+    fundo.addColorStop(0, estilo.fundo[0]);
+    fundo.addColorStop(0.45, estilo.fundo[1]);
+    fundo.addColorStop(1, estilo.fundo[2]);
     c.fillStyle = fundo;
     c.fillRect(0, 0, W, H);
     // Brilho atrás do personagem.
     const brilho = c.createRadialGradient(W / 2, 760, 40, W / 2, 760, 560);
-    brilho.addColorStop(0, 'rgba(255, 240, 220, 0.55)');
-    brilho.addColorStop(1, 'rgba(255, 240, 220, 0)');
+    brilho.addColorStop(0, estilo.brilho);
+    brilho.addColorStop(1, 'rgba(0, 0, 0, 0)');
     c.fillStyle = brilho;
     c.fillRect(0, 200, W, 1100);
 
@@ -2402,7 +2617,7 @@
     const cw = (W - 120 - gap * 2) / 3;
     caixas.forEach(([rotulo, valor], k) => {
       const x = 60 + k * (cw + gap);
-      c.fillStyle = 'rgba(18, 20, 26, 0.14)';
+      c.fillStyle = estilo.caixa;
       c.beginPath();
       c.roundRect(x, 1420, cw, 170, 32);
       c.fill();
@@ -2432,10 +2647,34 @@
     c.font = texto(600, 38);
     c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1810, W - 120);
 
+    // Borda da ofensiva em volta do card, com o nome dela no alto.
+    const borda = bordaDa(of.dias);
+    if (borda) {
+      const grad = c.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, borda.cores[0]);
+      grad.addColorStop(0.5, borda.cores[1]);
+      grad.addColorStop(1, borda.cores[2]);
+      c.strokeStyle = grad;
+      c.lineWidth = 22;
+      c.beginPath();
+      c.roundRect(24, 24, W - 48, H - 48, 56);
+      c.stroke();
+      const rotulo = `${borda.nome.toUpperCase()} · ${of.dias} DIAS`;
+      c.font = titulo(800, 38);
+      const lw = c.measureText(rotulo).width + 64;
+      c.fillStyle = grad;
+      c.beginPath();
+      c.roundRect((W - lw) / 2, 6, lw, 62, 31);
+      c.fill();
+      c.fillStyle = '#12141a';
+      c.fillText(rotulo, W / 2, 50);
+    }
+
     return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
   }
 
   async function abrirCompartilhar(r, treino) {
+    let url = null;
     const fechar = () => {
       if (url) URL.revokeObjectURL(url);
       modal.remove();
@@ -2448,30 +2687,37 @@
       },
     }, caixa);
     document.body.append(modal);
-    let url = null;
-    const blob = await desenharCard(r, treino);
-    if (!blob || !modal.isConnected) return;
-    url = URL.createObjectURL(blob);
-    const nomeArquivo = `treino-${treino.id}-${dataLocal(new Date())}.png`;
-    const arquivo = new File([blob], nomeArquivo, { type: 'image/png' });
-    const podeCompartilhar = Boolean(navigator.canShare && navigator.canShare({ files: [arquivo] }));
-    caixa.replaceChildren(...[
-      h('img', { class: 'card-previa', src: url, alt: `Card do ${treino.titulo} para compartilhar` }),
-      podeCompartilhar ? h('button', {
-        class: 'botao primario', icone: 'compartilhar',
-        onclick: async () => {
-          try {
-            await navigator.share({ files: [arquivo], text: `${treino.titulo} feito! 💪` });
-          } catch (e) {
-            // A pessoa fechou o menu de compartilhar.
-          }
-        },
-      }, 'Compartilhar') : null,
-      h('a', { class: podeCompartilhar ? 'botao secundario' : 'botao primario', href: url, download: nomeArquivo }, 'Salvar imagem'),
-      h('p', { class: 'aviso' }, podeCompartilhar ? 'Compartilhar abre o menu do celular: Instagram, WhatsApp e outros.' : 'Salve a imagem e poste no Instagram, no status do WhatsApp ou onde quiser.'),
-      h('button', { class: 'link', onclick: fechar }, 'Fechar'),
-    ].filter(Boolean));
-    caixa.querySelector('.botao').focus();
+    // Desenha com o estilo escolhido; trocar de estilo desenha de novo.
+    async function montar() {
+      const blob = await desenharCard(r, treino, estado.estiloCard);
+      if (!blob || !modal.isConnected) return;
+      if (url) URL.revokeObjectURL(url);
+      url = URL.createObjectURL(blob);
+      const nomeArquivo = `treino-${treino.id}-${dataLocal(new Date())}.png`;
+      const arquivo = new File([blob], nomeArquivo, { type: 'image/png' });
+      const podeCompartilhar = Boolean(navigator.canShare && navigator.canShare({ files: [arquivo] }));
+      caixa.replaceChildren(...[
+        h('img', { class: 'card-previa', src: url, alt: `Card do ${treino.titulo} para compartilhar` }),
+        h('p', { class: 'rotulo' }, 'Cor do card'),
+        opcoesEstilo(montar),
+        podeCompartilhar ? h('button', {
+          class: 'botao primario', icone: 'compartilhar',
+          onclick: async () => {
+            try {
+              await navigator.share({ files: [arquivo], text: `${treino.titulo} feito! 💪` });
+            } catch (e) {
+              // A pessoa fechou o menu de compartilhar.
+            }
+          },
+        }, 'Compartilhar') : null,
+        h('a', { class: podeCompartilhar ? 'botao secundario' : 'botao primario', href: url, download: nomeArquivo }, 'Salvar imagem'),
+        h('p', { class: 'aviso' }, podeCompartilhar ? 'Compartilhar abre o menu do celular: Instagram, WhatsApp e outros.' : 'Salve a imagem e poste no Instagram, no status do WhatsApp ou onde quiser.'),
+        h('button', { class: 'link', onclick: fechar }, 'Fechar'),
+      ].filter(Boolean));
+    }
+    await montar();
+    const botao = caixa.querySelector('.botao');
+    if (botao) botao.focus();
   }
 
   // ---------- aeróbico ----------
@@ -3333,6 +3579,7 @@
     if (programa && estado.perfil.configurado) {
       const antes = estado.bloqueios.filter((b) => b.usado).length;
       usarBloqueios();
+      conferirApostas();
       if (estado.bloqueios.filter((b) => b.usado).length !== antes && tela === 'inicio') renderInicio();
     }
     if (tela === 'treino' || (estado.cronoAerobico && estado.cronoAerobico.fim)) pedirTravaTela();
@@ -3401,6 +3648,7 @@
       render();
       if (estado.cronoAerobico) desenharCronometro();
       usarBloqueios();
+      conferirApostas();
       if (tela === 'inicio') renderInicio();
       carregarBiblioteca();
     })

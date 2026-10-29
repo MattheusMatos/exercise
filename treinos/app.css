@@ -1074,7 +1074,7 @@ svg { width: 22px; height: 22px; flex: none; }
 .ajuste.ligado { background: var(--laranja); color: var(--tinta); }
 
 /* Abas da folha de personagem e treino */
-.abas { position: sticky; top: -1px; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: var(--fundo); }
+.abas { position: sticky; top: -1px; z-index: 2; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 14px; background: var(--fundo); }
 .abas button { min-height: 44px; border: 0; border-radius: 10px; background: none; color: var(--apagado); font: 800 20px/1 var(--fonte-titulo); letter-spacing: 0.02em; cursor: pointer; }
 .abas [aria-selected="true"] { background: var(--superficie-2); color: var(--texto); box-shadow: inset 0 -3px 0 var(--laranja); }
 .aba-conteudo { display: flex; flex-direction: column; gap: 12px; }
@@ -1167,3 +1167,31 @@ svg { width: 22px; height: 22px; flex: none; }
 @keyframes chacoalhar { 0%, 80%, 100% { transform: rotate(0); } 84% { transform: rotate(-10deg); } 88% { transform: rotate(10deg); } 92% { transform: rotate(-6deg); } 96% { transform: rotate(6deg); } }
 @keyframes revelar { from { opacity: 0; transform: scale(0.4); } 70% { opacity: 1; transform: scale(1.15); } }
 @media (prefers-reduced-motion: reduce) { .bau-cartao .bau-icone, .bau-premio { animation: none !important; } }
+
+/* Loja */
+.saldo-loja { margin: 0; font-size: 18px; }
+.saldo-loja strong { font: 800 28px/1 var(--fonte-titulo); color: var(--laranja); }
+.loja-item { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 16px; background: var(--superficie-2); }
+.loja-item p { margin: 0; font-size: 14px; line-height: 1.4; }
+.loja-item.destaque { box-shadow: inset 0 0 0 2px var(--laranja); }
+.loja-item .botao:disabled { opacity: 0.45; cursor: default; }
+.loja-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.preco { flex: none; padding: 2px 8px; border-radius: 999px; background: var(--fundo); color: var(--laranja); font-size: 12px; font-weight: 700; }
+.opcoes-estilo { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.opcao-estilo { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border: 2px solid var(--linha); border-radius: 12px; background: var(--fundo); color: var(--texto); font-size: 12px; font-weight: 600; cursor: pointer; }
+.opcao-estilo[aria-pressed="true"] { border-color: var(--laranja); }
+.opcao-estilo .preco { padding: 1px 5px; font-size: 10px; background: var(--superficie-2); }
+.amostra-estilo { display: grid; place-items: center; width: 100%; aspect-ratio: 9 / 13; border-radius: 8px; font: 800 13px/1 var(--fonte-titulo); }
+.perfil .pontos { padding: 0; border: 0; background: none; color: var(--texto); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.compartilhar-folha .rotulo { margin: 4px 0 0; }
+
+/* Bordas da ofensiva */
+.perfil { position: relative; }
+.perfil.com-borda { border: 3px solid transparent; background: linear-gradient(var(--superficie), var(--superficie)) padding-box, linear-gradient(135deg, var(--b1), var(--b2), var(--b3)) border-box; }
+.selo-borda { position: absolute; top: -12px; right: 16px; padding: 3px 10px; border-radius: 999px; background: linear-gradient(135deg, var(--b1), var(--b2)); color: #12141a; font: 800 13px/1.2 var(--fonte-titulo); letter-spacing: 0.04em; text-transform: uppercase; box-shadow: 0 4px 10px var(--sombra); }
+.bordas-cartao { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 16px; background: var(--superficie-2); }
+.bordas-cartao p { margin: 0; font-size: 14px; }
+.bordas-lista { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.borda-amostra { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; border: 3px solid transparent; border-radius: 12px; background: linear-gradient(var(--fundo), var(--fundo)) padding-box, linear-gradient(135deg, var(--b1), var(--b2), var(--b3)) border-box; font-size: 20px; }
+.borda-amostra small { color: var(--apagado); font-size: 11px; font-weight: 700; }
+.borda-amostra.travada { filter: grayscale(1) opacity(0.4); }
