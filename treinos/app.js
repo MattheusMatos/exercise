@@ -63,7 +63,7 @@
   let biblioteca = null; // { itens, porId }
   let estado = {
     proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
-    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {},
+    aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [],
     perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, nome: '', configurado: false }, atualizado: 0,
   };
   let tela = 'inicio';
@@ -247,9 +247,15 @@
     const limpo = {
       proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
       aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
-      cargas: {}, ajustes: {}, extrasProximo: {},
+      cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [],
       perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     };
+    // Bloqueios de ofensiva comprados com pontos; usado é o dia que cada um protegeu.
+    const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
+    if (Array.isArray(e.bloqueios)) {
+      limpo.bloqueios = e.bloqueios.filter((b) => b && ehData(b.comprado) && (b.usado === null || ehData(b.usado)))
+        .map((b) => ({ comprado: b.comprado, usado: b.usado })).slice(-100);
+    }
     // Carga usada por exercício (id da foto), para a próxima vez.
     if (e.cargas && typeof e.cargas === 'object') {
       for (const [id, c] of Object.entries(e.cargas)) {
@@ -871,7 +877,63 @@
   }
 
   const todosOsPlanos = () => (estado.plano ? { ...estado.planos, [estado.plano.semana]: estado.plano.dias } : estado.planos);
-  const ofensivaAtual = () => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dataLocal(new Date()));
+  const diasProtegidos = () => estado.bloqueios.filter((b) => b.usado).map((b) => b.usado);
+  const ofensivaAtual = () => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dataLocal(new Date()), diasProtegidos());
+
+  // ---------- bloqueio de ofensiva ----------
+
+  const PRECO_BLOQUEIO = 50; // pontos: uns 5 treinos
+  const MAX_BLOQUEIOS = 2; // guardados ao mesmo tempo
+  const bloqueiosGuardados = () => estado.bloqueios.filter((b) => !b.usado).length;
+
+  // Usa os bloqueios guardados nos dias em que a ofensiva apagaria. Roda ao abrir o app e ao voltar para ele.
+  function usarBloqueios() {
+    if (!estado.bloqueios.some((b) => !b.usado)) return;
+    const { bloqueios, salvos } = window.Ofensiva.aplicarBloqueios(estado.historico, todosOsPlanos(), dataLocal(new Date()), estado.bloqueios);
+    if (!salvos.length) return;
+    estado.bloqueios = bloqueios;
+    salvar();
+    const usados = salvos.reduce((soma, x) => soma + x.usados.length, 0);
+    const dias = salvos[salvos.length - 1].dias;
+    avisar(`🧊 ${usados === 1 ? 'Bloqueio usado' : `${usados} bloqueios usados`}: sua ofensiva de ${plural(dias, 'dia')} continua!`);
+  }
+
+  function comprarBloqueio() {
+    if (pontosAtuais() < PRECO_BLOQUEIO || bloqueiosGuardados() >= MAX_BLOQUEIOS) return false;
+    estado.bloqueios = [...estado.bloqueios, { comprado: dataLocal(new Date()), usado: null }];
+    salvar();
+    return true;
+  }
+
+  const dataCurta = (dia) => `${dia.slice(8, 10)}/${dia.slice(5, 7)}`;
+
+  // Na aba Personagem: o que é, quantos tem guardados e o botão de comprar.
+  function cartaoBloqueio(redesenhar) {
+    const guardados = bloqueiosGuardados();
+    const saldo = pontosAtuais();
+    const usados = estado.bloqueios.filter((b) => b.usado).map((b) => b.usado).sort().reverse();
+    const motivo = guardados >= MAX_BLOQUEIOS ? `Você já tem ${MAX_BLOQUEIOS}, o máximo guardado.`
+      : saldo < PRECO_BLOQUEIO ? `Faltam ${plural(PRECO_BLOQUEIO - saldo, 'ponto')}: cada treino vale ${window.Aerobico.PONTOS_TREINO}, e o aeróbico soma mais.` : null;
+    return h('div', { class: 'bloqueio-cartao' },
+      h('div', { class: 'bloqueio-topo' },
+        h('p', { class: 'rotulo' }, 'Bloqueio de ofensiva'),
+        h('span', { class: 'bloqueio-icones', 'aria-label': `${guardados} de ${MAX_BLOQUEIOS} guardados` },
+          Array.from({ length: MAX_BLOQUEIOS }, (_, k) => h('span', { class: k < guardados ? 'cheio' : '' }, '🧊')))),
+      h('p', null, 'Vai viajar ou não vai conseguir treinar? Com um bloqueio guardado, o dia sem treino conta para a meta da semana e a ofensiva não apaga. Ele é usado sozinho, só se a ofensiva fosse apagar; o dia protegido não soma dia de ofensiva.'),
+      h('button', {
+        class: 'botao primario',
+        disabled: Boolean(motivo),
+        onclick: () => {
+          if (comprarBloqueio()) {
+            avisar(`🧊 Bloqueio guardado. Você tem ${plural(pontosAtuais(), 'ponto')}.`);
+            redesenhar();
+            renderInicio();
+          }
+        },
+      }, `Comprar por ${PRECO_BLOQUEIO} pontos`),
+      h('p', { class: 'aviso' }, motivo || `Você tem ${plural(saldo, 'ponto')}.`),
+      usados.length ? h('p', { class: 'aviso' }, `Dias protegidos: ${usados.slice(0, 6).map(dataCurta).join(', ')}.`) : null);
+  }
 
   // Encaixa a meta nos dias que ainda faltam da semana, preferindo os dias sugeridos.
   function planejarSemana(meta) {
@@ -922,6 +984,8 @@
       if (feitos.has(data)) {
         status = 'feito';
         treino = feitos.get(data);
+      } else if (diasProtegidos().includes(data)) {
+        status = 'protegido';
       } else if (planejado && data < hoje) {
         status = 'faltou';
       } else if (planejado) {
@@ -966,10 +1030,10 @@
     if (meta === 1) resumo = `${feitos} de 1 treino feito`;
     else if (meta) resumo = `${feitos} de ${meta} treinos feitos`;
     else if (feitos) resumo = `${feitos} treino${feitos === 1 ? ' feito' : 's feitos'}`;
-    const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso' };
+    const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso', protegido: 'protegido por bloqueio de ofensiva' };
     const tira = h('ol', { class: 'semana' }, dias.map((x) => {
       const podeMudar = interativo && !x.passado && x.status !== 'feito';
-      const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : '—';
+      const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : x.status === 'protegido' ? '🧊' : '—';
       const nome = `${maiuscula(NOMES_DIAS[x.d])}, dia ${x.numero}${x.hoje ? ' (hoje)' : ''}`;
       return h('li', null, h(podeMudar ? 'button' : 'div', {
         class: `dia ${x.status}${x.hoje ? ' hoje' : ''}`,
@@ -1143,6 +1207,10 @@
     if (of.humor === 'novo') return `${nome} está ${window.Avatar.personagem(estado.perfil.personagem).genero === 'f' ? 'pronta' : 'pronto'} para começar. Termine o primeiro treino para acender a ofensiva.`;
     if (of.risco) return 'Treine hoje para não apagar a ofensiva!';
     if (of.treinouHoje) return of.dias >= 3 ? 'Treino de hoje feito. A ofensiva está pegando fogo!' : 'Treino de hoje feito!';
+    // Último dia ativo foi um bloqueio: a ofensiva seguiu, mas não houve treino.
+    const ultimoTreino = estado.historico.map((x) => x.data).sort().pop() || '';
+    const hoje = dataLocal(new Date());
+    if (diasProtegidos().some((x) => x > ultimoTreino && x <= hoje)) return '🧊 O bloqueio segurou a ofensiva enquanto você esteve fora. Bora voltar?';
     if (dias >= 15) return `${dias} dias parado. ${nome} está largado esperando você.`;
     if (dias >= 4) return `${dias} dias sem treinar. ${nome} está com saudade.`;
     if (of.dias === 0) return 'A ofensiva apagou: a meta da semana não fecha mais. O próximo treino acende de novo.';
@@ -1155,7 +1223,8 @@
     return faltam === null ? `Nível ${of.nivel}, o máximo` : `Nível ${of.nivel} · ${faltam === 1 ? 'falta' : 'faltam'} ${plural(faltam, 'dia')} para o nível ${of.nivel + 1}`;
   }
 
-  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos);
+  // Pontos para gastar: os ganhos com treino e aeróbico, menos os bloqueios comprados.
+  const pontosAtuais = () => window.Aerobico.pontos(estado.historico, estado.aerobicos) - estado.bloqueios.length * PRECO_BLOQUEIO;
 
   function linhaOfensiva(of, estadoChama) {
     return h('p', { class: `ofensiva ${estadoChama}` },
@@ -1175,7 +1244,8 @@
         h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', { class: 'humor-texto' }, fraseDoHumor(of)),
-        h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto'))),
+        h('p', { class: 'nivel' }, textoDoNivel(of), ' · ', h('strong', { class: 'pontos' }, plural(pontosAtuais(), 'ponto')),
+          bloqueiosGuardados() ? h('span', { class: 'bloqueio-mini', title: 'Bloqueios de ofensiva guardados' }, ` · 🧊 ${bloqueiosGuardados()}`) : null),
         h('button', { class: 'link', onclick: () => abrirPerfil('treino') }, 'Trocar treino')));
   }
 
@@ -1274,6 +1344,7 @@
         campoNome(),
         linhaOfensiva(of, estadoDaChama(of)),
         h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
+        cartaoBloqueio(desenhar),
         destaquePersonagem(),
         h('div', { class: 'opcoes-personagem' }, window.Avatar.PERSONAGENS.map((p) => h('button', {
           class: 'opcao-personagem',
@@ -1288,7 +1359,8 @@
             h('li', null, 'Cada dia com treino soma 1 dia de ofensiva. Dia de descanso não apaga.'),
             h('li', null, 'Ela apaga quando não dá mais para bater a meta da semana. Semana sem meta pede 1 treino.'),
             h('li', null, 'Com 15 dias de ofensiva, o personagem chega no auge.'),
-            h('li', null, 'Com 4 dias ou mais sem treinar, ele aparece afastado; no primeiro treino depois disso, fica "de volta" por uma semana.'))),
+            h('li', null, 'Com 4 dias ou mais sem treinar, ele aparece afastado; no primeiro treino depois disso, fica "de volta" por uma semana.'),
+            h('li', null, `Bloqueio de ofensiva: custa ${PRECO_BLOQUEIO} pontos e dá para guardar até ${MAX_BLOQUEIOS}. Se a ofensiva fosse apagar, ele protege o dia sem treino.`))),
       ];
     }
     function desenhar() {
@@ -2861,6 +2933,11 @@
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
+    if (programa && estado.perfil.configurado) {
+      const antes = estado.bloqueios.filter((b) => b.usado).length;
+      usarBloqueios();
+      if (estado.bloqueios.filter((b) => b.usado).length !== antes && tela === 'inicio') renderInicio();
+    }
     if (tela === 'treino' || (estado.cronoAerobico && estado.cronoAerobico.fim)) pedirTravaTela();
     tique();
   });
@@ -2925,6 +3002,8 @@
       selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;
       render();
       if (estado.cronoAerobico) desenharCronometro();
+      usarBloqueios();
+      if (tela === 'inicio') renderInicio();
       carregarBiblioteca();
     })
     .catch(() => {

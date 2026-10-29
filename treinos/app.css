@@ -1119,3 +1119,15 @@ svg { width: 22px; height: 22px; flex: none; }
 .desfazer-aviso[hidden] { display: none; }
 .desfazer-aviso span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .desfazer-aviso .link { flex: none; color: var(--laranja); font-weight: 700; }
+
+/* Bloqueio de ofensiva */
+.bloqueio-cartao { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 16px; background: var(--superficie-2); box-shadow: inset 3px 0 0 var(--azul); }
+.bloqueio-cartao p { margin: 0; font-size: 14px; line-height: 1.4; }
+.bloqueio-topo { display: flex; align-items: center; justify-content: space-between; }
+.bloqueio-icones { display: flex; gap: 4px; font-size: 22px; }
+.bloqueio-icones span { filter: grayscale(1) opacity(0.35); }
+.bloqueio-icones .cheio { filter: none; }
+.bloqueio-cartao .botao:disabled { opacity: 0.45; cursor: default; }
+.bloqueio-mini { font-weight: 700; color: var(--azul); }
+.dia.protegido { border-color: var(--azul); }
+.dia.protegido .dia-treino { color: var(--azul); }

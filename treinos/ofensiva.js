@@ -5,7 +5,10 @@
  *   - dia de descanso não apaga a ofensiva;
  *   - ela apaga quando não dá mais para bater a meta da semana (domingo a sábado): a meta
  *     é o número de dias planejados; semana sem plano, ou com "Agora não", pede 1 treino;
- *   - depois que apaga, o próximo treino já começa uma ofensiva nova.
+ *   - depois que apaga, o próximo treino já começa uma ofensiva nova;
+ *   - bloqueio de ofensiva (comprado com pontos): um dia sem treino protegido conta para a meta
+ *     da semana, mas não soma dia de ofensiva. O app usa o bloqueio sozinho no dia em que a
+ *     ofensiva apagaria (aplicarBloqueios).
  *
  * O nível de força do avatar sobe com a ofensiva, e o humor depende de quantos dias
  * se passaram desde o último treino: animado (até 1), bem (até 3), triste (até 7),
@@ -45,13 +48,17 @@
 
   /**
    * historico: [{ data: 'AAAA-MM-DD' }], planos: { 'AAAA-MM-DD' do domingo: [7 booleanos] },
-   * hoje: 'AAAA-MM-DD'.
+   * hoje: 'AAAA-MM-DD', protegidos: datas cobertas por bloqueio de ofensiva.
+   * quebras: [{ data, dias }] de cada vez que a ofensiva apagou, com os dias que ela tinha.
    */
-  function calcular(historico, planos, hoje) {
+  function calcular(historico, planos, hoje, protegidos = []) {
     const treinou = new Set(historico.map((x) => x.data).filter((x) => x <= hoje));
+    const protegido = new Set(protegidos);
     const metaDaSemana = (semana) => Math.max(1, (planos[semana] || []).filter(Boolean).length);
     const ultimo = [...treinou].sort().pop() || null;
-    const diasSemTreinar = ultimo ? diasEntre(ultimo, hoje) : null;
+    // Dia protegido por bloqueio é ausência justificada: não deixa o personagem "afastado".
+    const ultimoAtivo = [...treinou, ...[...protegido].filter((x) => x <= hoje)].sort().pop() || null;
+    const diasSemTreinar = ultimoAtivo ? diasEntre(ultimoAtivo, hoje) : null;
     // Dias desde a volta: o primeiro treino depois de 4 dias ou mais parado.
     const datas = [...treinou].sort();
     let voltouHa = null;
@@ -62,13 +69,14 @@
       }
     }
     const base = { recorde: 0, diasSemTreinar, voltouHa, humor: humor(diasSemTreinar) };
-    if (!ultimo) return { ...base, dias: 0, nivel: 0, treinouHoje: false, risco: false, metaSemana: null, feitosSemana: 0 };
+    if (!ultimo) return { ...base, dias: 0, nivel: 0, treinouHoje: false, risco: false, metaSemana: null, feitosSemana: 0, quebras: [] };
 
     let atual = 0;
     let recorde = 0;
     let quebrada = null; // semana em que a ofensiva já apagou: o resto dela não apaga de novo
     let feitosSemana = 0;
     let semanaCorrente = null;
+    const quebras = [];
     const fim = data(hoje);
     for (let d = data([...treinou].sort()[0]); d <= fim; d = somarDias(d, 1)) {
       const semana = chave(domingo(d));
@@ -80,9 +88,12 @@
         atual += 1;
         feitosSemana += 1;
         recorde = Math.max(recorde, atual);
+      } else if (protegido.has(chave(d))) {
+        feitosSemana += 1; // bloqueio: conta para a meta, sem somar dia de ofensiva
       }
       // Só um dia que já terminou pode apagar a ofensiva; hoje ainda dá para treinar.
       if (chave(d) < hoje && quebrada !== semana && feitosSemana + (6 - d.getDay()) < metaDaSemana(semana)) {
+        if (atual > 0) quebras.push({ data: chave(d), dias: atual });
         atual = 0;
         quebrada = semana;
       }
@@ -93,7 +104,54 @@
     const meta = metaDaSemana(semana);
     // Se não treinar hoje, amanhã já não dá para bater a meta.
     const risco = atual > 0 && !treinouHoje && quebrada !== semana && feitosSemana + (6 - fim.getDay()) < meta;
-    return { ...base, dias: atual, recorde, nivel: nivel(atual), treinouHoje, risco, metaSemana: meta, feitosSemana };
+    return { ...base, dias: atual, recorde, nivel: nivel(atual), treinouHoje, risco, metaSemana: meta, feitosSemana, quebras };
+  }
+
+  /**
+   * Usa os bloqueios guardados nos dias em que a ofensiva apagaria.
+   * bloqueios: [{ comprado: 'AAAA-MM-DD', usado: 'AAAA-MM-DD' | null }]. Um bloqueio só salva uma
+   * quebra que aconteceu depois de comprado. Se os bloqueios guardados não bastam para salvar a
+   * semana, nenhum é gasto. Devolve { bloqueios, salvos: [{ data, dias, usados }] }.
+   */
+  function aplicarBloqueios(historico, planos, hoje, bloqueios) {
+    let lista = bloqueios.map((b) => ({ ...b }));
+    const salvos = [];
+    const treinou = new Set(historico.map((x) => x.data));
+    const usadosEm = (l) => l.filter((b) => b.usado).map((b) => b.usado);
+    const semanaDe = (dia) => chave(domingo(data(dia)));
+    for (let volta = 0; volta < 60; volta++) {
+      const r = calcular(historico, planos, hoje, usadosEm(lista));
+      // A primeira quebra que algum bloqueio guardado pode salvar.
+      const quebra = r.quebras.find((q) => lista.some((b) => !b.usado && b.comprado <= q.data));
+      if (!quebra) break;
+      // Tenta salvar a semana inteira; se faltar bloqueio em algum dia dela, não gasta nenhum.
+      const semana = semanaDe(quebra.data);
+      const tentativa = lista.map((b) => ({ ...b }));
+      const usados = [];
+      let salvou = false;
+      for (let passo = 0; passo < 7; passo++) {
+        const q = calcular(historico, planos, hoje, usadosEm(tentativa)).quebras.find((x) => semanaDe(x.data) === semana);
+        if (!q) {
+          salvou = true;
+          break;
+        }
+        // O dia mais recente da semana, até o da quebra, sem treino e sem bloqueio.
+        const d = data(q.data);
+        let dia = null;
+        for (let k = 0; k <= d.getDay() && !dia; k++) {
+          const c = chave(somarDias(d, -k));
+          if (!treinou.has(c) && !usadosEm(tentativa).includes(c)) dia = c;
+        }
+        const livre = tentativa.find((b) => !b.usado && b.comprado <= q.data);
+        if (!dia || !livre) break;
+        livre.usado = dia;
+        usados.push(dia);
+      }
+      if (!salvou) break;
+      lista = tentativa;
+      salvos.push({ data: quebra.data, dias: quebra.dias, usados });
+    }
+    return { bloqueios: lista, salvos };
   }
 
   // Quantos dias de ofensiva faltam para o próximo nível, ou null no último.
@@ -110,7 +168,7 @@
     return 'comecando';
   }
 
-  const api = { calcular, nivel, humor, fase, faltamParaSubir, NIVEIS };
+  const api = { calcular, aplicarBloqueios, nivel, humor, fase, faltamParaSubir, NIVEIS };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Ofensiva = api;
 })(typeof window !== 'undefined' ? window : globalThis);
