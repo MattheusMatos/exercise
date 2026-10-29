@@ -251,6 +251,7 @@
       cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [],
       perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     };
+    if (typeof e.faltaResolvida === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.faltaResolvida)) limpo.faltaResolvida = e.faltaResolvida;
     // Bloqueios de ofensiva comprados com pontos; usado é o dia que cada um protegeu.
     const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
     if (Array.isArray(e.bloqueios)) {
@@ -1049,8 +1050,19 @@
         treino = programa.treinos[seguinte].id;
         seguinte = (seguinte + 1) % programa.treinos.length;
       }
-      return { d, numero: dia.getDate(), hoje: data === hoje, passado: data < hoje, status, treino };
+      return { d, data, numero: dia.getDate(), hoje: data === hoje, passado: data < hoje, status, treino };
     });
+  }
+
+  // Dia planejado desta semana que passou sem treino, se depois dele ainda não houve treino e a
+  // pessoa ainda não escolheu entre fazer o que faltou ou pular para o seguinte.
+  function faltaPendente() {
+    if (estado.sessao || !programa.treinos.length) return null;
+    const dias = semanaComTreinos();
+    const k = dias.map((x) => x.status).lastIndexOf('faltou');
+    if (k < 0 || dias.slice(k + 1).some((x) => x.status === 'feito')) return null;
+    if (estado.faltaResolvida === dias[k].data) return null;
+    return dias[k];
   }
 
   // "hoje", o nome do dia do próximo treino planejado, ou null sem plano.
@@ -1629,6 +1641,8 @@
         `Começar este treino encerra o ${programa.treinos[sessao.treino].titulo} em andamento.`));
     }
     if (emAndamento) extras.push(botaoRecomecar(i));
+    const falta = i === estado.proximo ? faltaPendente() : null;
+    if (falta) extras.push(cartaoFalta(falta));
     const ajuste = !emAndamento && estado.ajustes[treino.id];
     if (ajuste) {
       const partes = [ajuste.descanso ? `+${ajuste.descanso} s de descanso` : null, ajuste.carga ? `carga ${ajuste.carga > 0 ? '+' : '−'}${Math.abs(ajuste.carga)}%` : null].filter(Boolean);
@@ -1742,6 +1756,35 @@
       h('button', { class: 'link', onclick: fechar }, 'Fechar')));
     document.body.append(modal);
     modal.querySelector('.link').focus();
+  }
+
+  // Faltou um dia: fazer hoje o treino que ficou (recomendado: o volume da semana fica completo)
+  // ou pular para o seguinte da sequência.
+  function cartaoFalta(falta) {
+    const atual = programa.treinos[estado.proximo];
+    const seguinte = programa.treinos[(estado.proximo + 1) % programa.treinos.length];
+    const resolver = (pular) => {
+      estado.faltaResolvida = falta.data;
+      if (pular) {
+        estado.proximo = (estado.proximo + 1) % programa.treinos.length;
+        selecionado = estado.proximo;
+      }
+      salvar();
+      if (pular) {
+        renderInicio();
+        avisar(`Pulou para o ${seguinte.titulo}`);
+      } else {
+        comecar(estado.proximo);
+      }
+    };
+    return h('div', { class: 'falta-aviso' },
+      h('p', null, h('strong', null, `Você faltou ${NOMES_DIAS[falta.d] === 'sábado' || NOMES_DIAS[falta.d] === 'domingo' ? 'no' : 'na'} ${NOMES_DIAS[falta.d]}.`),
+        ` O ${atual.titulo} ficou para trás. Fazer ele agora mantém todos os músculos com o volume da semana; pular deixa os músculos dele sem esse treino até a volta da sequência.`),
+      h('button', { class: 'botao primario', onclick: () => resolver(false) }, `Começar o ${atual.titulo} (recomendado)`),
+      h('button', { class: 'botao secundario', onclick: () => resolver(true) }, `Pular para o ${seguinte.titulo}`),
+      h('details', null,
+        h('summary', null, 'O que dizem os estudos'),
+        h('p', null, 'O que mais pesa no crescimento é o total de séries de cada músculo na semana (Pelland et al., 2026); com o mesmo volume, treinar um dia antes ou depois quase não muda o resultado (Schoenfeld, Grgic & Krieger, 2019). Por isso vale fazer o treino que faltou. E faltar um dia não tira o que você ganhou: quem parou 3 semanas inteiras recuperou rápido e cresceu igual a quem não parou (Ogasawara et al., 2013).')));
   }
 
   function botaoRecomecar(i) {

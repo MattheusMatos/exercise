@@ -117,7 +117,7 @@ A semana começa no domingo, pela data do celular. Na primeira abertura de cada 
 | 5 | segunda a sexta |
 | 6 | segunda a sábado |
 
-A tira **D S T Q Q S S** mostra o treino de cada dia. Tocar num dia troca entre treino e descanso, e terminar um treino marca o dia em verde. Um dia planejado que passou sem treino aparece como "faltou", e a sequência continua no dia seguinte.
+A tira **D S T Q Q S S** mostra o treino de cada dia. Tocar num dia troca entre treino e descanso, e terminar um treino marca o dia em verde. Um dia planejado que passou sem treino aparece como "faltou", e a sequência continua no dia seguinte. A tela inicial então pergunta: **começar o treino que faltou** (recomendado, porque o que mais pesa no crescimento é o volume de cada músculo na semana, e treinar um dia depois quase não muda o resultado: Pelland et al., 2026; Schoenfeld, Grgic & Krieger, 2019) ou **pular para o seguinte**. Faltar um dia não tira o que foi ganho: quem parou 3 semanas recuperou rápido e cresceu igual a quem não parou (Ogasawara et al., 2013).
 
 **Lembrete de domingo:** um site sem servidor não consegue mandar notificação sozinho. Por isso o botão **Lembrete todo domingo** cria um evento semanal na agenda do celular: um link para o Google Agenda (Android) e o arquivo [`lembrete-domingo.ics`](lembrete-domingo.ics) para o Calendário do iPhone, com aviso todo domingo às 9h.
 
