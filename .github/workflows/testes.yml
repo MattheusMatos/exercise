@@ -6,7 +6,8 @@ on:
 
 jobs:
   testes:
-    runs-on: ubuntu-latest
+    # 24.04: o Playwright 1.56 (o mesmo da máquina de desenvolvimento) não instala o Chromium no 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
