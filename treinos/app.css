@@ -1212,7 +1212,7 @@ svg { width: 22px; height: 22px; flex: none; }
 .retro-barras { display: flex; gap: 4px; }
 .retro-barras span { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.3); overflow: hidden; }
 .retro-barras span.feita { background: #fff; }
-.retro-fechar { position: absolute; top: max(24px, calc(env(safe-area-inset-top) + 12px)); right: 16px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 18px; cursor: pointer; }
+.retro-fechar { position: absolute; z-index: 2; top: max(24px, calc(env(safe-area-inset-top) + 12px)); right: 16px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 18px; cursor: pointer; }
 .retro-palco { flex: 1; display: flex; cursor: pointer; }
 .retro-tela { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; animation: surgir 0.35s ease-out both; }
 .retro-tela h2 { margin: 0; font: 800 clamp(44px, 13vw, 64px)/0.95 var(--fonte-titulo); text-transform: capitalize; }

@@ -82,3 +82,14 @@ test('retrospectiva do mês com recordes de carga e imagem de resumo', async ({ 
   const arquivo = await download.path();
   expect(fs.statSync(arquivo).size).toBeGreaterThan(10000);
 });
+
+test('retrospectiva: o X fecha em qualquer tela', async ({ page }) => {
+  const historico = [{ data: '2026-10-05', treino: 'push_a', minutos: 50 }, { data: '2026-10-07', treino: 'pull_a', minutos: 50 }];
+  await abrir(page, { quando: '2026-11-03T10:00:00', estado: { bloqueiosPresente: true, historico } });
+  for (const avancar of [0, 2]) {
+    await page.click('.retro-convite');
+    for (let i = 0; i < avancar; i++) await page.mouse.click(330, 500);
+    await page.click('.retro-fechar'); // clique de verdade: falha se outra coisa estiver por cima do botão
+    await expect(page.locator('.retro')).toHaveCount(0);
+  }
+});
