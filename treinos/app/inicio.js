@@ -39,7 +39,7 @@ function cartaoInstalar() {
   return null;
 }
 
-if ('serviceWorker' in navigator && window.isSecureContext && !dentroDeOutraPagina) {
+if ('serviceWorker' in navigator && window.isSecureContext && !dentroDeOutraPagina && !ACADEMIA) {
   // updateViaCache: 'none' faz o celular buscar o sw.js novo a cada abertura.
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {
     // Sem service worker, o app funciona normal, só não abre sem internet.

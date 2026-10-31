@@ -211,7 +211,8 @@ async function desenharRetro(r) {
   c.textAlign = 'center';
   c.fillStyle = '#f0f2f5';
   c.font = texto(600, 36);
-  c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1860, W - 120);
+  const assinatura = ACADEMIA ? ACADEMIA.nome : programa.titulo;
+  c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${assinatura}` : assinatura, W / 2, 1860, W - 120);
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
 }
 

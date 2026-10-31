@@ -7,7 +7,11 @@
 // Constantes, o estado em memória e as utilidades usadas em todo o app (h() para montar a tela, datas, avisos).
 'use strict';
 
-const CHAVE_ESTADO = 'ppl:estado';
+// Versão de uma academia (ver academias/): a página dela define window.ACADEMIA antes dos scripts.
+// Cada academia guarda os dados numa chave própria, separada da do Treino PPL, e não instala o
+// service worker (que é do Treino PPL). Sem window.ACADEMIA, o app é o Treino PPL de sempre.
+const ACADEMIA = window.ACADEMIA && /^[a-z0-9-]+$/.test(window.ACADEMIA.id) ? window.ACADEMIA : null;
+const CHAVE_ESTADO = ACADEMIA ? `${ACADEMIA.id}:estado` : 'ppl:estado';
 const LIMIAR_ARRASTE = 110; // px para o cartão sair
 const LIMITE_LISTA = 60; // resultados por página na biblioteca
 const app = document.getElementById('app');

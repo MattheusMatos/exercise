@@ -56,7 +56,7 @@ function estadoValido(bruto) {
     proximo: 0, proximos: {}, sessao: sessaoValida(e.sessao, prog), trocas: {}, plano: null, planos: {}, historico: [], extras: {},
     aerobicos: [], cronoAerobico: null, peso: Number(e.peso) >= 30 && Number(e.peso) <= 250 ? Math.round(Number(e.peso)) : 70,
     cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
-    compras: [], apostas: [], estiloCard: 'laranja', registroCargas: [], pesos: [],
+    compras: [], apostas: [], estiloCard: ESTILOS_CARD.academia ? 'academia' : 'laranja', registroCargas: [], pesos: [],
     perfil: { personagem, programa: nomePrograma, sexo: configurado ? sexo : null, nome: limparNome(p.nome), configurado }, atualizado: Number(e.atualizado) || 0,
     versao: VERSAO_ESTADO,
   };
@@ -190,6 +190,7 @@ function carregarLocal() {
     // sem armazenamento ou sem espaço: segue como primeira abertura
   }
   // Versão anterior do app guardava em duas chaves separadas; sem nada salvo, é a primeira abertura.
+  if (ACADEMIA) return estadoValido(null);
   const proximo = ler('ppl:proximo', null);
   const sessao = ler('ppl:sessao', null);
   return estadoValido(proximo === null && sessao === null ? null : { proximo: proximo || 0, sessao });

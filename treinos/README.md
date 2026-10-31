@@ -213,6 +213,15 @@ npm run test:e2e                  # telas, num Chromium com tela de celular
 
 Os testes de tela abrem o app com dados e datas fixos e falham se a página tiver qualquer erro de JavaScript. Eles rodam sozinhos no GitHub a cada push ([`.github/workflows/testes.yml`](../.github/workflows/testes.yml)); se falharem, o relatório fica nos artefatos da execução.
 
+## Versão de academia
+
+[`../academias/`](../academias/) tem uma pasta por academia: o mesmo app, com o logo e as cores dela. A primeira é a Feira Fitness (demonstração): [`academias/feira-fitness/`](../academias/feira-fitness/), publicada em `…/exercise/academias/feira-fitness/`.
+
+- **Não mexe no Treino PPL.** A página da academia usa os arquivos de `treinos/` (pelo `<base>`), mas guarda os dados numa chave própria (`feira-fitness:estado`) e não instala o service worker. O mesmo celular pode ter os dois apps, cada um com os seus dados.
+- **O que muda:** o logo no alto da tela inicial, a cor de destaque (`tema.css`), as cores do card do story (já escolhidas, com o logo no pé) e o nome da academia nas imagens. Ícone e nome para instalar no celular ficam no `manifest.webmanifest` da pasta.
+- **Nova academia:** copie a pasta, troque `id`, `nome`, `logo` e `card` no `window.ACADEMIA` do `index.html`, a cor em `tema.css`, o logo e os ícones. O teste de estrutura confere que a página carrega os mesmos scripts do app.
+- Ainda não tem login nem painel da academia: isso precisa de servidor (próximo passo, se a academia topar).
+
 ## Publicar como site (GitHub Pages)
 
 O app é um site estático: não precisa de servidor, banco de dados nem login.

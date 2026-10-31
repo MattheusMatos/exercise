@@ -4,7 +4,9 @@
 // ---------- compartilhar ----------
 
 // Cores do card, à escolha (todas grátis): fundo (três cores, de cima para baixo), texto, caixas e brilho.
+// Na versão de uma academia, as cores dela vêm primeiro e já escolhidas.
 const ESTILOS_CARD = {
+  ...(ACADEMIA && ACADEMIA.card ? { academia: { nome: ACADEMIA.nome, ...ACADEMIA.card } } : {}),
   laranja: { nome: 'Laranja', fundo: ['#ffb37a', '#ff6b35', '#c93d12'], tinta: '#12141a', caixa: 'rgba(18, 20, 26, 0.14)', brilho: 'rgba(255, 240, 220, 0.55)' },
   noite: { nome: 'Noite', fundo: ['#2b3754', '#151b2b', '#07090f'], tinta: '#f0f2f5', caixa: 'rgba(255, 255, 255, 0.08)', brilho: 'rgba(255, 107, 53, 0.35)' },
   neon: { nome: 'Neon', fundo: ['#8dffbf', '#2fd27d', '#0b6b3c'], tinta: '#071a10', caixa: 'rgba(7, 26, 16, 0.14)', brilho: 'rgba(230, 255, 240, 0.55)' },
@@ -125,7 +127,27 @@ async function desenharCard(r, treino, estiloId) {
   }
 
   c.font = texto(600, 38);
-  c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${programa.titulo}` : programa.titulo, W / 2, 1810, W - 120);
+  let assinou = false;
+  if (ACADEMIA) {
+    // Na versão de academia, o logo dela num selo branco no pé do card, e o nome da pessoa embaixo.
+    try {
+      const logo = await carregarImagem(ACADEMIA.logo);
+      const alto = 96;
+      const largo = Math.min(420, (logo.width / logo.height) * alto);
+      c.fillStyle = '#ffffff';
+      c.beginPath();
+      c.roundRect((W - largo) / 2 - 28, 1732, largo + 56, alto + 24, 24);
+      c.fill();
+      c.drawImage(logo, (W - largo) / 2, 1744, largo, alto);
+      c.fillStyle = TINTA;
+      if (estado.perfil.nome) c.fillText(estado.perfil.nome, W / 2, 1900, W - 120);
+      assinou = true;
+    } catch (e) {
+      // Sem o logo, assina com o nome da academia.
+    }
+  }
+  const assinatura = ACADEMIA ? ACADEMIA.nome : programa.titulo;
+  if (!assinou) c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${assinatura}` : assinatura, W / 2, 1810, W - 120);
 
   // Borda da ofensiva em volta do card, com o nome dela no alto.
   const borda = bordaDa(of.dias);

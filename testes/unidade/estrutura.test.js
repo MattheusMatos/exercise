@@ -39,3 +39,15 @@ test('os arquivos de app/ são JavaScript válido e não repetem nomes', () => {
   // Os módulos de lógica ficam em window.<Nome>; o app não pode declarar o mesmo nome.
   for (const nome of ['Ofensiva', 'Avatar', 'Aerobico', 'Retrospectiva', 'Semelhanca']) assert.ok(!donos.has(nome), `${nome} declarado no app`);
 });
+
+test('cada academia carrega os mesmos scripts do app, na mesma ordem', () => {
+  const pasta = path.join(__dirname, '../../academias');
+  for (const nome of fs.readdirSync(pasta)) {
+    const html = fs.readFileSync(path.join(pasta, nome, 'index.html'), 'utf8');
+    const deles = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
+    assert.deepStrictEqual(deles, scripts, `academias/${nome}/index.html está com scripts diferentes de treinos/index.html`);
+    assert.ok(html.includes('<base href="../../treinos/">'), `academias/${nome} sem o base`);
+    const id = (html.match(/id: '([a-z0-9-]+)'/) || [])[1];
+    assert.ok(id && id !== 'ppl', `academias/${nome}: id inválido`);
+  }
+});

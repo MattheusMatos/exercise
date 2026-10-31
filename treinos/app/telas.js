@@ -135,7 +135,11 @@ function renderInicio() {
   }));
 
   app.replaceChildren(h('section', { class: 'inicio' },
-    h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
+    ACADEMIA
+      ? h('header', { class: 'marca marca-academia' },
+        h('img', { src: ACADEMIA.logo, alt: ACADEMIA.nome }),
+        h('span', null, ACADEMIA.subtitulo || programa.titulo, h('br'), programa.marca))
+      : h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
     cartaoPerfil(),
     cartaoRetroInicio(),
     cartaoBau(),

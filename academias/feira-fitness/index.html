@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<!-- Versão da Feira Fitness: o mesmo app do Treino PPL (os arquivos vêm de treinos/, pelo base),
+     com o logo e as cores da academia e os dados numa chave própria, separada do Treino PPL. -->
+<base href="../../treinos/">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1115">
+<meta name="description" content="App de treino da Feira Fitness (demonstração).">
+<title>Feira Fitness</title>
+<link rel="manifest" href="../academias/feira-fitness/manifest.webmanifest">
+<link rel="icon" href="../academias/feira-fitness/icone-192.png" type="image/png">
+<link rel="apple-touch-icon" href="../academias/feira-fitness/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Feira Fitness">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="../academias/feira-fitness/tema.css">
+</head>
+<body>
+<main id="app" class="app"><p class="carregando">Carregando treinos…</p></main>
+<script>
+  window.ACADEMIA = {
+    id: 'feira-fitness',
+    nome: 'Feira Fitness',
+    subtitulo: 'Demonstração',
+    logo: '../academias/feira-fitness/logo.png',
+    card: { fundo: ['#f6676a', '#e3262e', '#5c0b0f'], tinta: '#ffffff', caixa: 'rgba(0, 0, 0, 0.2)', brilho: 'rgba(255, 225, 225, 0.45)' },
+  };
+</script>
+<script src="semelhanca.js"></script>
+<script src="ofensiva.js"></script>
+<script src="avatar.js"></script>
+<script src="aerobico.js"></script>
+<script src="retrospectiva.js"></script>
+<!-- O app, em ordem (ver o começo de app/nucleo.js) -->
+<script src="app/nucleo.js"></script>
+<script src="app/estado.js"></script>
+<script src="app/biblioteca.js"></script>
+<script src="app/semana.js"></script>
+<script src="app/loja.js"></script>
+<script src="app/perfil.js"></script>
+<script src="app/telas.js"></script>
+<script src="app/cartao.js"></script>
+<script src="app/fim.js"></script>
+<script src="app/retrospectiva-telas.js"></script>
+<script src="app/compartilhar.js"></script>
+<script src="app/aerobico-telas.js"></script>
+<script src="app/sessao.js"></script>
+<script src="app/descanso.js"></script>
+<script src="app/inicio.js"></script>
+</body>
+</html>
