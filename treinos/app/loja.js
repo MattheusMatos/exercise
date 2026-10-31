@@ -207,6 +207,9 @@ function cartaoBloqueio(redesenhar) {
   const usados = estado.bloqueios.filter((b) => b.usado).map((b) => b.usado).sort().reverse();
   const motivo = guardados >= MAX_BLOQUEIOS ? `Você já tem ${MAX_BLOQUEIOS}, o máximo guardado.`
     : saldo < PRECO_BLOQUEIO ? `Faltam ${plural(PRECO_BLOQUEIO - saldo, 'ponto')}: cada treino vale ${window.Aerobico.PONTOS_TREINO}, e o aeróbico soma mais.` : null;
+  // O botão diz o que falta quando não dá para comprar, para não parecer só um botão apagado.
+  const rotuloCompra = guardados >= MAX_BLOQUEIOS ? 'Máximo guardado'
+    : saldo < PRECO_BLOQUEIO ? `Faltam ${plural(PRECO_BLOQUEIO - saldo, 'ponto')} para comprar` : `Comprar por ${PRECO_BLOQUEIO} pontos`;
   return h('div', { class: 'bloqueio-cartao' },
     h('div', { class: 'bloqueio-topo' },
       h('p', { class: 'rotulo' }, 'Bloqueio de ofensiva'),
@@ -228,9 +231,9 @@ function cartaoBloqueio(redesenhar) {
           },
         }, 'Vou treinar: devolver o bloqueio'))
       : treinouHoje() ? h('p', { class: 'aviso' }, 'Hoje você já treinou: não precisa de bloqueio.')
+        : !guardados ? null
         : h('button', {
           class: 'botao primario',
-          disabled: !guardados,
           onclick: () => {
             if (usarBloqueioHoje()) {
               avisar('🧊 Bloqueio usado hoje: a ofensiva está protegida.');
@@ -238,9 +241,9 @@ function cartaoBloqueio(redesenhar) {
               renderInicio();
             }
           },
-        }, guardados ? 'Usar um bloqueio hoje' : 'Sem bloqueio guardado'),
+        }, 'Usar um bloqueio hoje'),
     h('button', {
-      class: 'botao secundario',
+      class: 'botao comprar',
       disabled: Boolean(motivo),
       onclick: () => {
         if (comprarBloqueio()) {
@@ -249,8 +252,10 @@ function cartaoBloqueio(redesenhar) {
           renderInicio();
         }
       },
-    }, `Comprar por ${PRECO_BLOQUEIO} pontos`),
-    h('p', { class: 'aviso' }, motivo || `Você tem ${plural(saldo, 'ponto')}.`),
+    }, rotuloCompra),
+    h('p', { class: 'aviso' }, guardados >= MAX_BLOQUEIOS ? motivo
+      : saldo < PRECO_BLOQUEIO ? `${guardados ? '' : 'Nenhum bloqueio guardado. '}Cada treino vale ${window.Aerobico.PONTOS_TREINO} pontos, e o aeróbico soma mais.`
+        : `Você tem ${plural(saldo, 'ponto')}.`),
     usados.length ? h('p', { class: 'aviso' }, `Dias protegidos: ${usados.slice(0, 6).map(dataCurta).join(', ')}.`) : null);
 }
 

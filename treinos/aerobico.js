@@ -1,5 +1,5 @@
 /*
- * Aeróbico para fazer no fim do treino e os pontos do app.
+ * Aeróbico no fim do treino, esportes em qualquer hora do dia e os pontos do app.
  *
  * Gasto calórico: MET × peso (kg) × horas, com os METs do Compendium of Physical
  * Activities (Ainsworth et al., 2011). É uma média: varia com a velocidade, a carga e a pessoa.
@@ -37,7 +37,37 @@
       id: 'remo', nome: 'Remo ergométrico', imagem: 'Rowing_Stationary', met: 7.0, ritmo: 'moderado',
       impacto: 'nenhum', articulacoes: 'Sem impacto, trabalha pernas, costas e braços. Empurre com as pernas e mantenha a coluna reta, sem arredondar a lombar.',
     },
+    // Esportes (grupo 'esporte'): sem foto, com um ícone. METs do Compendium (Ainsworth et al., 2011).
+    {
+      id: 'basquete', grupo: 'esporte', nome: 'Basquete', icone: '🏀', met: 8.0, ritmo: 'jogo',
+      impacto: 'alto', articulacoes: 'Saltos e mudanças de direção: tornozelo e joelho levam bastante carga. Tênis de quadra com amortecimento e aquecimento antes ajudam a evitar entorse.',
+    },
+    {
+      id: 'futebol', grupo: 'esporte', nome: 'Futebol', icone: '⚽', met: 7.0, ritmo: 'pelada, sem competição',
+      impacto: 'alto', articulacoes: 'Corrida com arrancadas e giros: joelho e tornozelo trabalham muito. Depois de um treino pesado de perna, pegue mais leve.',
+    },
+    {
+      id: 'volei', grupo: 'esporte', nome: 'Vôlei', icone: '🏐', met: 3.0, ritmo: 'recreativo, em quadra',
+      impacto: 'alto', articulacoes: 'Pouca corrida, mas saltos e bloqueios: joelho e ombro trabalham. O gasto é baixo no recreativo; no competitivo chega ao dobro.',
+    },
+    {
+      id: 'volei_praia', grupo: 'esporte', nome: 'Vôlei de praia', icone: '🏖️', met: 8.0, ritmo: 'na areia',
+      impacto: 'baixo', articulacoes: 'A areia amortece os saltos, mas cansa muito mais as pernas.',
+    },
+    {
+      id: 'tenis', grupo: 'esporte', nome: 'Tênis', icone: '🎾', met: 7.3, ritmo: 'jogo',
+      impacto: 'alto', articulacoes: 'Arrancadas curtas e o mesmo braço sempre: ombro e cotovelo do lado da raquete pedem atenção.',
+    },
+    {
+      id: 'natacao', grupo: 'esporte', nome: 'Natação', icone: '🏊', met: 5.8, ritmo: 'crawl, leve a moderado',
+      impacto: 'nenhum', articulacoes: 'Sem impacto: a água segura o peso. Boa para quem sente o joelho; o ombro trabalha bastante.',
+    },
+    {
+      id: 'ciclismo', grupo: 'esporte', nome: 'Pedal na rua', icone: '🚴', met: 7.5, ritmo: 'ritmo geral',
+      impacto: 'nenhum', articulacoes: 'Sem impacto: o peso fica no banco. Ajuste o banco na altura do quadril.',
+    },
   ];
+  const grupoDe = (m) => m.grupo || 'aparelho';
   const IMPACTOS = { nenhum: 'Sem impacto', baixo: 'Impacto baixo', alto: 'Impacto alto' };
   const MINUTOS = [15, 20, 30]; // atalhos do cronômetro; dá para escolher qualquer tempo
   const MINUTOS_MAX = 180;
@@ -60,7 +90,7 @@
     return dias.size * PONTOS_TREINO + extra;
   }
 
-  const api = { MODALIDADES, IMPACTOS, MINUTOS, MINUTOS_MAX, META_SEMANA, PONTOS_TREINO, modalidade, calorias, pontosDoAerobico, minutosDoDia, pontos };
+  const api = { MODALIDADES, grupoDe, IMPACTOS, MINUTOS, MINUTOS_MAX, META_SEMANA, PONTOS_TREINO, modalidade, calorias, pontosDoAerobico, minutosDoDia, pontos };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Aerobico = api;
 })(typeof window !== 'undefined' ? window : globalThis);

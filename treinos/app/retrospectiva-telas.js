@@ -168,6 +168,7 @@ async function desenharRetro(r) {
   fundo.addColorStop(1, '#07090f');
   c.fillStyle = fundo;
   c.fillRect(0, 0, W, H);
+  areaSeguraStory(c, W, H); // em compartilhar.js
   c.textAlign = 'center';
   c.fillStyle = '#ff6b35';
   c.font = titulo(800, 48);

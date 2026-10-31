@@ -104,7 +104,7 @@ function renderFim() {
       }, h('span', { 'aria-hidden': 'true' }, e.emoji), e.rotulo))),
       resumoFinal.esforco ? sugestaoDoEsforco(resumoFinal, treino) : null,
       h('p', { class: 'aviso' }, `Calorias: estimativa por MET × peso (${estado.peso} kg) × tempo, pelo Compendium of Physical Activities (Ainsworth et al., 2011); ${programa.mobilidade ? 'alongamento leve vale 2,3 METs' : 'musculação vale 3,5 METs, ou 6,0 se o treino foi pesado'}. O peso se ajusta no aeróbico.`)),
-    cartaoAerobico(),
+    cartaoAerobico(true),
     cartaoSemana(false),
     h('article', { class: 'proximo' },
       h('p', { class: 'etiqueta' }, 'Próximo treino'),

@@ -14,7 +14,7 @@
 | [`semelhanca.js`](semelhanca.js) | Calcula o quanto um exercício se parece com outro, para sugerir trocas |
 | [`ofensiva.js`](ofensiva.js) | Calcula a ofensiva (dias seguidos de treino), o nível e a fase do personagem |
 | [`avatar.js`](avatar.js), [`personagens/`](personagens/) | Os 11 personagens, com descrição e imagens sem fundo (fases, descanso, comemoração), e o fogo da ofensiva |
-| [`aerobico.js`](aerobico.js) | Opções de aeróbico (impacto nas articulações e calorias) e os pontos |
+| [`aerobico.js`](aerobico.js) | Opções de aeróbico e esportes (impacto nas articulações e calorias) e os pontos |
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
@@ -83,7 +83,7 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 - **bloqueio de ofensiva:** todo usuário ganha 2 de presente; depois, na aba Personagem, cada um custa 50 pontos e dá para guardar até 2. Dá para usar na hora ("Usar um bloqueio hoje", na aba ou no cartão do personagem quando a ofensiva está em risco) e devolver no mesmo dia se der para treinar. Se esquecer e a ofensiva fosse apagar (viagem, doença), o app usa o bloqueio sozinho: o dia sem treino conta para a meta da semana, sem somar dia de ofensiva, e aparece com 🧊 na semana. Se os bloqueios guardados não bastam para salvar a semana, nenhum é gasto (`aplicarBloqueios` em `ofensiva.js`). Os pontos mostrados são os que sobram para gastar;
 - o personagem aparece também no topo do treino, no descanso e no fim do treino. O descanso abre num cartão laranja de tela cheia, com o personagem descansando, o tempo, o que vem a seguir, **+30 s** e **Pular**; quando acaba, fica verde e ele comemora. **Minimizar** reduz o descanso a uma barra para ver o cartão do exercício, e marcar o exercício como **Feito** encerra o descanso.
 
-### Aeróbico e pontos
+### Aeróbico, esportes e pontos
 
 **Armário do dia:** uma vez por dia, a tela inicial tem um armário para abrir. Ele dá +5, +10 ou +20 pontos, pontos do treino em dobro ou em triplo naquele dia (se treinar) ou um bloqueio de ofensiva (vira pontos se já houver 2 guardados). Abrindo 7 dias seguidos, vem o armário VIP, só com os prêmios melhores: triplo, +30 pontos ou bloqueio.
 
@@ -95,9 +95,9 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 
 **Bordas da ofensiva:** o cartão do personagem e o card de compartilhar ganham borda conforme os dias de ofensiva: Madeira (3), Ferro (7), Bronze (15), Prata (30), Ouro (60) e Diamante (100). Se a ofensiva apagar, a borda volta junto. As cores do card de compartilhar (Laranja, Noite, Neon, Rosa e Dourado) são grátis, à escolha.
 
-Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre seis opções com foto: caminhada e corrida na esteira, bicicleta, elíptico, escada e remo. Cada uma mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
+Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre as opções; na tela inicial fica só um atalho discreto, **Aeróbico ou esporte**, para registrar algo em outra hora do dia (uma esteira à noite, um jogo de basquete). São seis aparelhos com foto (caminhada e corrida na esteira, bicicleta, elíptico, escada e remo) e sete esportes (basquete, futebol, vôlei, vôlei de praia, tênis, natação e pedal na rua). Cada opção mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
 
-**Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia de treino.
+**Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Para o que já foi feito sem cronômetro, **Já fez?** registra os minutos direto. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia de treino.
 
 | Aeróbico | METs | Impacto |
 |---|---|---|
@@ -107,6 +107,13 @@ Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbi
 | Elíptico (moderado) | 5,0 | baixo |
 | Escada (simulador) | 9,0 | baixo, com o joelho trabalhando dobrado |
 | Remo ergométrico (moderado) | 7,0 | nenhum |
+| Basquete (jogo) | 8,0 | alto: saltos e mudanças de direção |
+| Futebol (pelada) | 7,0 | alto |
+| Vôlei (recreativo, em quadra) | 3,0 | alto: saltos |
+| Vôlei de praia | 8,0 | baixo: a areia amortece |
+| Tênis | 7,3 | alto |
+| Natação (crawl, leve a moderado) | 5,8 | nenhum |
+| Pedal na rua | 7,5 | nenhum |
 
 Calorias = MET × peso (kg) × horas, com os METs do Compendium of Physical Activities (Ainsworth et al., 2011). O app explica, em **O que dizem os estudos**:
 

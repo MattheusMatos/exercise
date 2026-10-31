@@ -6,7 +6,11 @@ test('comprar bloqueio e ele salvar a ofensiva sozinho', async ({ page }) => {
   // usuário antigo: sem os bloqueios de presente, 80 pontos
   await abrir(page, { quando: '2026-11-05T10:00:00', estado: { historico, bloqueiosPresente: true, planos, plano: { semana: '2026-11-01', dias: SEG_QUA_SEX } } });
   await page.click('.perfil .pontos');
-  await page.click('.bloqueio-cartao .botao.secundario');
+  await expect(page.locator('.bloqueio-cartao .botao.comprar')).toHaveText('Comprar por 50 pontos');
+  await page.click('.bloqueio-cartao .botao.comprar');
+  // depois de comprar, com menos de 50 pontos, o botão diz quanto falta
+  await expect(page.locator('.bloqueio-cartao .botao.comprar')).toBeDisabled();
+  await expect(page.locator('.bloqueio-cartao .botao.comprar')).toContainText('Faltam');
   const e = await lerEstado(page);
   expect(e.bloqueios).toEqual([expect.objectContaining({ comprado: '2026-11-05', usado: null })]);
   await page.keyboard.press('Escape');

@@ -93,3 +93,22 @@ test('retrospectiva: o X fecha em qualquer tela', async ({ page }) => {
     await expect(page.locator('.retro')).toHaveCount(0);
   }
 });
+
+test('tela inicial: atalho discreto para aeróbico ou esporte, e "Já fez?" registra sem cronômetro', async ({ page }) => {
+  await abrir(page, { quando: '2026-10-26T21:00:00', estado: { historico: [{ data: '2026-10-26', treino: 'push_a' }], plano: { semana: '2026-10-25', dias: SEG_QUA_SEX } } });
+  // o cartão grande do convite fica só no fim do treino
+  await expect(page.locator('.aerobico-cartao.convite')).toHaveCount(0);
+  await page.click('.aerobico-atalho');
+  await expect(page.locator('.aerobico-folha')).toContainText('Esportes');
+  await page.click('.aerobico-linha:has-text("Basquete")');
+  await page.fill('.ja-fiz input', '60');
+  await page.click('.ja-fiz .botao');
+  await expect(page.locator('.toast')).toContainText('+15 pontos');
+  expect((await lerEstado(page)).aerobicos).toEqual([expect.objectContaining({ data: '2026-10-26', tipo: 'basquete', minutos: 60 })]);
+  await expect(page.locator('.aerobico-cartao.feito')).toContainText('Basquete, 60 min');
+});
+
+test('tela inicial: em dia sem treino o atalho também aparece', async ({ page }) => {
+  await abrir(page, { quando: '2026-10-27T21:00:00' });
+  await expect(page.locator('.aerobico-atalho')).toBeVisible();
+});

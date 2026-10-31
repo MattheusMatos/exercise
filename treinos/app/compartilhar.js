@@ -20,6 +20,17 @@ const carregarImagem = (src) => new Promise((resolve, reject) => {
 });
 
 // Card do treino em formato de story (1080 × 1920), para Instagram, WhatsApp e afins.
+// No story, o Instagram e o WhatsApp põem a barra de progresso e o nome por cima do alto da imagem,
+// e o campo de resposta por cima do pé. O conteúdo dos cards é desenhado um pouco menor, dentro da
+// faixa que fica livre; só o fundo vai até as bordas.
+const STORY_TOPO = 150;
+const STORY_BASE = 130;
+function areaSeguraStory(c, W, H) {
+  const s = (H - STORY_TOPO - STORY_BASE) / H;
+  c.translate((W - W * s) / 2, STORY_TOPO);
+  c.scale(s, s);
+}
+
 async function desenharCard(r, treino, estiloId) {
   const estilo = ESTILOS_CARD[estiloId] || ESTILOS_CARD.laranja;
   const W = 1080;
@@ -39,6 +50,7 @@ async function desenharCard(r, treino, estiloId) {
   fundo.addColorStop(1, estilo.fundo[2]);
   c.fillStyle = fundo;
   c.fillRect(0, 0, W, H);
+  areaSeguraStory(c, W, H);
   // Brilho atrás do personagem.
   const brilho = c.createRadialGradient(W / 2, 760, 40, W / 2, 760, 560);
   brilho.addColorStop(0, estilo.brilho);

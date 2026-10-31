@@ -9,6 +9,12 @@ const minutosNaSemana = () => {
   return estado.aerobicos.filter((a) => dias.has(a.data)).reduce((soma, a) => soma + a.minutos, 0);
 };
 
+// Foto do aparelho ou, nos esportes, o ícone.
+function figuraAerobico(m, extra) {
+  return m.imagem ? h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '', ...extra })
+    : h('span', { class: 'icone-esporte', 'aria-hidden': 'true' }, m.icone);
+}
+
 function registrarAerobico(tipo, minutos) {
   const hoje = dataLocal(new Date());
   const antes = window.Aerobico.pontosDoAerobico(window.Aerobico.minutosDoDia(estado.aerobicos, hoje));
@@ -20,19 +26,27 @@ function registrarAerobico(tipo, minutos) {
 }
 
 // No fim do treino: convite para somar aeróbico, ou o aeróbico já feito hoje.
-function cartaoAerobico() {
+// convite: o cartão grande do fim do treino; sem ele, o atalho da tela inicial.
+function cartaoAerobico(convite) {
   const feitos = aerobicosDeHoje();
   if (feitos.length) {
     const minutos = feitos.reduce((soma, a) => soma + a.minutos, 0);
     const m = window.Aerobico.modalidade(feitos[feitos.length - 1].tipo);
     const kcal = feitos.reduce((soma, a) => soma + window.Aerobico.calorias(a.tipo, a.minutos, estado.peso), 0);
     return h('article', { class: 'aerobico-cartao feito' },
-      h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '' }),
+      figuraAerobico(m),
       h('div', null,
         h('p', { class: 'etiqueta' }, `Aeróbico de hoje · +${window.Aerobico.pontosDoAerobico(minutos)} pontos`),
-        h('strong', null, feitos.length === 1 ? `${m.nome}, ${minutos} min` : `${minutos} min em ${feitos.length} aeróbicos`),
+        h('strong', null, feitos.length === 1 ? `${m.nome}, ${minutos} min` : `${minutos} min em ${feitos.length} atividades`),
         h('span', null, `Cerca de ${kcal} kcal · ${plural(pontosAtuais(), 'ponto')} no total`),
         h('button', { class: 'link', onclick: abrirAerobico }, 'Fazer mais')));
+  }
+  // Na tela inicial, um atalho discreto: dá para registrar um aeróbico ou um jogo à noite, em outra hora.
+  if (!convite) {
+    return h('button', { class: 'aerobico-atalho', onclick: abrirAerobico },
+      h('span', { class: 'aerobico-atalho-mais', 'aria-hidden': 'true' }, '+'),
+      h('span', null, h('strong', null, 'Aeróbico ou esporte'),
+        h('span', null, ofensivaAtual().treinouHoje ? `Esteira à noite, basquete, futebol… Hoje vale até +15 pontos.` : 'Esteira, basquete, futebol, natação… Pontua em dia de treino.')));
   }
   return h('button', { class: 'aerobico-cartao convite', onclick: abrirAerobico },
     h('span', { class: 'mais-pontos', 'aria-hidden': 'true' }, '+15'),
@@ -51,10 +65,34 @@ function abrirAerobico() {
       if (e.target === modal) fechar();
     },
   }, caixa);
+  // Para o que já foi feito sem o cronômetro (o jogo de basquete da noite, por exemplo).
+  function campoJaFiz(m) {
+    const entrada = h('input', { type: 'text', inputmode: 'numeric', placeholder: 'min', 'aria-label': `Minutos de ${m.nome}`, maxlength: '3' });
+    const registrar = () => {
+      const minutos = Math.round(Number(entrada.value.replace(',', '.')));
+      if (!(minutos >= 1 && minutos <= window.Aerobico.MINUTOS_MAX)) {
+        avisar(`Escreva de 1 a ${window.Aerobico.MINUTOS_MAX} minutos`);
+        entrada.focus();
+        return;
+      }
+      const pontos = registrarAerobico(m.id, minutos);
+      fechar();
+      if (tela === 'inicio') renderInicio();
+      else render();
+      avisar(`${m.nome}: ${minutos} min registrados${pontos ? ` · +${plural(pontos, 'ponto')}` : ''}`);
+    };
+    entrada.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') registrar();
+    });
+    return h('div', { class: 'ja-fiz' },
+      h('span', null, 'Já fez?'), entrada,
+      h('button', { class: 'botao secundario', onclick: registrar }, 'Registrar'));
+  }
+
   function desenhar() {
     const semana = minutosNaSemana();
     const meta = window.Aerobico.META_SEMANA;
-    const lista = window.Aerobico.MODALIDADES.map((m) => {
+    const opcao = (m) => {
       const aberto = m.id === escolhido;
       return h('div', { class: `aerobico-opcao${aberto ? ' aberta' : ''}` },
         h('button', {
@@ -64,7 +102,7 @@ function abrirAerobico() {
             desenhar();
           },
         },
-        h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '', loading: 'lazy' }),
+        figuraAerobico(m, { loading: 'lazy' }),
         h('span', { class: 'aerobico-texto' },
           h('strong', null, m.nome),
           h('span', { class: `impacto ${m.impacto}` }, window.Aerobico.IMPACTOS[m.impacto]),
@@ -78,11 +116,17 @@ function abrirAerobico() {
               fechar();
               abrirCronometro(m.id);
             },
-          }, 'Abrir cronômetro')) : null);
-    });
+          }, 'Abrir cronômetro'),
+          campoJaFiz(m)) : null);
+    };
+    const doGrupo = (g) => window.Aerobico.MODALIDADES.filter((m) => window.Aerobico.grupoDe(m) === g).map(opcao);
+    const lista = [
+      h('p', { class: 'rotulo aerobico-grupo' }, 'Aparelhos da academia'), doGrupo('aparelho'),
+      h('p', { class: 'rotulo aerobico-grupo' }, 'Esportes'), doGrupo('esporte'),
+    ];
     caixa.replaceChildren(
-      h('h2', null, 'Aeróbico no fim do treino'),
-      h('p', null, 'Escolha o aparelho e marque o tempo no cronômetro. Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo nem de força (Schumann et al., 2022).'),
+      h('h2', null, 'Aeróbico e esportes'),
+      h('p', null, 'Escolha a atividade e use o cronômetro, ou registre os minutos de algo que já fez. Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo nem de força (Schumann et al., 2022). Pontua em dia de treino, até 30 minutos somados.'),
       h('div', { class: 'aerobico-semana' },
         h('p', null, h('strong', null, `${semana} de ${meta} min`), ' de aeróbico esta semana'),
         h('span', { class: 'barra-tempo' }, h('i', { style: `width: ${Math.min(100, (semana / meta) * 100)}%` }))),
@@ -155,8 +199,8 @@ function desenharCronometro(fim) {
   cronoIntervalo = null;
   const iniciado = c && (c.fim !== null || c.restante !== null);
   const topo = h('div', { class: 'crono-topo' },
-    h('img', { src: `fotos/${m.imagem}-0.jpg`, alt: '' }),
-    h('div', null, h('span', { class: 'rotulo' }, 'Aeróbico'), h('strong', null, m.nome)));
+    figuraAerobico(m),
+    h('div', null, h('span', { class: 'rotulo' }, window.Aerobico.grupoDe(m) === 'esporte' ? 'Esporte' : 'Aeróbico'), h('strong', null, m.nome)));
 
   if (fim) {
     // Acabou: mostra o que somou.

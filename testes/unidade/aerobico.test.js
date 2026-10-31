@@ -21,3 +21,12 @@ test('aeróbico só pontua em dia de treino e soma até 30 min no dia', () => {
   ];
   assert.strictEqual(A.pontos(historico, aerobicos), 2 * A.PONTOS_TREINO + 15);
 });
+
+test('esportes têm ícone; aparelhos têm foto', () => {
+  for (const m of A.MODALIDADES) {
+    if (A.grupoDe(m) === 'esporte') assert.ok(m.icone && !m.imagem, m.id);
+    else assert.ok(m.imagem, m.id);
+    assert.ok(A.IMPACTOS[m.impacto], m.id);
+  }
+  assert.strictEqual(A.calorias('basquete', 60, 80), 640);
+});
