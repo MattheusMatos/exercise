@@ -17,6 +17,19 @@ function extraValido(x) {
     typeof x.reps === 'string' && typeof x.rir === 'string' && typeof x.descanso === 'string';
 }
 
+// O treino montado pela pessoa (montador.js): divisão, dias e até 6 treinos de até 12 exercícios.
+function meuTreinoValido(m) {
+  if (!m || typeof m !== 'object' || !window.Avaliacao.DIVISOES[m.divisao] || !Array.isArray(m.treinos)) return null;
+  const treinos = m.treinos.slice(0, 6).filter((t) => t && typeof t.titulo === 'string' && Array.isArray(t.exercicios)).map((t) => ({
+    titulo: t.titulo.replace(/\s+/g, ' ').trim().slice(0, 30) || 'TREINO',
+    foco: Array.isArray(t.foco) ? t.foco.filter((g) => typeof g === 'string').slice(0, 12) : [],
+    exercicios: t.exercicios.filter(extraValido).slice(0, 12).map((x) => ({ id: x.id, series: x.series, reps: x.reps, rir: x.rir, descanso: x.descanso })),
+  }));
+  if (!treinos.length) return null;
+  const dias = Number.isInteger(m.dias) && m.dias >= 2 && m.dias <= 6 ? m.dias : 3;
+  return { divisao: m.divisao, dias, treinos };
+}
+
 function sessaoValida(s, prog) {
   if (!s || typeof s !== 'object') return null;
   const treino = prog.treinos[s.treino];
@@ -87,6 +100,7 @@ function estadoValido(bruto) {
   if (Array.isArray(e.pesos)) {
     limpo.pesos = e.pesos.filter((r) => r && ehDia(r.data) && Number.isFinite(r.kg) && r.kg >= 30 && r.kg <= 250).map((r) => ({ data: r.data, kg: r.kg })).slice(-1000);
   }
+  limpo.meuTreino = meuTreinoValido(e.meuTreino);
   if (typeof e.faltaResolvida === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.faltaResolvida)) limpo.faltaResolvida = e.faltaResolvida;
   // Bloqueios de ofensiva comprados com pontos; usado é o dia que cada um protegeu.
   const ehData = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);

@@ -37,7 +37,7 @@ test('os arquivos de app/ são JavaScript válido e não repetem nomes', () => {
     }
   }
   // Os módulos de lógica ficam em window.<Nome>; o app não pode declarar o mesmo nome.
-  for (const nome of ['Ofensiva', 'Avatar', 'Aerobico', 'Retrospectiva', 'Semelhanca']) assert.ok(!donos.has(nome), `${nome} declarado no app`);
+  for (const nome of ['Ofensiva', 'Avatar', 'Aerobico', 'Retrospectiva', 'Semelhanca', 'Avaliacao']) assert.ok(!donos.has(nome), `${nome} declarado no app`);
 });
 
 test('cada academia carrega os mesmos scripts do app, na mesma ordem', () => {

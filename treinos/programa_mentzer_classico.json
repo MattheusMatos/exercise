@@ -1,0 +1,435 @@
+{
+  "nome": "Alta intensidade à moda de 1980",
+  "titulo": "Estilo Mentzer clássico",
+  "marca": "1 série até a falha · Pré-exaustão",
+  "publico": "todos",
+  "nivel": "Avançado",
+  "categoria": "experimente",
+  "dias": "2 dias por semana",
+  "opcoesDias": [
+    2
+  ],
+  "resumo": "Uma única série de trabalho por exercício, até a falha, com pré-exaustão e 3 ou 4 dias de descanso entre os treinos. Treinos de 20 a 30 minutos.",
+  "regras": [
+    "Só 1 série de trabalho por exercício, até a falha (as séries leves de aquecimento não contam)",
+    "Pré-exaustão: o isolado e, sem descanso, o composto",
+    "Subida e descida lentas, uns 4 segundos cada, sem embalo",
+    "3 a 4 dias de descanso entre os treinos"
+  ],
+  "progressao": "Bateu o topo da faixa de repetições? Suba a carga na próxima vez. Se não conseguiu mais repetições que na vez anterior, Mentzer mandava descansar mais um dia, não treinar mais.",
+  "metodo": {
+    "ilustracao": "metodos/mentzer-classico.svg",
+    "epoca": "Anos 1970 e 80",
+    "historia": [
+      "Mike Mentzer foi um fisiculturista americano, Mr. Universo em 1978, o primeiro a ganhar com nota máxima. Ele levou adiante as ideias de Arthur Jones, criador das máquinas Nautilus: o que faz o músculo crescer é a intensidade do esforço, não a quantidade de séries.",
+      "Numa época em que os campeões treinavam 2 a 3 horas por dia, ele defendia o contrário: poucas séries, levadas além da falha, e muito descanso. Chamou o método de Heavy Duty e o explicou em livros nos anos 1980 e 90."
+    ],
+    "como": [
+      "Uma série de trabalho por exercício, depois de 1 ou 2 leves de aquecimento.",
+      "Até a falha: a repetição em que não sai mais nenhuma com boa forma. Mentzer às vezes ia além, com repetições forçadas (alguém ajuda a subir) ou negativas (só a descida, bem lenta).",
+      "Pré-exaustão: um isolado logo antes do composto, sem descanso. O voador cansa o peito antes do supino.",
+      "Execução lenta e controlada, sem embalo.",
+      "Pouco volume e muito descanso: 3 a 7 dias entre os treinos; com o tempo, ele recomendava ainda mais."
+    ],
+    "pros": [
+      "Treinos curtos: 20 a 30 minutos.",
+      "Uma série perto da falha já faz crescer, principalmente quem está começando ou voltando.",
+      "Ensina a treinar com intensidade de verdade e anotar cada repetição."
+    ],
+    "contras": [
+      "Volume muito baixo: cada músculo recebe 1 a 3 séries a cada 4 a 7 dias. Os estudos mostram mais crescimento com 10 ou mais séries por semana (Schoenfeld et al., 2017; Pelland et al., 2026).",
+      "Cada músculo treinado menos de 1 vez por semana. Treinar 2 vezes rende igual ou um pouco mais (Schoenfeld et al., 2016).",
+      "Ir além da falha cansa muito e não mostrou ganho extra (Refalo et al., 2023). Em levantamento terra e agachamento, é arriscado."
+    ],
+    "veredito": "Funciona, mas não é o caminho para o máximo de músculo. Bom para quem tem muito pouco tempo, para variar alguns meses ou para sentir como é treinar no limite.",
+    "paraQuem": "Quem já treina há algum tempo, sabe a técnica dos exercícios e quer experimentar um treino curto e muito intenso.",
+    "referencias": [
+      "Mentzer, M. Heavy Duty (1993) e Heavy Duty II: Mind and Body (1996).",
+      "Schoenfeld, B. J. et al. (2017). Dose-response relationship between weekly resistance training volume and increases in muscle mass. J Sports Sci.",
+      "Schoenfeld, B. J. et al. (2016). Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med.",
+      "Refalo, M. C. et al. (2023). Influence of resistance training proximity-to-failure on skeletal muscle hypertrophy. Sports Med.",
+      "Augustsson, J. et al. (2003). Effect of pre-exhaustion exercise on lower-extremity muscle activation during a leg press exercise. J Strength Cond Res."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "mzc_a",
+      "titulo": "PEITO E COSTAS",
+      "foco": "Pré-exaustão de peito e de costas, e terra",
+      "duracao": "~25 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Voador (crucifixo na máquina)",
+          "imagem": "Butterfly",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto. Mentzer usava o voador da Nautilus antes do supino inclinado.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados e fixos",
+            "Aperte o peito no meio, sem bater os braços",
+            "Volte devagar até sentir o alongamento"
+          ]
+        },
+        {
+          "nome": "Supino inclinado com barra",
+          "imagem": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Logo depois do voador, com o peito já cansado. Use alguém para ajudar ou máquina com trava se for até a falha.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Banco a 30–45°",
+            "Barra desce até a parte de cima do peito",
+            "Escápulas presas no banco"
+          ]
+        },
+        {
+          "nome": "Pulldown com braços estendidos",
+          "imagem": "Straight-Arm_Pulldown",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Tríceps"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "B"
+          },
+          "porque": "No lugar do pullover da Nautilus, que quase nenhuma academia tem: trabalha o dorsal sem o bíceps limitar.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Braços quase estendidos, cotovelos fixos",
+            "Puxe com as costas até a barra chegar às coxas",
+            "Suba devagar até sentir o alongamento"
+          ]
+        },
+        {
+          "nome": "Puxada supinada",
+          "imagem": "Underhand_Cable_Pulldowns",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "B"
+          },
+          "porque": "Pegada supinada, como Mentzer fazia, logo depois do pulldown com braços estendidos.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada supinada na largura dos ombros",
+            "Puxe a barra até o alto do peito",
+            "Peito alto, sem jogar o corpo para trás"
+          ]
+        },
+        {
+          "nome": "Levantamento terra",
+          "imagem": "Barbell_Deadlift",
+          "series": 1,
+          "reps": "5–8",
+          "rir": "1",
+          "descanso": "—",
+          "primarios": [
+            "Eretores da coluna",
+            "Glúteo",
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Quadríceps",
+            "Trapézio superior",
+            "Meio das costas"
+          ],
+          "aquecimento": true,
+          "porque": "Mentzer fechava o dia de costas com o terra. Aqui ele para 1 repetição antes da falha: no terra, a última repetição é onde a lombar arredonda.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Barra colada nas canelas e coluna neutra",
+            "Empurre o chão com as pernas e estenda o quadril",
+            "Nunca arredonde a lombar para tirar mais uma repetição"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mzc_b",
+      "titulo": "PERNAS",
+      "foco": "Pré-exaustão de quadríceps, posteriores e panturrilha",
+      "duracao": "~20 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "imagem": "Leg_Extensions",
+          "series": 1,
+          "reps": "8–12",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Quadríceps"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto. Num estudo, a extensora antes do leg press diminuiu a ativação do quadríceps no leg press, em vez de aumentar (Augustsson et al., 2003).",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Encosto ajustado: joelho alinhado ao eixo da máquina",
+            "Segure 1 s em cima",
+            "Desça devagar"
+          ]
+        },
+        {
+          "nome": "Leg press",
+          "imagem": "Leg_Press",
+          "series": 1,
+          "reps": "8–12",
+          "rir": "0 (falha)",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Logo depois da extensora. Mentzer usava o agachamento ou o leg press; o leg press é mais seguro para ir até a falha.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pés na largura dos ombros, no meio da plataforma",
+            "Desça até onde a lombar não sai do encosto",
+            "Não trave os joelhos em cima"
+          ]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 1,
+          "reps": "8–12",
+          "rir": "0 (falha)",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "alemdafalha"
+          },
+          "porque": "Sentado, o posterior trabalha alongado e cresceu mais que deitado (Maeo et al., 2021).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 1,
+          "reps": "12–20",
+          "rir": "0 (falha)",
+          "descanso": "—",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "alemdafalha"
+          },
+          "porque": "Uma série longa até a falha; nas últimas, só a descida, bem lenta (negativas).",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mzc_c",
+      "titulo": "OMBROS E BRAÇOS",
+      "foco": "Deltoides, bíceps e tríceps com pré-exaustão",
+      "duracao": "~20 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 1,
+          "reps": "8–12",
+          "rir": "0 (falha)",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "alemdafalha"
+          },
+          "porque": "O deltoide lateral quase não trabalha nos supinos: precisa de um exercício só dele.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados",
+            "Suba até a altura dos ombros, liderando com os cotovelos",
+            "Desça devagar, sem embalo"
+          ]
+        },
+        {
+          "nome": "Crucifixo inverso na máquina",
+          "imagem": "Reverse_Machine_Flyes",
+          "series": 1,
+          "reps": "8–12",
+          "rir": "0 (falha)",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide posterior"
+          ],
+          "secundarios": [
+            "Meio das costas"
+          ],
+          "porque": "A parte de trás do ombro, que os supinos não pegam.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito apoiado, braços quase estendidos",
+            "Abra os braços para trás, liderando com os cotovelos",
+            "Sem encolher os ombros"
+          ]
+        },
+        {
+          "nome": "Rosca direta com barra",
+          "imagem": "Barbell_Curl",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "2 min",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial",
+            "Braquiorradial"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "alemdafalha"
+          },
+          "porque": "Até a falha e, se tiver ajuda, 2 ou 3 negativas: alguém ajuda a subir e você desce em 4 a 5 segundos.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Suba sem jogar o tronco",
+            "Desça devagar até o braço estender"
+          ]
+        },
+        {
+          "nome": "Tríceps no pulley",
+          "imagem": "Triceps_Pushdown",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Estenda o braço até o fim",
+            "Volte só até 90°, devagar"
+          ]
+        },
+        {
+          "nome": "Mergulho nas paralelas (tríceps)",
+          "imagem": "Dips_-_Triceps_Version",
+          "series": 1,
+          "reps": "6–10",
+          "rir": "0 (falha)",
+          "descanso": "—",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [
+            "Peitoral maior",
+            "Deltoide anterior"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Mentzer fazia as paralelas logo depois do tríceps isolado. Peso do corpo; se passar de 10, pendure uma anilha.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco reto para pegar mais tríceps",
+            "Desça até o braço ficar paralelo ao chão",
+            "Sem dor no ombro: se doer, troque pelo banco"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -20,6 +20,14 @@ const TECNICAS = {
     nome: 'Rest-pause', evidencia: 'crescimento',
     texto: 'Vá até 1 repetição antes da falha, descanse 15 s (botão Mini-pausa) e faça mais repetições; repita a pausa mais uma vez. Tudo conta como 1 série. Rendeu pelo menos o mesmo crescimento que séries normais em pessoas treinadas (Prestes et al., 2019).',
   },
+  preexaustao: {
+    nome: 'Pré-exaustão', evidencia: 'ativacao',
+    texto: 'Uma série do isolado e, sem descanso, uma do composto: o músculo chega cansado ao composto. É do método de Arthur Jones e Mike Mentzer. Nos estudos, não aumentou a ativação do músculo no composto (Augustsson et al., 2003) nem rendeu mais força que a ordem normal (Fisher et al., 2014); serve mais para economizar tempo.',
+  },
+  alemdafalha: {
+    nome: 'Até a falha (e além)', evidencia: 'crescimento',
+    texto: 'Vá até não sair mais nenhuma repetição com boa forma. Para ir além, como o Mentzer: 2 ou 3 repetições forçadas (alguém ajuda a subir) ou negativas (só a descida, em 4 a 5 s). Ir até a falha rendeu crescimento parecido com parar 1 ou 2 repetições antes, com mais cansaço (Refalo et al., 2023).',
+  },
   cluster: {
     nome: 'Cluster', evidencia: 'crescimento',
     texto: 'Cada série é dividida em blocos de 2 repetições, com 20 s de pausa entre eles (botão Mini-pausa). A carga pesada sai mais rápida e com menos cansaço; músculo e força cresceram igual às séries normais (Davies et al., 2021).',
@@ -144,7 +152,7 @@ function cartao(i, posicao) {
     h('div', { class: 'corpo' },
       h('h2', null, ex.nome),
       // O vídeo do treino tem os exercícios do programa, sem as trocas.
-      i < programa.treinos[treinoIdx].exercicios.length && !ex.trocado
+      i < programa.treinos[treinoIdx].exercicios.length && !ex.trocado && !programa.semVideo
         ? h('button', { class: 'link video-exercicio', icone: 'play', onclick: () => abrirVideo(treinoIdx, i) }, 'Ver vídeo')
         : null,
       h('div', { class: 'numeros' },

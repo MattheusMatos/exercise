@@ -102,7 +102,8 @@ function perguntaSemana() {
     h('p', { class: 'etiqueta' }, new Date().getDay() === 0 ? 'Nova semana' : 'Esta semana'),
     h('h2', null, 'Preparado para a semana?'),
     h('p', { class: 'pergunta-texto' }, 'Quantos dias você pretende treinar?'),
-    h('div', { class: 'opcoes-dias' }, [3, 4, 5, 6].map((n) => h('button', {
+    // Alguns programas pedem outros números de dias (o estilo Mentzer clássico, só 2).
+    h('div', { class: 'opcoes-dias' }, (programa.opcoesDias || [3, 4, 5, 6]).map((n) => h('button', {
       class: 'opcao-dia',
       'aria-label': `${n} dias`,
       onclick: () => planejarSemana(n),

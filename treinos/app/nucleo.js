@@ -33,7 +33,7 @@ const ICONES = {
 const LETRAS_DIAS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 const NOMES_DIAS = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
 // Dias sugeridos para cada meta semanal (0 = domingo). Com 3 ou 4, um dia de folga entre os treinos quando dá.
-const DIAS_SUGERIDOS = { 3: [1, 3, 5], 4: [1, 2, 4, 5], 5: [1, 2, 3, 4, 5], 6: [1, 2, 3, 4, 5, 6] };
+const DIAS_SUGERIDOS = { 2: [1, 4], 3: [1, 3, 5], 4: [1, 2, 4, 5], 5: [1, 2, 3, 4, 5], 6: [1, 2, 3, 4, 5, 6] };
 
 // Grupos usados no filtro da biblioteca.
 const MUSCULOS = {
@@ -68,6 +68,8 @@ const ARQUIVOS_PROGRAMA = {
   iniciante_f: 'programa_iniciante_f.json',
   avancado_f: 'programa_avancado_f.json',
   mobilidade: 'programa_mobilidade.json',
+  mentzer_classico: 'programa_mentzer_classico.json',
+  mentzer_moderno: 'programa_mentzer_moderno.json',
 };
 let programas = {};
 let programa = null; // o do avatar escolhido

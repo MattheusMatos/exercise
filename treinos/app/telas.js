@@ -277,7 +277,7 @@ function abrirExercicio(i, slot) {
       if (e.target === modal) fechar();
     },
   }, h('div', { class: 'modal-caixa folha previa' },
-    ex.trocado ? figura(ex, doisDigitos(slot + 1), null) : videoDoExercicio(i, slot, true),
+    ex.trocado || programa.semVideo ? figura(ex, doisDigitos(slot + 1), null) : videoDoExercicio(i, slot, true),
     h('h2', null, ex.nome),
     h('div', { class: 'numeros' },
       h('div', null, h('span', { class: 'rotulo' }, programa.mobilidade ? 'Séries × tempo' : 'Séries × reps'), h('strong', null, `${ex.series} × ${ex.reps}`)),

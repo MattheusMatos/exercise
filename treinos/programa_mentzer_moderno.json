@@ -1,0 +1,576 @@
+{
+  "nome": "Alta intensidade com o que a ciência sabe hoje",
+  "titulo": "Estilo Mentzer moderno",
+  "marca": "Pouco volume · Perto da falha · 2x por semana",
+  "publico": "todos",
+  "nivel": "Intermediário",
+  "categoria": "experimente",
+  "dias": "3 ou 4 dias por semana",
+  "opcoesDias": [
+    3,
+    4
+  ],
+  "resumo": "A intensidade e a pré-exaustão do Mentzer, mas com 2 séries por exercício e cada músculo treinado 2 vezes por semana. Treinos de ~35 minutos.",
+  "regras": [
+    "2 séries de trabalho por exercício, a última perto da falha (0–1 repetição na reserva)",
+    "Pré-exaustão nos pares marcados, sem descanso entre eles",
+    "Rest-pause e drop-set só onde marcado",
+    "Superior e inferior, cada um 2 vezes na semana"
+  ],
+  "progressao": "Bateu o topo da faixa nas 2 séries? Suba 2,5–5% da carga. Anote tudo: com pouco volume, a carga precisa subir.",
+  "metodo": {
+    "ilustracao": "metodos/mentzer-moderno.svg",
+    "epoca": "Hoje",
+    "historia": [
+      "O Mentzer acertou em muita coisa: intensidade, controle e anotar cada repetição. Mas os estudos dos últimos 20 anos mostraram que volume e frequência importam mais do que ele achava.",
+      "Esta versão guarda o espírito do Heavy Duty, com treinos curtos e intensos, e ajusta o que a ciência corrigiu: 2 séries em vez de 1, e cada músculo 2 vezes por semana em vez de a cada 7 dias."
+    ],
+    "como": [
+      "2 séries por exercício: a primeira a 1 ou 2 repetições da falha, a segunda a 0 ou 1.",
+      "Pré-exaustão nos pares marcados, como no clássico.",
+      "Rest-pause ou drop-set na última série de alguns isolados: mais estímulo sem mais tempo.",
+      "Superior A, Inferior A, Superior B e Inferior B: cada músculo 2 vezes por semana.",
+      "Cerca de 6 a 10 séries por músculo na semana, em treinos de uns 35 minutos."
+    ],
+    "pros": [
+      "Treinos curtos, com volume suficiente para crescer bem: mesmo poucas séries por semana já dão boa parte do ganho (Pelland et al., 2026).",
+      "Frequência de 2 vezes por semana, que rende igual ou um pouco mais que 1 (Schoenfeld et al., 2016).",
+      "Perto da falha, mas sem passar dela: quase todo o estímulo, com menos cansaço (Refalo et al., 2023)."
+    ],
+    "contras": [
+      "Ainda é metade do volume dos programas de hipertrofia do app: para o máximo de músculo, 10 a 20 séries por semana rendem mais.",
+      "Exige esforço de verdade em toda série; sem isso, o volume baixo não basta."
+    ],
+    "veredito": "Um bom meio-termo: quase todo o ganho com metade do tempo. Ótimo para semanas corridas ou para quem gosta de treino curto e intenso.",
+    "paraQuem": "Quem tem pouco tempo, mas treina com intensidade e quer crescer de forma consistente.",
+    "referencias": [
+      "Pelland, J. C. et al. (2026). The resistance training dose-response: meta-regressions exploring the effects of weekly volume and frequency on muscle hypertrophy and strength gain. Sports Med.",
+      "Schoenfeld, B. J. et al. (2016). Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med.",
+      "Refalo, M. C. et al. (2023). Influence of resistance training proximity-to-failure on skeletal muscle hypertrophy. Sports Med.",
+      "Prestes, J. et al. (2019). Strength and muscular adaptations after 6 weeks of rest-pause vs. traditional multiple-sets resistance training in trained subjects. J Strength Cond Res."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "mzm_sup_a",
+      "titulo": "SUPERIOR A",
+      "foco": "Peito e costas com pré-exaustão",
+      "duracao": "~35 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Voador (crucifixo na máquina)",
+          "imagem": "Butterfly",
+          "series": 2,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados e fixos",
+            "Aperte o peito no meio, sem bater os braços",
+            "Volte devagar até sentir o alongamento"
+          ]
+        },
+        {
+          "nome": "Supino inclinado com barra",
+          "imagem": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Com carga alta, o inclinado fez a parte de cima do peito crescer mais que o reto (Chaves et al., 2020). Aqui vem logo depois do voador.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30–45°",
+            "Barra desce até a parte de cima do peito",
+            "Escápulas presas no banco"
+          ]
+        },
+        {
+          "nome": "Pulldown com braços estendidos",
+          "imagem": "Straight-Arm_Pulldown",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Tríceps"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "B"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Braços quase estendidos, cotovelos fixos",
+            "Puxe com as costas até a barra chegar às coxas",
+            "Suba devagar até sentir o alongamento"
+          ]
+        },
+        {
+          "nome": "Puxada supinada",
+          "imagem": "Underhand_Cable_Pulldowns",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "B"
+          },
+          "porque": "Logo depois do pulldown com braços estendidos.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada supinada na largura dos ombros",
+            "Puxe a barra até o alto do peito",
+            "Peito alto, sem jogar o corpo para trás"
+          ]
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "1–2 min",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "restpause",
+            "pausa": 15
+          },
+          "porque": "Rest-pause na última série: mais repetições perto da falha sem mais séries.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Cotovelos levemente dobrados",
+            "Suba até a altura dos ombros, liderando com os cotovelos",
+            "Desça devagar, sem embalo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mzm_inf_a",
+      "titulo": "INFERIOR A",
+      "foco": "Quadríceps com pré-exaustão e posteriores",
+      "duracao": "~35 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Cadeira extensora",
+          "imagem": "Leg_Extensions",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Quadríceps"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Pré-exaustão: o isolado cansa o músculo antes do composto, para ele, e não o braço, ser o limite no composto. O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez (Ema et al., 2013).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Encosto ajustado: joelho alinhado ao eixo da máquina",
+            "Segure 1 s em cima",
+            "Desça devagar"
+          ]
+        },
+        {
+          "nome": "Leg press",
+          "imagem": "Leg_Press",
+          "series": 2,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "tecnica": {
+            "tipo": "preexaustao",
+            "grupo": "A"
+          },
+          "porque": "Seguro para ir perto da falha, logo depois da extensora.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros, no meio da plataforma",
+            "Desça até onde a lombar não sai do encosto",
+            "Não trave os joelhos em cima"
+          ]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 2,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "1–2 min",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "restpause",
+            "pausa": 15
+          },
+          "porque": "Sentado, o posterior trabalha alongado e cresceu mais que deitado (Maeo et al., 2021). Rest-pause na última série.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Stiff (terra romeno)",
+          "imagem": "Romanian_Deadlift",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "1–2",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Posteriores de coxa",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Eretores da coluna"
+          ],
+          "aquecimento": true,
+          "porque": "O posterior também trabalha pelo quadril, e alongado. Fica longe da falha: técnica primeiro.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelhos levemente dobrados e fixos",
+            "Leve o quadril para trás com a coluna neutra",
+            "Desça até sentir os posteriores alongarem"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "1 min",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "restpause",
+            "pausa": 15
+          },
+          "porque": "Rest-pause na última série.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mzm_sup_b",
+      "titulo": "SUPERIOR B",
+      "foco": "Empurrar, puxar e braços",
+      "duracao": "~35 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino na máquina",
+          "imagem": "Machine_Bench_Press",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "aquecimento": true,
+          "porque": "Máquina permite ir perto da falha sem precisar de ajuda.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Pegada na linha do meio do peito",
+            "Escápulas presas no encosto",
+            "Desça devagar até alongar o peito"
+          ]
+        },
+        {
+          "nome": "Remada sentada no cabo",
+          "imagem": "Seated_Cable_Rows",
+          "series": 2,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "aquecimento": true,
+          "porque": "A puxada do Superior A é vertical; aqui, horizontal, para o meio das costas.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito alto, coluna neutra",
+            "Puxe o cabo até o abdômen, cotovelos junto ao corpo",
+            "Volte esticando os braços, sem arredondar"
+          ]
+        },
+        {
+          "nome": "Desenvolvimento com halteres",
+          "imagem": "Dumbbell_Shoulder_Press",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide anterior"
+          ],
+          "secundarios": [
+            "Deltoide lateral",
+            "Tríceps"
+          ],
+          "porque": "Ombro já aquecido pelo supino.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Halteres na linha das orelhas",
+            "Suba sem bater um halter no outro",
+            "Desça até o cotovelo passar um pouco de 90°"
+          ]
+        },
+        {
+          "nome": "Crucifixo inverso na máquina",
+          "imagem": "Reverse_Machine_Flyes",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "1 min",
+          "primarios": [
+            "Deltoide posterior"
+          ],
+          "secundarios": [
+            "Meio das costas"
+          ],
+          "tecnica": {
+            "tipo": "drop"
+          },
+          "porque": "Drop-set na última série.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Peito apoiado, braços quase estendidos",
+            "Abra os braços para trás, liderando com os cotovelos",
+            "Sem encolher os ombros"
+          ]
+        },
+        {
+          "nome": "Rosca direta com barra",
+          "imagem": "Barbell_Curl",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "0–1",
+          "descanso": "1–2 min",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "aquecimento": true,
+          "tecnica": {
+            "tipo": "biset",
+            "grupo": "C"
+          },
+          "porque": "Bi-set com o tríceps: os dois braços no tempo de um (Zhang et al., 2025).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Suba sem jogar o tronco",
+            "Desça devagar até o braço estender"
+          ]
+        },
+        {
+          "nome": "Tríceps no pulley",
+          "imagem": "Triceps_Pushdown",
+          "series": 2,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "1–2 min",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "tecnica": {
+            "tipo": "biset",
+            "grupo": "C"
+          },
+          "porque": "Fecha o bi-set com a rosca.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Estenda o braço até o fim",
+            "Volte só até 90°, devagar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mzm_inf_b",
+      "titulo": "INFERIOR B",
+      "foco": "Hack, posteriores e panturrilha",
+      "duracao": "~30 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento hack",
+          "imagem": "Hack_Squat",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "0–1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores"
+          ],
+          "aquecimento": true,
+          "porque": "Agachamento guiado: dá para ir perto da falha com segurança.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Pés no meio da plataforma",
+            "Desça fundo mantendo a lombar no encosto",
+            "Suba sem travar os joelhos"
+          ]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 2,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "1–2 min",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "aquecimento": true,
+          "porque": "Segunda vez na semana para os posteriores.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Cadeira extensora",
+          "imagem": "Leg_Extensions",
+          "series": 1,
+          "reps": "12–15",
+          "rir": "0",
+          "descanso": "1 min",
+          "primarios": [
+            "Quadríceps"
+          ],
+          "secundarios": [],
+          "tecnica": {
+            "tipo": "drop"
+          },
+          "porque": "Drop-set na única série: fecha o quadríceps em pouco tempo (Sødal et al., 2023).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Encosto ajustado: joelho alinhado ao eixo da máquina",
+            "Segure 1 s em cima",
+            "Desça devagar"
+          ]
+        },
+        {
+          "nome": "Panturrilha no leg press",
+          "imagem": "Calf_Press_On_The_Leg_Press_Machine",
+          "series": 2,
+          "reps": "12–20",
+          "rir": "0–1",
+          "descanso": "1 min",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "aquecimento": true,
+          "porque": "Segunda vez na semana para a panturrilha, com pausa no alongamento.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Só a ponta dos pés na plataforma",
+            "Desça até alongar bem",
+            "Joelhos estendidos, mas sem travar"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -54,8 +54,15 @@ Promise.all(Object.entries(ARQUIVOS_PROGRAMA).map(([nome, arquivo]) => fetch(arq
     return resposta.json();
   })
   .then((dados) => [nome, dados])))
-  .then((lista) => {
+  .then(async (lista) => {
     programas = Object.fromEntries(lista);
+    // Se o programa salvo é o Meu treino, ele é montado com a biblioteca antes de validar o estado.
+    const salvo = ler(CHAVE_ESTADO, null);
+    const meu = salvo && meuTreinoValido(salvo.meuTreino);
+    if (meu && salvo.perfil && salvo.perfil.programa === 'meu') {
+      await carregarBiblioteca();
+      if (biblioteca) programas.meu = montarProgramaMeu(meu);
+    }
     estado = carregarLocal();
     salvar(); // grava o que a validação acrescentou, como os bloqueios de presente
     programa = programas[estado.perfil.programa];

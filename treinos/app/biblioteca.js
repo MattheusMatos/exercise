@@ -13,7 +13,7 @@ function exercicio(treinoIdx, slot) {
   const base = treino.exercicios[slot];
   const id = estado.trocas[treino.id] && estado.trocas[treino.id][slot];
   const item = id && biblioteca ? biblioteca.porId.get(id) : null;
-  if (!item) return { ...base, trocado: false, k: null, semelhanca: null };
+  if (!item) return { ...base, trocado: false, k: base.k ?? null, semelhanca: null };
   const original = originalDoLugar(treinoIdx, slot);
   return {
     ...base,
@@ -143,8 +143,11 @@ function figura(ex, numero, botao) {
   return fig;
 }
 
+// Carrega uma vez; quem precisa dela antes de seguir (o Meu treino) espera a promessa.
+let carregandoBiblioteca = null;
 function carregarBiblioteca() {
-  fetch('biblioteca/exercicios.json')
+  if (carregandoBiblioteca) return carregandoBiblioteca;
+  carregandoBiblioteca = fetch('biblioteca/exercicios.json')
     .then((resposta) => {
       if (!resposta.ok) throw new Error(String(resposta.status));
       return resposta.json();
@@ -156,12 +159,16 @@ function carregarBiblioteca() {
         busca: semAcento(`${e.nome} ${e.id.replace(/[_-]+/g, ' ')}`),
       }));
       biblioteca = { itens, porId: new Map(itens.map((e) => [e.id, e])) };
+      if (estado.meuTreino) programas.meu = montarProgramaMeu(estado.meuTreino);
+      if (!programa) return; // ainda abrindo o app
       if (tela === 'inicio') renderInicio();
       else if (tela === 'treino' && estado.sessao) montarPilha(app.querySelector('.pilha'), false);
     })
     .catch(() => {
       biblioteca = null; // o treino segue normal, só sem a troca de exercícios
+      carregandoBiblioteca = null;
     });
+  return carregandoBiblioteca;
 }
 
 function abrirBiblioteca(treinoIdx, slot) {

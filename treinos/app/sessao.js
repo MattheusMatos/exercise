@@ -110,7 +110,7 @@ function marcarSerie(i, k) {
   }
 
   if (agora <= antes) return;
-  // Bi-set e tri-set: entre os exercícios do grupo não há descanso; o app passa para o próximo.
+  // Bi-set, tri-set e pré-exaustão: entre os exercícios do grupo não há descanso; o app passa para o próximo.
   const membros = (membrosDoGrupo(i) || []).filter((j) => !sessao.feitos.includes(j));
   const pos = membros.indexOf(i);
   const pendente = (j) => (sessao.series[j] || 0) < seriesDaSessao(j);
@@ -125,7 +125,7 @@ function marcarSerie(i, k) {
     const primeiro = membros.find(pendente);
     if (primeiro !== undefined && primeiro !== i) {
       trazerParaFrente(primeiro);
-      iniciarDescanso(segundosDescanso(ex.descanso), `rodada ${(sessao.series[primeiro] || 0) + 1} do ${ex.tecnica.tipo === 'triset' ? 'tri-set' : 'bi-set'}: ${exercicioDaSessao(primeiro).nome}`);
+      iniciarDescanso(segundosDescanso(ex.descanso), `rodada ${(sessao.series[primeiro] || 0) + 1} ${{ triset: 'do tri-set', preexaustao: 'da pré-exaustão' }[ex.tecnica.tipo] || 'do bi-set'}: ${exercicioDaSessao(primeiro).nome}`);
       return;
     }
   }

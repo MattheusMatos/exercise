@@ -8,6 +8,8 @@
 | [`programa_iniciante_m.md`](programa_iniciante_m.md), [`programa_iniciante_f.md`](programa_iniciante_f.md) | Corpo inteiro 3x por semana, para começar (com o `.json` de cada um) |
 | [`programa_avancado_m.md`](programa_avancado_m.md), [`programa_avancado_f.md`](programa_avancado_f.md) | Avançados com bi-set, tri-set, cluster, rest-pause e drop-set |
 | [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
+| [`programa_mentzer.md`](programa_mentzer.md), [`metodos/`](metodos/) | Seção Experimente: estilo Mentzer clássico e moderno, com as ilustrações |
+| [`avaliacao.js`](avaliacao.js) | Avalia o treino montado pela pessoa (volume, frequência, equilíbrio, ordem) e sugere exercícios |
 | [`retrospectiva.js`](retrospectiva.js) | Calcula a retrospectiva do mês ou do ano |
 | [`analise_hipertrofia.md`](analise_hipertrofia.md) | O que a literatura diz sobre volume, frequência e divisão do treino, e o volume de cada programa |
 | [`index.html`](index.html), [`app.css`](app.css), [`app/`](app/) | App de cartões para seguir o treino no celular (o código, dividido por assunto; ver [Código e testes](#código-e-testes)) |
@@ -57,6 +59,29 @@ Na primeira vez, o app pergunta como a pessoa quer ser chamada, se é homem ou m
 | [Mobilidade](programa_mobilidade.md) | Todos | Todos | antes do treino ou no descanso |
 
 Cada `.md` explica as escolhas com os estudos; cada exercício tem o motivo e a base no app.
+
+### Experimente: outros métodos
+
+No fim da lista de programas, métodos conhecidos para experimentar. Tocar num deles abre antes uma folha com uma ilustração original (sem retratar ninguém), a história, como funciona, o que funciona, o que a ciência corrigiu, o veredito e as referências; **Experimentar este treino** troca o programa. Ver [`programa_mentzer.md`](programa_mentzer.md).
+
+| Método | Nível | Dias | Ideia |
+|---|---|---|---|
+| Estilo Mentzer clássico | Avançado | 2 | 1 série até a falha por exercício, pré-exaustão, 3 a 4 dias de descanso |
+| Estilo Mentzer moderno | Intermediário | 3 ou 4 | 2 séries perto da falha, pré-exaustão, superior e inferior 2x por semana |
+
+A pergunta da semana respeita os dias de cada método (o clássico oferece só 2). Duas técnicas novas nos cartões: **pré-exaustão** (isolado e composto sem descanso, como o bi-set) e **até a falha (e além)**. Um método novo entra em `gerar_metodos.py` (com o campo `metodo` e `categoria: "experimente"`), no `ARQUIVOS_PROGRAMA` e no `sw.js`.
+
+### Meu treino
+
+Na aba Treino do perfil, **Monte seu próprio treino** abre o montador:
+
+1. a divisão: Push/Pull/Legs, superior e inferior, corpo inteiro, ABC ou livre (1 a 6 treinos);
+2. os dias por semana, que decidem quantas vezes cada treino é feito;
+3. os exercícios de cada dia, da biblioteca (busca e filtro por músculo), com séries, repetições e ordem;
+4. **Sugestões para o dia**: dos músculos que o dia foca, os que estão com menos séries na semana, com um exercício que ainda não está no dia (os dos programas do app vêm primeiro);
+5. **Avaliação da semana**: séries por músculo na semana em barras (o ideal, 10 a 20, marcado) e avisos: músculo grande sem nada, volume baixo ou alto, músculo treinado só 1 vez por semana, mais de ~11 séries de um músculo num treino, isolado antes do composto, movimento repetido, peito contra costas, quadríceps contra posteriores, deltoide lateral esquecido e treino longo demais.
+
+**Salvar e usar este treino** cria o programa *Meu treino*, que funciona como os outros (cartões com as fotos da biblioteca, aquecimento no primeiro exercício de cada músculo, ofensiva, cargas). Editar depois mantém o que foi montado; fechar sem salvar não muda nada.
 
 ### Fim do treino
 
@@ -195,6 +220,7 @@ O app não tem build: são arquivos estáticos. O código fica em [`app/`](app/)
 | `aerobico-telas.js` | Aeróbico e o cronômetro em tela cheia |
 | `sessao.js` | Ações durante o treino: séries, Feito/Depois, desfazer, arrastar |
 | `descanso.js` | Descanso, som, vibração, tela ligada e vídeo |
+| `montador.js` | Meu treino: o montador, as sugestões e o programa montado |
 | `inicio.js` | Instalar como app e o começo: carrega os programas e desenha a primeira tela |
 
 São scripts comuns (não módulos), então dividem o mesmo escopo global: um nome declarado num arquivo é visto nos outros e não pode se repetir. Um arquivo novo entra no `index.html` (antes do `inicio.js`) e no `ESSENCIAIS` do `sw.js`; o teste de estrutura avisa se faltar.

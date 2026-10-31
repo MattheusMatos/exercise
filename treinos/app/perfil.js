@@ -8,26 +8,70 @@
 const ORDEM_NIVEL = { Iniciante: 0, 'Intermediário': 1, 'Avançado': 2 };
 function gruposDeProgramas(sexo) {
   const lista = Object.entries(programas).sort(([, a], [, b]) => (ORDEM_NIVEL[a.nivel] ?? 3) - (ORDEM_NIVEL[b.nivel] ?? 3));
-  const de = (filtro) => lista.filter(([, p]) => filtro(p.publico)).map(([id]) => id);
+  const de = (filtro) => lista.filter(([, p]) => !p.categoria && filtro(p.publico)).map(([id]) => id);
   return [
     ['Recomendados para você', de((x) => x === sexo)],
     ['Para todos', de((x) => x === 'todos')],
     [sexo === 'f' ? 'Outros treinos (sugeridos para homens)' : 'Outros treinos (sugeridos para mulheres)', de((x) => x !== sexo && x !== 'todos')],
+    // Métodos conhecidos, para experimentar: cada um abre antes a explicação e o que a ciência diz.
+    ['Experimente: outros métodos', Object.entries(programas).filter(([, p]) => p.categoria === 'experimente').map(([id]) => id)],
   ].filter(([, ids]) => ids.length);
 }
 
 function opcaoPrograma(id, escolher, atual) {
   const p = programas[id];
   return h('button', {
-    class: 'opcao-programa',
+    class: `opcao-programa${p.metodo ? ' com-metodo' : ''}`,
     'aria-pressed': String(id === atual),
     'data-programa': id,
-    onclick: () => escolher(id),
+    onclick: () => (p.metodo ? abrirMetodo(id, escolher) : escolher(id)),
   },
+  p.metodo ? h('img', { class: 'metodo-miniatura', src: p.metodo.ilustracao, alt: '' }) : null,
   h('span', { class: `nivel-programa nivel-${(p.nivel || '').normalize('NFD').replace(/[^a-z]/gi, '').toLowerCase()}` }, p.nivel),
   h('strong', null, p.titulo),
   h('span', { class: 'dias-programa' }, `${p.dias} · ${p.treinos.length} treinos`),
-  h('span', null, p.resumo));
+  h('span', null, p.resumo),
+  p.metodo ? h('span', { class: 'link metodo-saiba' }, 'Ver a história e o que a ciência diz') : null);
+}
+
+// A folha de um método da seção Experimente: quem criou, como funciona, prós, contras e o veredito.
+function abrirMetodo(id, escolher) {
+  const p = programas[id];
+  const m = p.metodo;
+  const fechar = () => modal.remove();
+  const lista = (itens) => h('ul', null, itens.map((x) => h('li', null, x)));
+  const caixa = h('div', { class: 'modal-caixa folha metodo-folha' },
+    h('figure', { class: 'metodo-arte' }, h('img', { src: m.ilustracao, alt: '' }), h('span', { class: 'metodo-epoca' }, m.epoca)),
+    h('p', { class: 'etiqueta' }, 'Experimente'),
+    h('h2', null, p.titulo),
+    h('p', { class: 'metodo-resumo' }, p.resumo),
+    h('h3', null, 'A história'), m.historia.map((x) => h('p', null, x)),
+    h('h3', null, 'Como funciona'), lista(m.como),
+    h('div', { class: 'metodo-colunas' },
+      h('div', { class: 'metodo-pros' }, h('h3', null, 'O que funciona'), lista(m.pros)),
+      h('div', { class: 'metodo-contras' }, h('h3', null, 'O que a ciência corrigiu'), lista(m.contras))),
+    h('div', { class: 'metodo-veredito' }, h('strong', null, 'Veredito: '), m.veredito),
+    h('p', null, h('strong', null, 'Para quem: '), m.paraQuem),
+    h('p', { class: 'aviso' }, `${p.dias} · ${p.treinos.length} treinos: ${p.treinos.map((t) => t.titulo.toLowerCase()).join(', ')}.`),
+    h('details', { class: 'saiba-mais' }, h('summary', null, 'Referências'), lista(m.referencias)),
+    h('p', { class: 'aviso' }, 'Ilustração original, sem retratar ninguém. O app não tem ligação com o criador do método.'),
+    h('button', { class: 'botao primario', onclick: () => { fechar(); escolher(id); } }, 'Experimentar este treino'),
+    h('button', { class: 'link', onclick: fechar }, 'Voltar'));
+  const modal = h('div', {
+    class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': p.titulo,
+    onclick: (e) => {
+      if (e.target === modal) fechar();
+    },
+  }, caixa);
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.stopPropagation();
+      fechar();
+    }
+  });
+  document.body.append(modal);
+  caixa.tabIndex = -1;
+  caixa.focus();
 }
 
 // atual: o programa marcado como escolhido (nenhum na primeira abertura).
@@ -462,6 +506,13 @@ function abrirPerfil(aba) {
               desenhar();
             },
           }, 'Cancelar'))
+        : null,
+      cartaoMeuTreino(() => {
+        fechar();
+        abrirMontador();
+      }),
+      estado.meuTreino && programas.meu && estado.perfil.programa !== 'meu'
+        ? h('button', { class: 'link usar-meu', onclick: () => escolherPrograma('meu') }, 'Usar o Meu treino')
         : null,
       listaDeProgramas(estado.perfil.sexo, escolherPrograma, estado.perfil.programa),
     ];
