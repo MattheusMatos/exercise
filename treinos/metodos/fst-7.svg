@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Ilustração de um atleta com ondas ao redor e o número 7">
+
+  <defs><radialGradient id="r7" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#4b1c7a"/><stop offset="1" stop-color="#0e0a1f"/></radialGradient></defs>
+  <rect width="640" height="400" fill="url(#r7)"/>
+  <circle cx="320" cy="200" r="150" fill="none" stroke="#b46cff" stroke-width="3" opacity="0.50"/><circle cx="320" cy="200" r="186" fill="none" stroke="#b46cff" stroke-width="3" opacity="0.42"/><circle cx="320" cy="200" r="222" fill="none" stroke="#b46cff" stroke-width="3" opacity="0.34"/><circle cx="320" cy="200" r="258" fill="none" stroke="#b46cff" stroke-width="3" opacity="0.26"/><circle cx="320" cy="200" r="294" fill="none" stroke="#b46cff" stroke-width="3" opacity="0.18"/>
+  <text x="560" y="330" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="280" fill="#4ea3ff" opacity="0.35" text-anchor="middle">7</text>
+  
+  <g transform="translate(0 0)">
+  <g fill="#f0f2f5" stroke="#f0f2f5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="262,178 196,186 186,112" fill="none" stroke-width="34"/>
+    <polyline points="378,178 444,186 454,112" fill="none" stroke-width="34"/>
+    <ellipse cx="222" cy="168" rx="34" ry="22" transform="rotate(-12 222 168)" stroke="none"/>
+    <ellipse cx="418" cy="168" rx="34" ry="22" transform="rotate(12 418 168)" stroke="none"/>
+    <circle cx="186" cy="100" r="17" stroke="none"/>
+    <circle cx="454" cy="100" r="17" stroke="none"/>
+    <circle cx="262" cy="176" r="28" stroke="none"/>
+    <circle cx="378" cy="176" r="28" stroke="none"/>
+    <ellipse cx="320" cy="112" rx="23" ry="27" stroke="none"/>
+    <path d="M300 128 L340 128 L346 150 Q372 156 392 168 L248 168 Q268 156 294 150 Z" stroke="none"/>
+    <path d="M246 166 Q320 150 394 166 L378 236 Q370 284 348 296 L292 296 Q270 284 262 236 Z" stroke="none"/>
+    <path d="M290 292 L350 292 L360 330 L280 330 Z" stroke="none"/>
+    <path d="M282 326 Q258 362 274 402 L312 402 Q314 364 320 332 Z" stroke="none"/>
+    <path d="M358 326 Q382 362 366 402 L328 402 Q326 364 320 332 Z" stroke="none"/>
+  </g>
+  <g fill="none" stroke="#4b1c7a" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <path d="M320 178 L320 290"/>
+    <path d="M276 196 Q298 210 318 200"/><path d="M364 196 Q342 210 322 200"/>
+    <path d="M300 236 L340 236"/><path d="M302 258 L338 258"/>
+    <path d="M206 160 Q222 150 240 158"/><path d="M434 160 Q418 150 400 158"/>
+  </g>
+  </g>
+  <text x="28" y="56" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#f0f2f5">7 SÉRIES · 30–45 S</text>
+</svg>

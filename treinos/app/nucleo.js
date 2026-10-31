@@ -70,6 +70,11 @@ const ARQUIVOS_PROGRAMA = {
   mobilidade: 'programa_mobilidade.json',
   mentzer_classico: 'programa_mentzer_classico.json',
   mentzer_moderno: 'programa_mentzer_moderno.json',
+  cinco_por_cinco: 'programa_cinco_por_cinco.json',
+  german_volume: 'programa_german_volume.json',
+  arnold: 'programa_arnold.json',
+  phul: 'programa_phul.json',
+  fst7: 'programa_fst7.json',
 };
 let programas = {};
 let programa = null; // o do avatar escolhido

@@ -1,27 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Ilustração retrô de um fisiculturista fazendo pose de duplo bíceps">
+
   <defs>
-    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2a1140"/><stop offset="0.45" stop-color="#b8325a"/><stop offset="0.8" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ffd27a"/>
-    </linearGradient>
-    <linearGradient id="sol" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#ff7a3d"/>
-    </linearGradient>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1140"/><stop offset="0.45" stop-color="#b8325a"/><stop offset="0.8" stop-color="#ff8a3d"/><stop offset="1" stop-color="#ffd27a"/></linearGradient>
+    <linearGradient id="sol" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#ff7a3d"/></linearGradient>
     <clipPath id="metade"><rect x="0" y="0" width="640" height="300"/></clipPath>
   </defs>
   <rect width="640" height="400" fill="url(#ceu)"/>
   <g fill="#fff" opacity="0.7"><circle cx="70" cy="50" r="2"/><circle cx="150" cy="90" r="1.5"/><circle cx="560" cy="60" r="2"/><circle cx="500" cy="110" r="1.5"/><circle cx="600" cy="140" r="1.2"/><circle cx="40" cy="150" r="1.2"/></g>
   <circle cx="320" cy="250" r="150" fill="url(#sol)" clip-path="url(#metade)"/>
-  <g fill="#2a1140" opacity="0.85">
-    <rect x="150" y="214" width="340" height="7"/><rect x="150" y="238" width="340" height="9"/><rect x="150" y="264" width="340" height="11"/><rect x="150" y="290" width="340" height="12"/>
-  </g>
+  <g fill="#2a1140" opacity="0.85"><rect x="150" y="214" width="340" height="7"/><rect x="150" y="238" width="340" height="9"/><rect x="150" y="264" width="340" height="11"/><rect x="150" y="290" width="340" height="12"/></g>
   <rect x="0" y="300" width="640" height="100" fill="#4a1d5e"/>
   <g stroke="#ff8a3d" stroke-width="2" opacity="0.6">
     <line x1="0" y1="320" x2="640" y2="320"/><line x1="0" y1="348" x2="640" y2="348"/><line x1="0" y1="384" x2="640" y2="384"/>
     <line x1="320" y1="300" x2="320" y2="400"/><line x1="320" y1="300" x2="140" y2="400"/><line x1="320" y1="300" x2="500" y2="400"/><line x1="320" y1="300" x2="-40" y2="400"/><line x1="320" y1="300" x2="680" y2="400"/>
   </g>
   
+  <g transform="translate(0 0)">
   <g fill="#14081f" stroke="#14081f" stroke-linecap="round" stroke-linejoin="round">
-    <!-- braços: ombro, cotovelo, punho -->
     <polyline points="262,178 196,186 186,112" fill="none" stroke-width="34"/>
     <polyline points="378,178 444,186 454,112" fill="none" stroke-width="34"/>
     <ellipse cx="222" cy="168" rx="34" ry="22" transform="rotate(-12 222 168)" stroke="none"/>
@@ -30,24 +25,19 @@
     <circle cx="454" cy="100" r="17" stroke="none"/>
     <circle cx="262" cy="176" r="28" stroke="none"/>
     <circle cx="378" cy="176" r="28" stroke="none"/>
-    <!-- cabeça, pescoço e trapézio -->
     <ellipse cx="320" cy="112" rx="23" ry="27" stroke="none"/>
     <path d="M300 128 L340 128 L346 150 Q372 156 392 168 L248 168 Q268 156 294 150 Z" stroke="none"/>
-    <!-- tronco em V -->
     <path d="M246 166 Q320 150 394 166 L378 236 Q370 284 348 296 L292 296 Q270 284 262 236 Z" stroke="none"/>
-    <!-- sunga e pernas -->
     <path d="M290 292 L350 292 L360 330 L280 330 Z" stroke="none"/>
     <path d="M282 326 Q258 362 274 402 L312 402 Q314 364 320 332 Z" stroke="none"/>
     <path d="M358 326 Q382 362 366 402 L328 402 Q326 364 320 332 Z" stroke="none"/>
   </g>
-  <!-- linhas de definição -->
   <g fill="none" stroke="#ff8a3d" stroke-width="3" stroke-linecap="round" opacity="0.55">
     <path d="M320 178 L320 290"/>
     <path d="M276 196 Q298 210 318 200"/><path d="M364 196 Q342 210 322 200"/>
     <path d="M300 236 L340 236"/><path d="M302 258 L338 258"/>
     <path d="M206 160 Q222 150 240 158"/><path d="M434 160 Q418 150 400 158"/>
   </g>
-  <g font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" fill="#ffe9a8" text-anchor="middle">
-    <text x="320" y="44" font-size="30" letter-spacing="6">1 SÉRIE · ATÉ A FALHA</text>
   </g>
+  <text x="320" y="44" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="30" letter-spacing="6" fill="#ffe9a8" text-anchor="middle">1 SÉRIE · ATÉ A FALHA</text>
 </svg>

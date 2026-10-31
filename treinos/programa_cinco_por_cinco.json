@@ -1,0 +1,218 @@
+{
+  "nome": "Força com os exercícios básicos",
+  "titulo": "5×5 clássico",
+  "marca": "Agachamento toda vez · Carga sobe todo treino",
+  "publico": "todos",
+  "nivel": "Iniciante",
+  "categoria": "experimente",
+  "dias": "3 dias por semana",
+  "opcoesDias": [
+    3
+  ],
+  "resumo": "Dois treinos alternados, só com os básicos: agachamento sempre, supino ou desenvolvimento, remada ou terra. 5 séries de 5, com a carga subindo a cada treino.",
+  "regras": [
+    "5 séries de 5 repetições com a mesma carga (o terra, 1 série de 5)",
+    "Alterne A e B: segunda A, quarta B, sexta A; na outra semana, B, A, B",
+    "Completou as 25 repetições? Suba 2,5 kg no próximo treino (5 kg no terra)",
+    "Falhou 3 treinos seguidos na mesma carga? Volte 10% e suba de novo"
+  ],
+  "progressao": "Suba a carga sempre que completar as 5 séries de 5. Quando parar de subir mesmo voltando 10%, é hora de um programa intermediário.",
+  "metodo": {
+    "ilustracao": "metodos/cinco-por-cinco.svg",
+    "epoca": "Anos 1960 a hoje",
+    "historia": [
+      "O 5×5 apareceu entre os levantadores e fisiculturistas dos anos 1950 e 60; o sul-africano Reg Park, ídolo do jovem Arnold, ajudou a popularizá-lo. Nos anos 70, o técnico americano Bill Starr usou o esquema com atletas de futebol americano.",
+      "As versões de hoje deixaram o treino ainda mais simples: dois treinos alternados, agachamento em todos, e a carga subindo um pouco a cada vez."
+    ],
+    "como": [
+      "Treino A: agachamento, supino e remada curvada, 5×5.",
+      "Treino B: agachamento e desenvolvimento 5×5, e levantamento terra 1×5.",
+      "3 vezes por semana, alternando A e B.",
+      "Descanso longo, 3 a 5 minutos, para levantar pesado de novo.",
+      "A carga sobe a cada treino enquanto der: é a progressão linear."
+    ],
+    "pros": [
+      "Ótimo para ganhar força no começo: carga pesada é o que mais aumenta a força máxima (Schoenfeld et al., 2017).",
+      "Poucos exercícios, fácil de aprender e de acompanhar o progresso.",
+      "Com o mesmo volume, séries pesadas e moderadas fizeram crescer parecido (Schoenfeld et al., 2015)."
+    ],
+    "contras": [
+      "Pouco volume para hipertrofia fora das pernas: peito e costas ficam com 7 a 8 séries por semana, e braços e ombro lateral quase sem nada.",
+      "A progressão linear acaba em alguns meses; depois disso, a carga não sobe toda semana.",
+      "Agachamento pesado 3 vezes por semana cansa; a técnica precisa estar boa antes da carga."
+    ],
+    "veredito": "Excelente para os primeiros meses de quem quer ficar forte. Para crescer o máximo, depois vale passar para um programa com mais volume.",
+    "paraQuem": "Iniciantes que querem força e aprender os exercícios básicos com barra.",
+    "referencias": [
+      "Starr, B. The Strongest Shall Survive (1976).",
+      "Schoenfeld, B. J. et al. (2017). Strength and hypertrophy adaptations between low- vs. high-load resistance training: a systematic review and meta-analysis. J Strength Cond Res.",
+      "Schoenfeld, B. J. et al. (2015). Effects of low- vs. high-load resistance training on muscle strength and hypertrophy in well-trained men. J Strength Cond Res."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "cxc_a",
+      "titulo": "TREINO A",
+      "foco": "Agachamento, supino e remada",
+      "duracao": "~45 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento livre",
+          "imagem": "Barbell_Full_Squat",
+          "series": 5,
+          "reps": "5",
+          "rir": "1–2",
+          "descanso": "3–5 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa",
+            "Eretores da coluna"
+          ],
+          "porque": "O exercício central do 5×5: em todos os treinos, com a carga subindo.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros",
+            "Desça até a coxa passar do paralelo",
+            "Coluna neutra, joelhos na direção dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Supino reto com barra",
+          "imagem": "Barbell_Bench_Press_-_Medium_Grip",
+          "series": 5,
+          "reps": "5",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "Alterna com o desenvolvimento: um treino sim, outro não.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Escápulas retraídas e deprimidas",
+            "Barra desce até a linha do mamilo",
+            "Pés firmes no chão"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Remada curvada com barra",
+          "imagem": "Bent_Over_Barbell_Row",
+          "series": 5,
+          "reps": "5",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior",
+            "Eretores da coluna"
+          ],
+          "porque": "Equilibra o supino e fortalece as costas para o agachamento e o terra.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco inclinado uns 45°, coluna neutra",
+            "Puxe a barra até a parte de baixo do peito",
+            "Desça controlando, sem soltar a postura"
+          ],
+          "aquecimento": true
+        }
+      ]
+    },
+    {
+      "id": "cxc_b",
+      "titulo": "TREINO B",
+      "foco": "Agachamento, desenvolvimento e terra",
+      "duracao": "~40 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento livre",
+          "imagem": "Barbell_Full_Squat",
+          "series": 5,
+          "reps": "5",
+          "rir": "1–2",
+          "descanso": "3–5 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa",
+            "Eretores da coluna"
+          ],
+          "porque": "De novo: no 5×5 o agachamento está em todos os treinos.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros",
+            "Desça até a coxa passar do paralelo",
+            "Coluna neutra, joelhos na direção dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Desenvolvimento em pé com barra",
+          "imagem": "Standing_Military_Press",
+          "series": 5,
+          "reps": "5",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Deltoide anterior"
+          ],
+          "secundarios": [
+            "Deltoide lateral",
+            "Tríceps"
+          ],
+          "porque": "O empurrar acima da cabeça, alternando com o supino.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Em pé, glúteo e abdômen firmes",
+            "Barra sobe em linha reta, cabeça passa por baixo",
+            "Sem arquear a lombar"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Levantamento terra",
+          "imagem": "Barbell_Deadlift",
+          "series": 1,
+          "reps": "5",
+          "rir": "1",
+          "descanso": "—",
+          "primarios": [
+            "Eretores da coluna",
+            "Glúteo",
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Quadríceps",
+            "Trapézio superior",
+            "Meio das costas"
+          ],
+          "porque": "Só 1 série pesada: as pernas já vêm cansadas do agachamento. Sobe 5 kg por treino enquanto der.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Barra colada nas canelas e coluna neutra",
+            "Empurre o chão com as pernas e estenda o quadril",
+            "Nunca arredonde a lombar para tirar mais uma repetição"
+          ]
+        }
+      ]
+    }
+  ]
+}

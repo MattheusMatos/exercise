@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Ilustração de um levantador com uma barra carregada ao fundo e o número 5 por 5">
+
+  <defs><linearGradient id="f5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a0d0d"/><stop offset="1" stop-color="#121214"/></linearGradient></defs>
+  <rect width="640" height="400" fill="url(#f5)"/>
+  <text x="320" y="300" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="300" fill="#e3262e" opacity="0.22" text-anchor="middle">5×5</text>
+  <rect x="40" y="236" width="560" height="12" rx="6" fill="#9aa1ad"/>
+  <circle cx="92" cy="242" r="70" fill="#26272b"/><circle cx="92" cy="242" r="43" fill="none" stroke="#9aa1ad" stroke-width="3" opacity="0.5"/><circle cx="92" cy="242" r="11" fill="#9aa1ad"/><circle cx="140" cy="242" r="54" fill="#e3262e"/><circle cx="140" cy="242" r="33" fill="none" stroke="#2a0c0c" stroke-width="3" opacity="0.5"/><circle cx="140" cy="242" r="9" fill="#2a0c0c"/>
+  <circle cx="548" cy="242" r="70" fill="#26272b"/><circle cx="548" cy="242" r="43" fill="none" stroke="#9aa1ad" stroke-width="3" opacity="0.5"/><circle cx="548" cy="242" r="11" fill="#9aa1ad"/><circle cx="500" cy="242" r="54" fill="#e3262e"/><circle cx="500" cy="242" r="33" fill="none" stroke="#2a0c0c" stroke-width="3" opacity="0.5"/><circle cx="500" cy="242" r="9" fill="#2a0c0c"/>
+  
+  <g transform="translate(0 0)">
+  <g fill="#f0f2f5" stroke="#f0f2f5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="262,178 196,186 186,112" fill="none" stroke-width="34"/>
+    <polyline points="378,178 444,186 454,112" fill="none" stroke-width="34"/>
+    <ellipse cx="222" cy="168" rx="34" ry="22" transform="rotate(-12 222 168)" stroke="none"/>
+    <ellipse cx="418" cy="168" rx="34" ry="22" transform="rotate(12 418 168)" stroke="none"/>
+    <circle cx="186" cy="100" r="17" stroke="none"/>
+    <circle cx="454" cy="100" r="17" stroke="none"/>
+    <circle cx="262" cy="176" r="28" stroke="none"/>
+    <circle cx="378" cy="176" r="28" stroke="none"/>
+    <ellipse cx="320" cy="112" rx="23" ry="27" stroke="none"/>
+    <path d="M300 128 L340 128 L346 150 Q372 156 392 168 L248 168 Q268 156 294 150 Z" stroke="none"/>
+    <path d="M246 166 Q320 150 394 166 L378 236 Q370 284 348 296 L292 296 Q270 284 262 236 Z" stroke="none"/>
+    <path d="M290 292 L350 292 L360 330 L280 330 Z" stroke="none"/>
+    <path d="M282 326 Q258 362 274 402 L312 402 Q314 364 320 332 Z" stroke="none"/>
+    <path d="M358 326 Q382 362 366 402 L328 402 Q326 364 320 332 Z" stroke="none"/>
+  </g>
+  <g fill="none" stroke="#3a0d0d" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <path d="M320 178 L320 290"/>
+    <path d="M276 196 Q298 210 318 200"/><path d="M364 196 Q342 210 322 200"/>
+    <path d="M300 236 L340 236"/><path d="M302 258 L338 258"/>
+    <path d="M206 160 Q222 150 240 158"/><path d="M434 160 Q418 150 400 158"/>
+  </g>
+  </g>
+  <text x="320" y="44" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="28" letter-spacing="5" fill="#f0f2f5" text-anchor="middle">CARGA SOBE TODO TREINO</text>
+</svg>

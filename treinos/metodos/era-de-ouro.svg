@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Ilustração em estilo anos 70 de um fisiculturista na praia ao pôr do sol">
+
+  <defs><linearGradient id="ouro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6b25b"/><stop offset="0.6" stop-color="#e2723a"/><stop offset="1" stop-color="#8a3b24"/></linearGradient></defs>
+  <rect width="640" height="400" fill="url(#ouro)"/>
+  <circle cx="320" cy="232" r="120" fill="#ffe2a1" opacity="0.85"/>
+  <rect y="280" width="640" height="40" fill="#5a7c8a"/><rect y="320" width="640" height="80" fill="#e9c38a"/>
+  <g stroke="#ffe2a1" stroke-width="3" opacity="0.6"><line x1="220" y1="292" x2="420" y2="292"/><line x1="250" y1="305" x2="390" y2="305"/></g>
+  <path d="M62.8 300 Q86.8 204.0 70 120.0" fill="none" stroke="#2b1a0e" stroke-width="14" stroke-linecap="round"/><path d="M70 120.0 q-48.0 -36.0 -96.0 12.0" fill="none" stroke="#2b1a0e" stroke-width="11" stroke-linecap="round"/><path d="M70 120.0 q-30.0 -36.0 -60.0 12.0" fill="none" stroke="#2b1a0e" stroke-width="11" stroke-linecap="round"/><path d="M70 120.0 q30.0 -36.0 60.0 12.0" fill="none" stroke="#2b1a0e" stroke-width="11" stroke-linecap="round"/><path d="M70 120.0 q48.0 -36.0 96.0 12.0" fill="none" stroke="#2b1a0e" stroke-width="11" stroke-linecap="round"/><path d="M574.0 300 Q594.0 220.0 580 150.0" fill="none" stroke="#2b1a0e" stroke-width="12" stroke-linecap="round"/><path d="M580 150.0 q-40.0 -30.0 -80.0 10.0" fill="none" stroke="#2b1a0e" stroke-width="9" stroke-linecap="round"/><path d="M580 150.0 q-25.0 -30.0 -50.0 10.0" fill="none" stroke="#2b1a0e" stroke-width="9" stroke-linecap="round"/><path d="M580 150.0 q25.0 -30.0 50.0 10.0" fill="none" stroke="#2b1a0e" stroke-width="9" stroke-linecap="round"/><path d="M580 150.0 q40.0 -30.0 80.0 10.0" fill="none" stroke="#2b1a0e" stroke-width="9" stroke-linecap="round"/><path d="M515.5 300 Q530.5 240.0 520 187.5" fill="none" stroke="#2b1a0e" stroke-width="9" stroke-linecap="round"/><path d="M520 187.5 q-30.0 -22.5 -60.0 7.5" fill="none" stroke="#2b1a0e" stroke-width="7" stroke-linecap="round"/><path d="M520 187.5 q-18.75 -22.5 -37.5 7.5" fill="none" stroke="#2b1a0e" stroke-width="7" stroke-linecap="round"/><path d="M520 187.5 q18.75 -22.5 37.5 7.5" fill="none" stroke="#2b1a0e" stroke-width="7" stroke-linecap="round"/><path d="M520 187.5 q30.0 -22.5 60.0 7.5" fill="none" stroke="#2b1a0e" stroke-width="7" stroke-linecap="round"/>
+  
+  <g transform="translate(0 0)">
+  <g fill="#3b2212" stroke="#3b2212" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="262,178 196,186 186,112" fill="none" stroke-width="34"/>
+    <polyline points="378,178 444,186 454,112" fill="none" stroke-width="34"/>
+    <ellipse cx="222" cy="168" rx="34" ry="22" transform="rotate(-12 222 168)" stroke="none"/>
+    <ellipse cx="418" cy="168" rx="34" ry="22" transform="rotate(12 418 168)" stroke="none"/>
+    <circle cx="186" cy="100" r="17" stroke="none"/>
+    <circle cx="454" cy="100" r="17" stroke="none"/>
+    <circle cx="262" cy="176" r="28" stroke="none"/>
+    <circle cx="378" cy="176" r="28" stroke="none"/>
+    <ellipse cx="320" cy="112" rx="23" ry="27" stroke="none"/>
+    <path d="M300 128 L340 128 L346 150 Q372 156 392 168 L248 168 Q268 156 294 150 Z" stroke="none"/>
+    <path d="M246 166 Q320 150 394 166 L378 236 Q370 284 348 296 L292 296 Q270 284 262 236 Z" stroke="none"/>
+    <path d="M290 292 L350 292 L360 330 L280 330 Z" stroke="none"/>
+    <path d="M282 326 Q258 362 274 402 L312 402 Q314 364 320 332 Z" stroke="none"/>
+    <path d="M358 326 Q382 362 366 402 L328 402 Q326 364 320 332 Z" stroke="none"/>
+  </g>
+  <g fill="none" stroke="#f6b25b" stroke-width="3" stroke-linecap="round" opacity="0.55">
+    <path d="M320 178 L320 290"/>
+    <path d="M276 196 Q298 210 318 200"/><path d="M364 196 Q342 210 322 200"/>
+    <path d="M300 236 L340 236"/><path d="M302 258 L338 258"/>
+    <path d="M206 160 Q222 150 240 158"/><path d="M434 160 Q418 150 400 158"/>
+  </g>
+  </g>
+  <text x="320" y="44" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="30" letter-spacing="6" fill="#3b2212" text-anchor="middle">ERA DE OURO · 6 DIAS</text>
+</svg>

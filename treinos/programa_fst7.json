@@ -1,0 +1,515 @@
+{
+  "nome": "Divisão por grupos com 7 séries no fim",
+  "titulo": "Estilo FST-7",
+  "marca": "7 séries finais · Descanso de 30–45 s",
+  "publico": "todos",
+  "nivel": "Intermediário",
+  "categoria": "experimente",
+  "dias": "4 ou 5 dias por semana",
+  "opcoesDias": [
+    4,
+    5
+  ],
+  "resumo": "Um treino por grupo muscular, com os exercícios normais e, no fim, 7 séries de um isolado com descanso curto, buscando o máximo de \"pump\".",
+  "regras": [
+    "Exercícios normais primeiro, de 8 a 12 repetições",
+    "No fim, 7 séries de 8 a 12 do exercício marcado, com 30 a 45 s de descanso",
+    "Entre as 7 séries, alongue o músculo e beba água"
+  ],
+  "progressao": "Nos exercícios normais, suba a carga quando bater o topo da faixa. Nas 7 séries, mantenha a carga e tente fechar todas com 8 ou mais.",
+  "metodo": {
+    "ilustracao": "metodos/fst-7.svg",
+    "epoca": "Anos 2000",
+    "historia": [
+      "O treinador americano Hany Rambod criou o FST-7 nos anos 2000 e ficou famoso por treinar vários campeões do Mr. Olympia. A sigla vem do inglês Fascia Stretch Training, treino de alongamento da fáscia, e o 7 são as 7 séries finais.",
+      "A ideia dele: encher o músculo de sangue com as 7 séries curtas e alongar a fáscia, a película que envolve o músculo, para dar mais espaço para ele crescer."
+    ],
+    "como": [
+      "Um treino por grupo: peito e tríceps, costas e bíceps, pernas, ombros.",
+      "Os exercícios de sempre, de 8 a 12 repetições.",
+      "No fim de cada músculo, 7 séries de um isolado com 30 a 45 s de descanso.",
+      "Alongar o músculo entre as séries."
+    ],
+    "pros": [
+      "As 7 séries somam volume em poucos minutos.",
+      "Treino variado e motivante; o \"pump\" agrada muita gente."
+    ],
+    "contras": [
+      "Não há estudo mostrando que alongar a fáscia faz o músculo crescer mais: é a teoria do método, não um resultado medido.",
+      "Descanso curto rende menos por série: 3 minutos fizeram crescer mais que 1 com as mesmas séries (Schoenfeld et al., 2016).",
+      "Cada músculo treinado 1 vez por semana; 2 rende igual ou um pouco mais (Schoenfeld et al., 2016)."
+    ],
+    "veredito": "Funciona pelo volume das 7 séries, não pela fáscia. Ótimo como variação ou para músculos atrasados.",
+    "paraQuem": "Quem gosta de treino por grupo muscular e de sentir o músculo cheio, ou quer dar atenção a um músculo atrasado.",
+    "referencias": [
+      "Schoenfeld, B. J. et al. (2016). Longer interset rest periods enhance muscle strength and hypertrophy in resistance-trained men. J Strength Cond Res.",
+      "Schoenfeld, B. J. et al. (2016). Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "fst_pt",
+      "titulo": "PEITO E TRÍCEPS",
+      "foco": "Supinos, testa e 7 séries de crossover e pulley",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino inclinado com halteres",
+          "imagem": "Incline_Dumbbell_Press",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "O primeiro de peito, pesado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30°",
+            "Halteres descem até a altura do peito",
+            "Suba sem bater um halter no outro"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Supino na máquina",
+          "imagem": "Machine_Bench_Press",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "Mais volume de peito.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Pegada na linha do meio do peito",
+            "Escápulas presas no encosto",
+            "Desça devagar até alongar o peito"
+          ]
+        },
+        {
+          "nome": "Crucifixo no cabo (FST-7)",
+          "imagem": "Cable_Crossover",
+          "series": 7,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de peito.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Tronco levemente inclinado à frente",
+            "Feche os braços num arco, cotovelos fixos",
+            "Volte devagar até alongar o peito"
+          ]
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "imagem": "EZ-Bar_Skullcrusher",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "porque": "O tríceps já vem cansado dos supinos.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos apontando para o teto e fixos",
+            "Desça a barra até a testa ou logo atrás da cabeça",
+            "Estenda sem abrir os cotovelos"
+          ]
+        },
+        {
+          "nome": "Tríceps no pulley (FST-7)",
+          "imagem": "Triceps_Pushdown",
+          "series": 7,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de tríceps.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Estenda o braço até o fim",
+            "Volte só até 90°, devagar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fst_cb",
+      "titulo": "COSTAS E BÍCEPS",
+      "foco": "Barra, remada e 7 séries de pulldown e Scott",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Barra fixa (ou puxada)",
+          "imagem": "Pullups",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "porque": "O puxar vertical.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada um pouco mais aberta que os ombros",
+            "Puxe até o queixo passar a barra",
+            "Desça até o braço quase estender"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Remada sentada no cabo",
+          "imagem": "Seated_Cable_Rows",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "O puxar horizontal.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito alto, coluna neutra",
+            "Puxe o cabo até o abdômen, cotovelos junto ao corpo",
+            "Volte esticando os braços, sem arredondar"
+          ]
+        },
+        {
+          "nome": "Pulldown com braços estendidos (FST-7)",
+          "imagem": "Straight-Arm_Pulldown",
+          "series": 7,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Tríceps"
+          ],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de costas.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Braços quase estendidos, cotovelos fixos",
+            "Puxe com as costas até a barra chegar às coxas",
+            "Suba devagar até sentir o alongamento"
+          ]
+        },
+        {
+          "nome": "Rosca direta com barra",
+          "imagem": "Barbell_Curl",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "porque": "O bíceps pesado.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Suba sem jogar o tronco",
+            "Desça devagar até o braço estender"
+          ]
+        },
+        {
+          "nome": "Rosca Scott (FST-7)",
+          "imagem": "Preacher_Curl",
+          "series": 7,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de bíceps.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Axila encostada no banco",
+            "Suba sem tirar o braço do apoio",
+            "Desça até quase estender, devagar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fst_pe",
+      "titulo": "PERNAS",
+      "foco": "Hack, stiff, flexora e 7 séries de leg press",
+      "duracao": "~65 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento hack",
+          "imagem": "Hack_Squat",
+          "series": 4,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores"
+          ],
+          "porque": "O principal de quadríceps.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Pés no meio da plataforma",
+            "Desça fundo mantendo a lombar no encosto",
+            "Suba sem travar os joelhos"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Stiff (terra romeno)",
+          "imagem": "Romanian_Deadlift",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Posteriores de coxa",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Eretores da coluna"
+          ],
+          "porque": "Posteriores pelo quadril.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelhos levemente dobrados e fixos",
+            "Leve o quadril para trás com a coluna neutra",
+            "Desça até sentir os posteriores alongarem"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "90 s",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "porque": "Sentado, o posterior trabalha alongado e cresceu mais (Maeo et al., 2021).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Leg press (FST-7)",
+          "imagem": "Leg_Press",
+          "series": 7,
+          "reps": "10–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de coxa: o mais duro do método.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Pés na largura dos ombros, no meio da plataforma",
+            "Desça até onde a lombar não sai do encosto",
+            "Não trave os joelhos em cima"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 4,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "porque": "Para fechar.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ],
+          "aquecimento": true
+        }
+      ]
+    },
+    {
+      "id": "fst_om",
+      "titulo": "OMBROS",
+      "foco": "Desenvolvimento, crucifixo inverso e 7 séries de lateral",
+      "duracao": "~45 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento com halteres",
+          "imagem": "Dumbbell_Shoulder_Press",
+          "series": 4,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide anterior"
+          ],
+          "secundarios": [
+            "Deltoide lateral",
+            "Tríceps"
+          ],
+          "porque": "O empurrar acima da cabeça.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Halteres na linha das orelhas",
+            "Suba sem bater um halter no outro",
+            "Desça até o cotovelo passar um pouco de 90°"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Crucifixo inverso na máquina",
+          "imagem": "Reverse_Machine_Flyes",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Deltoide posterior"
+          ],
+          "secundarios": [
+            "Meio das costas"
+          ],
+          "porque": "A parte de trás do ombro.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito apoiado, braços quase estendidos",
+            "Abra os braços para trás, liderando com os cotovelos",
+            "Sem encolher os ombros"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Elevação lateral na polia (FST-7)",
+          "imagem": "Cable_Seated_Lateral_Raise",
+          "series": 7,
+          "reps": "10–12",
+          "rir": "0–1",
+          "descanso": "30–45 s",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "tecnica": {
+            "tipo": "fst7"
+          },
+          "porque": "As 7 séries finais de ombro.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cabo passando por trás ou pela frente do corpo",
+            "Suba até a altura do ombro",
+            "Desça devagar, sem embalo"
+          ]
+        },
+        {
+          "nome": "Abdominal na polia",
+          "imagem": "Cable_Crunch",
+          "series": 3,
+          "reps": "12–15",
+          "rir": "1",
+          "descanso": "60 s",
+          "primarios": [
+            "Abdômen"
+          ],
+          "secundarios": [],
+          "porque": "Abdômen no fim.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Ajoelhado, corda ao lado da cabeça",
+            "Enrole o tronco levando o peito ao quadril",
+            "Volte devagar, sem sentar nos calcanhares"
+          ],
+          "aquecimento": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,346 @@
+{
+  "nome": "Dez séries de dez",
+  "titulo": "German Volume Training (10×10)",
+  "marca": "10 séries de 10 · Descanso curto",
+  "publico": "todos",
+  "nivel": "Avançado",
+  "categoria": "experimente",
+  "dias": "3 dias por semana",
+  "opcoesDias": [
+    3
+  ],
+  "resumo": "Um exercício principal por músculo, 10 séries de 10 com a mesma carga e descanso curto, e dois complementos leves. Três treinos com dias de descanso entre eles.",
+  "regras": [
+    "10 séries de 10 com ~60% da carga máxima (uma carga que você faria umas 20 vezes)",
+    "Descanso de 60 a 90 s entre as séries; no original, alternando os dois exercícios principais",
+    "Só suba a carga quando completar as 10 séries de 10",
+    "Ciclo de 5 dias: A, B, descanso, C, descanso"
+  ],
+  "progressao": "Completou as 10 séries de 10? Suba 4–5% na próxima vez. Depois de umas 6 semanas, o método recomenda voltar a um treino de menos volume.",
+  "metodo": {
+    "ilustracao": "metodos/german-volume.svg",
+    "epoca": "Anos 1970 e 90",
+    "historia": [
+      "O treinador canadense Charles Poliquin popularizou o método nos anos 1990 e contava que ele vinha de técnicos de levantamento de peso da Alemanha dos anos 70, que o usavam para os atletas ganharem músculo fora da temporada.",
+      "A ideia é simples e brutal: um exercício, 10 séries de 10, com uma carga que no começo parece leve demais."
+    ],
+    "como": [
+      "Um exercício principal por músculo, 10 séries de 10 com a mesma carga.",
+      "Descanso curto, 60 a 90 s; no original, um exercício de peito e um de costas se alternam.",
+      "Depois, 2 complementos de 3 séries de 10 a 12.",
+      "Treino A: peito e costas. B: pernas. C: braços e ombros."
+    ],
+    "pros": [
+      "Muito volume em pouco tempo e com poucos exercícios.",
+      "Bom para sair de uma estagnação por algumas semanas.",
+      "Carga moderada: cansa o músculo sem castigar as articulações."
+    ],
+    "contras": [
+      "Nos dois estudos que testaram o método, 10 séries não fizeram crescer mais que 5; o grupo de 5 séries foi igual ou um pouco melhor (Amirthalingam et al., 2017; Hackett et al., 2018).",
+      "As últimas séries saem com bem menos repetições ou exigem tirar carga: o estímulo se concentra no fim.",
+      "Cada músculo treinado só 1 vez a cada 5 dias e quase nada fora do exercício principal."
+    ],
+    "veredito": "Funciona por causa do volume, mas 10 séries não rendem mais que 5. Vale como choque por 4 a 6 semanas, não como treino de sempre.",
+    "paraQuem": "Quem já treina há anos e quer um bloco curto de muito volume para variar.",
+    "referencias": [
+      "Poliquin, C. German Volume Training (artigos dos anos 1990).",
+      "Amirthalingam, T. et al. (2017). Effects of a modified German volume training program on muscular hypertrophy and strength. J Strength Cond Res.",
+      "Hackett, D. A. et al. (2018). Effects of a 12-week modified German volume training program on muscle strength and hypertrophy: a pilot study. Sports."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "gvt_a",
+      "titulo": "PEITO E COSTAS",
+      "foco": "Supino inclinado e barra fixa, 10×10",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino inclinado com halteres",
+          "imagem": "Incline_Dumbbell_Press",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "O exercício principal de peito: 10×10 com a mesma carga. As primeiras séries parecem fáceis; as últimas, não.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30°",
+            "Halteres descem até a altura do peito",
+            "Suba sem bater um halter no outro"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Barra fixa (ou puxada)",
+          "imagem": "Pullups",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "porque": "O principal de costas. Sem conseguir 10 na barra, faça na puxada no cabo.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada um pouco mais aberta que os ombros",
+            "Puxe até o queixo passar a barra",
+            "Desça até o braço quase estender"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Crucifixo no cabo",
+          "imagem": "Cable_Crossover",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1–2",
+          "descanso": "60 s",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "porque": "Complemento leve para o peito.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco levemente inclinado à frente",
+            "Feche os braços num arco, cotovelos fixos",
+            "Volte devagar até alongar o peito"
+          ]
+        },
+        {
+          "nome": "Remada unilateral com halter",
+          "imagem": "One-Arm_Dumbbell_Row",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1–2",
+          "descanso": "60 s",
+          "primarios": [
+            "Dorsal",
+            "Meio das costas"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "Complemento leve para as costas.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Joelho e mão apoiados no banco",
+            "Puxe o halter em direção ao quadril",
+            "Desça até alongar as costas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gvt_b",
+      "titulo": "PERNAS",
+      "foco": "Agachamento e flexora, 10×10",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento livre",
+          "imagem": "Barbell_Full_Squat",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "90 s",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa",
+            "Eretores da coluna"
+          ],
+          "porque": "10×10 de agachamento é o coração do método, e o treino mais duro da semana.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros",
+            "Desça até a coxa passar do paralelo",
+            "Coluna neutra, joelhos na direção dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "porque": "O principal de posteriores. Sentado, o posterior trabalha alongado e cresceu mais (Maeo et al., 2021).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 3,
+          "reps": "15–20",
+          "rir": "1",
+          "descanso": "60 s",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "porque": "Complemento.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Abdominal na polia",
+          "imagem": "Cable_Crunch",
+          "series": 3,
+          "reps": "12–15",
+          "rir": "1",
+          "descanso": "60 s",
+          "primarios": [
+            "Abdômen"
+          ],
+          "secundarios": [],
+          "porque": "Complemento.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Ajoelhado, corda ao lado da cabeça",
+            "Enrole o tronco levando o peito ao quadril",
+            "Volte devagar, sem sentar nos calcanhares"
+          ],
+          "aquecimento": true
+        }
+      ]
+    },
+    {
+      "id": "gvt_c",
+      "titulo": "BRAÇOS E OMBROS",
+      "foco": "Paralelas e rosca inclinada, 10×10",
+      "duracao": "~55 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Mergulho nas paralelas (tríceps)",
+          "imagem": "Dips_-_Triceps_Version",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [
+            "Peitoral maior",
+            "Deltoide anterior"
+          ],
+          "porque": "O principal de tríceps. Sem conseguir 10, faça no banco ou troque pelo tríceps no pulley.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco reto para pegar mais tríceps",
+            "Desça até o braço ficar paralelo ao chão",
+            "Sem dor no ombro: se doer, troque pelo banco"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Rosca inclinada com halteres",
+          "imagem": "Incline_Dumbbell_Curl",
+          "series": 10,
+          "reps": "10",
+          "rir": "3–4 no começo",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "porque": "O principal de bíceps, com o braço para trás e o bíceps alongado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 45–60°, braços pendurados",
+            "Suba sem tirar o cotovelo da linha do corpo",
+            "Desça até esticar bem"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Crucifixo inverso na máquina",
+          "imagem": "Reverse_Machine_Flyes",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1–2",
+          "descanso": "60 s",
+          "primarios": [
+            "Deltoide posterior"
+          ],
+          "secundarios": [
+            "Meio das costas"
+          ],
+          "porque": "Complemento.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito apoiado, braços quase estendidos",
+            "Abra os braços para trás, liderando com os cotovelos",
+            "Sem encolher os ombros"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1–2",
+          "descanso": "60 s",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "porque": "Complemento.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados",
+            "Suba até a altura dos ombros, liderando com os cotovelos",
+            "Desça devagar, sem embalo"
+          ],
+          "aquecimento": true
+        }
+      ]
+    }
+  ]
+}

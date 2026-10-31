@@ -20,7 +20,7 @@ test('Feira Fitness: primeira abertura com o logo, dados separados e sem service
   await page.click('.botao.fixo');
   await page.click('[data-programa="iniciante_f"]');
   await expect(page.locator('.marca-academia img')).toBeVisible();
-  expect(await page.locator('.marca-academia img').evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
+  await expect.poll(() => page.locator('.marca-academia img').evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator('.hero')).toBeVisible();
 
   const chaves = await page.evaluate(() => Object.keys(localStorage).sort());

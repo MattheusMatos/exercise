@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v15';
+const VERSAO = 'treino-ppl-v16';
 const PROGRAMAS = [
   'programa_ppl.json',
   'programa_feminino.json',
@@ -11,6 +11,11 @@ const PROGRAMAS = [
   'programa_mobilidade.json',
   'programa_mentzer_classico.json',
   'programa_mentzer_moderno.json',
+  'programa_cinco_por_cinco.json',
+  'programa_german_volume.json',
+  'programa_arnold.json',
+  'programa_phul.json',
+  'programa_fst7.json',
 ];
 const ESSENCIAIS = [
   './',
@@ -42,6 +47,11 @@ const ESSENCIAIS = [
   'biblioteca/exercicios.json',
   'metodos/mentzer-classico.svg',
   'metodos/mentzer-moderno.svg',
+  'metodos/cinco-por-cinco.svg',
+  'metodos/german-volume.svg',
+  'metodos/era-de-ouro.svg',
+  'metodos/phul.svg',
+  'metodos/fst-7.svg',
   'manifest.webmanifest',
   'icones/icone-192.png',
   'icones/icone-512.png',

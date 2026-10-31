@@ -1,0 +1,473 @@
+{
+  "nome": "A divisão da era de ouro",
+  "titulo": "Estilo Arnold (6 dias)",
+  "marca": "Peito e costas · Ombros e braços · Pernas",
+  "publico": "todos",
+  "nivel": "Avançado",
+  "categoria": "experimente",
+  "dias": "6 dias por semana",
+  "opcoesDias": [
+    5,
+    6
+  ],
+  "resumo": "Peito com costas, ombros com braços e pernas, cada um 2 vezes por semana, com muito volume. A divisão que os campeões dos anos 70 usavam.",
+  "regras": [
+    "Peito e costas juntos: um empurra, o outro puxa, e um descansa enquanto o outro trabalha",
+    "4 a 5 séries por exercício, de 6 a 12 repetições",
+    "Cada treino 2 vezes por semana",
+    "Muito volume: durma bem e coma o suficiente, ou diminua uma série de cada exercício"
+  ],
+  "progressao": "Suba a carga quando bater o topo da faixa em todas as séries. Se o desempenho cair duas semanas seguidas, tire uma série de cada exercício.",
+  "metodo": {
+    "ilustracao": "metodos/era-de-ouro.svg",
+    "epoca": "Anos 1970",
+    "historia": [
+      "Nos anos 70, na Califórnia, os campeões de fisiculturismo treinavam 6 dias por semana, muitas vezes 2 vezes por dia. A divisão mais famosa juntava peito com costas, ombros com braços e pernas, cada uma 2 vezes na semana.",
+      "Arnold Schwarzenegger a ensinou no livro Encyclopedia of Modern Bodybuilding, de 1985. É uma época anterior aos controles antidoping, e vários campeões da época, ele inclusive, admitiram o uso de esteroides, que ajudam a recuperar de tanto volume."
+    ],
+    "como": [
+      "Treino 1: peito e costas, alternando os dois.",
+      "Treino 2: ombros e braços.",
+      "Treino 3: pernas e panturrilha.",
+      "Cada treino 2 vezes por semana: 6 dias seguidos, 1 de descanso.",
+      "4 a 5 séries por exercício; cada músculo passa de 20 séries por semana."
+    ],
+    "pros": [
+      "Frequência de 2 vezes por semana para todos os músculos, como os estudos recomendam (Schoenfeld et al., 2016).",
+      "Peito e costas juntos economizam tempo e equilibram empurrar e puxar.",
+      "Volume alto, que ainda rende algo a mais em quem já treina há anos (Pelland et al., 2026)."
+    ],
+    "contras": [
+      "Volume acima de 20 séries por músculo na semana: o ganho extra é pequeno e a recuperação pesa para quem não usa esteroides.",
+      "6 dias por semana com treinos longos: difícil de manter com trabalho e família.",
+      "Pouco descanso para as articulações do ombro e do cotovelo."
+    ],
+    "veredito": "Uma ótima divisão, com volume para atleta da época. Para a maioria, a mesma estrutura com 3 séries por exercício rende quase o mesmo e recupera melhor.",
+    "paraQuem": "Avançados com tempo, sono e alimentação em dia, que gostam de treinar todo dia.",
+    "referencias": [
+      "Schwarzenegger, A. Encyclopedia of Modern Bodybuilding (1985).",
+      "Schoenfeld, B. J. et al. (2016). Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med.",
+      "Pelland, J. C. et al. (2026). The resistance training dose-response: meta-regressions exploring the effects of weekly volume and frequency on muscle hypertrophy and strength gain. Sports Med."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "arn_pc",
+      "titulo": "PEITO E COSTAS",
+      "foco": "Supinos, crucifixo, barra fixa, remada e pullover",
+      "duracao": "~75 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino reto com barra",
+          "imagem": "Barbell_Bench_Press_-_Medium_Grip",
+          "series": 5,
+          "reps": "6–10",
+          "rir": "1–2",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "O básico do peito, pesado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Escápulas retraídas e deprimidas",
+            "Barra desce até a linha do mamilo",
+            "Pés firmes no chão"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Barra fixa",
+          "imagem": "Pullups",
+          "series": 5,
+          "reps": "8–12",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "porque": "Alternando com o supino, como os campeões da época faziam.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada um pouco mais aberta que os ombros",
+            "Puxe até o queixo passar a barra",
+            "Desça até o braço quase estender"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Supino inclinado com barra",
+          "imagem": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+          "series": 4,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "Com carga alta, o inclinado fez a parte de cima do peito crescer mais que o reto (Chaves et al., 2020).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30–45°",
+            "Barra desce até a parte de cima do peito",
+            "Escápulas presas no banco"
+          ]
+        },
+        {
+          "nome": "Remada curvada com barra",
+          "imagem": "Bent_Over_Barbell_Row",
+          "series": 4,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "A remada pesada da era de ouro.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco inclinado uns 45°, coluna neutra",
+            "Puxe a barra até a parte de baixo do peito",
+            "Desça controlando, sem soltar a postura"
+          ]
+        },
+        {
+          "nome": "Crucifixo com halteres",
+          "imagem": "Dumbbell_Flyes",
+          "series": 4,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "porque": "O peito alongado no fundo do movimento.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados e fixos",
+            "Abra até sentir o peito alongar",
+            "Feche num arco, sem bater os halteres"
+          ]
+        },
+        {
+          "nome": "Pullover com halter",
+          "imagem": "Bent-Arm_Dumbbell_Pullover",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Peitoral maior",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Tríceps"
+          ],
+          "porque": "Clássico da época, entre peito e costas.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Deitado atravessado ou ao longo do banco",
+            "Leve o halter para trás da cabeça com os cotovelos levemente dobrados",
+            "Volte até a altura do peito"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arn_ob",
+      "titulo": "OMBROS E BRAÇOS",
+      "foco": "Desenvolvimento, laterais, roscas e tríceps",
+      "duracao": "~70 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Desenvolvimento Arnold com halteres",
+          "imagem": "Arnold_Dumbbell_Press",
+          "series": 4,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide anterior"
+          ],
+          "secundarios": [
+            "Deltoide lateral",
+            "Tríceps"
+          ],
+          "porque": "O desenvolvimento com giro que ganhou o nome dele.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Comece com as palmas viradas para você",
+            "Gire as mãos enquanto sobe",
+            "Desça girando de volta, devagar"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 4,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "porque": "Para a largura dos ombros.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados",
+            "Suba até a altura dos ombros, liderando com os cotovelos",
+            "Desça devagar, sem embalo"
+          ]
+        },
+        {
+          "nome": "Rosca direta com barra",
+          "imagem": "Barbell_Curl",
+          "series": 4,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "90 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial",
+            "Braquiorradial"
+          ],
+          "porque": "A rosca pesada, sem embalo.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Suba sem jogar o tronco",
+            "Desça devagar até o braço estender"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "imagem": "EZ-Bar_Skullcrusher",
+          "series": 4,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "90 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "porque": "Alternando com a rosca: um braço descansa enquanto o outro trabalha.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos apontando para o teto e fixos",
+            "Desça a barra até a testa ou logo atrás da cabeça",
+            "Estenda sem abrir os cotovelos"
+          ]
+        },
+        {
+          "nome": "Rosca inclinada com halteres",
+          "imagem": "Incline_Dumbbell_Curl",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "porque": "Com o bíceps alongado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 45–60°, braços pendurados",
+            "Suba sem tirar o cotovelo da linha do corpo",
+            "Desça até esticar bem"
+          ]
+        },
+        {
+          "nome": "Tríceps no pulley",
+          "imagem": "Triceps_Pushdown",
+          "series": 3,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "60–90 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "porque": "Para fechar os braços.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Estenda o braço até o fim",
+            "Volte só até 90°, devagar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arn_pe",
+      "titulo": "PERNAS",
+      "foco": "Coxa, posteriores e panturrilha",
+      "duracao": "~75 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento livre",
+          "imagem": "Barbell_Full_Squat",
+          "series": 5,
+          "reps": "8–12",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa",
+            "Eretores da coluna"
+          ],
+          "porque": "O exercício base das pernas.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros",
+            "Desça até a coxa passar do paralelo",
+            "Coluna neutra, joelhos na direção dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Leg press",
+          "imagem": "Leg_Press",
+          "series": 4,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "porque": "Mais volume de coxa sem cansar a lombar.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros, no meio da plataforma",
+            "Desça até onde a lombar não sai do encosto",
+            "Não trave os joelhos em cima"
+          ]
+        },
+        {
+          "nome": "Cadeira extensora",
+          "imagem": "Leg_Extensions",
+          "series": 3,
+          "reps": "12–15",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Quadríceps"
+          ],
+          "secundarios": [],
+          "porque": "O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez (Ema et al., 2013).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Encosto ajustado: joelho alinhado ao eixo da máquina",
+            "Segure 1 s em cima",
+            "Desça devagar"
+          ]
+        },
+        {
+          "nome": "Mesa flexora deitada",
+          "imagem": "Lying_Leg_Curls",
+          "series": 4,
+          "reps": "10–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "porque": "A flexora da época era deitada; sentada rende um pouco mais (Maeo et al., 2021), se tiver.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Quadril colado no banco",
+            "Puxe até o fim, sem tirar o quadril",
+            "Volte devagar"
+          ]
+        },
+        {
+          "nome": "Stiff (terra romeno)",
+          "imagem": "Romanian_Deadlift",
+          "series": 3,
+          "reps": "8–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Posteriores de coxa",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Eretores da coluna"
+          ],
+          "porque": "Posteriores pelo quadril.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelhos levemente dobrados e fixos",
+            "Leve o quadril para trás com a coluna neutra",
+            "Desça até sentir os posteriores alongarem"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 5,
+          "reps": "12–15",
+          "rir": "1",
+          "descanso": "60 s",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "porque": "Os campeões da época treinavam panturrilha quase todo dia.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ],
+          "aquecimento": true
+        }
+      ]
+    }
+  ]
+}

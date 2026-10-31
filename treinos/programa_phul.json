@@ -1,0 +1,617 @@
+{
+  "nome": "Força e hipertrofia, superior e inferior",
+  "titulo": "PHUL (força + hipertrofia)",
+  "marca": "2 dias de força · 2 de hipertrofia",
+  "publico": "todos",
+  "nivel": "Intermediário",
+  "categoria": "experimente",
+  "dias": "4 dias por semana",
+  "opcoesDias": [
+    4
+  ],
+  "resumo": "Superior e inferior 2 vezes por semana: um dia pesado (3 a 5 repetições) e um de hipertrofia (8 a 12) para cada metade do corpo.",
+  "regras": [
+    "Dias de força: 3 a 5 repetições, descanso longo, carga alta",
+    "Dias de hipertrofia: 8 a 15 repetições, perto da falha",
+    "Ordem sugerida: força superior, força inferior, descanso, hipertrofia superior, hipertrofia inferior"
+  ],
+  "progressao": "Nos dias de força, suba a carga quando fizer 5 repetições em todas as séries; nos de hipertrofia, quando bater o topo da faixa.",
+  "metodo": {
+    "ilustracao": "metodos/phul.svg",
+    "epoca": "Anos 2010",
+    "historia": [
+      "O nome vem do inglês Power Hypertrophy Upper Lower: força e hipertrofia, superior e inferior. Ficou popular em sites e fóruns de musculação nos anos 2010, como um jeito de ganhar força e músculo ao mesmo tempo.",
+      "Ele junta duas ideias que funcionam: a divisão superior e inferior, que treina cada músculo 2 vezes, e a alternância entre dias pesados e dias de mais repetições."
+    ],
+    "como": [
+      "Força superior: supino, remada e desenvolvimento pesados, mais braços.",
+      "Força inferior: agachamento e terra pesados, leg press e flexora.",
+      "Hipertrofia superior e inferior: exercícios variados de 8 a 15 repetições.",
+      "Cada músculo 2 vezes por semana, uma pesada e uma de volume."
+    ],
+    "pros": [
+      "Frequência de 2 vezes por semana e volume de 10 a 20 séries por músculo, dentro do que os estudos recomendam.",
+      "Força e músculo ao mesmo tempo: carga pesada aumenta mais a força, e o volume completa o crescimento (Schoenfeld et al., 2017).",
+      "4 dias por semana, com fins de semana livres."
+    ],
+    "contras": [
+      "Os dias de força são longos, pelo descanso de 3 minutos.",
+      "Não tem estudo do programa em si: é uma combinação de princípios que funcionam."
+    ],
+    "veredito": "Um dos melhores da seção para quem quer força e músculo com 4 dias por semana. Muito parecido com o que a ciência recomenda hoje.",
+    "paraQuem": "Intermediários que querem ficar mais fortes sem abrir mão da hipertrofia.",
+    "referencias": [
+      "Schoenfeld, B. J. et al. (2016). Effects of resistance training frequency on measures of muscle hypertrophy. Sports Med.",
+      "Schoenfeld, B. J. et al. (2017). Strength and hypertrophy adaptations between low- vs. high-load resistance training. J Strength Cond Res.",
+      "Pelland, J. C. et al. (2026). The resistance training dose-response. Sports Med."
+    ]
+  },
+  "treinos": [
+    {
+      "id": "phul_fs",
+      "titulo": "FORÇA SUPERIOR",
+      "foco": "Supino, remada e desenvolvimento pesados",
+      "duracao": "~65 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino reto com barra",
+          "imagem": "Barbell_Bench_Press_-_Medium_Grip",
+          "series": 4,
+          "reps": "3–5",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "O empurrar pesado da semana.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Escápulas retraídas e deprimidas",
+            "Barra desce até a linha do mamilo",
+            "Pés firmes no chão"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Remada curvada com barra",
+          "imagem": "Bent_Over_Barbell_Row",
+          "series": 4,
+          "reps": "3–5",
+          "rir": "1–2",
+          "descanso": "3 min",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "O puxar pesado da semana.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Tronco inclinado uns 45°, coluna neutra",
+            "Puxe a barra até a parte de baixo do peito",
+            "Desça controlando, sem soltar a postura"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Supino inclinado com halteres",
+          "imagem": "Incline_Dumbbell_Press",
+          "series": 3,
+          "reps": "6–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "Mais peito, agora com halteres.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30°",
+            "Halteres descem até a altura do peito",
+            "Suba sem bater um halter no outro"
+          ]
+        },
+        {
+          "nome": "Puxada aberta",
+          "imagem": "Full_Range-Of-Motion_Lat_Pulldown",
+          "series": 3,
+          "reps": "6–10",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Meio das costas"
+          ],
+          "porque": "O puxar vertical.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Pegada supinada na largura dos ombros",
+            "Puxe a barra até o alto do peito",
+            "Peito alto, sem jogar o corpo para trás"
+          ]
+        },
+        {
+          "nome": "Desenvolvimento em pé com barra",
+          "imagem": "Standing_Military_Press",
+          "series": 3,
+          "reps": "5–8",
+          "rir": "1–2",
+          "descanso": "2 min",
+          "primarios": [
+            "Deltoide anterior"
+          ],
+          "secundarios": [
+            "Deltoide lateral",
+            "Tríceps"
+          ],
+          "porque": "Ombro pesado.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Em pé, glúteo e abdômen firmes",
+            "Barra sobe em linha reta, cabeça passa por baixo",
+            "Sem arquear a lombar"
+          ]
+        },
+        {
+          "nome": "Rosca direta com barra",
+          "imagem": "Barbell_Curl",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "porque": "Braços no fim.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Cotovelos colados no corpo",
+            "Suba sem jogar o tronco",
+            "Desça devagar até o braço estender"
+          ]
+        },
+        {
+          "nome": "Tríceps testa com barra W",
+          "imagem": "EZ-Bar_Skullcrusher",
+          "series": 2,
+          "reps": "6–10",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "porque": "Braços no fim.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos apontando para o teto e fixos",
+            "Desça a barra até a testa ou logo atrás da cabeça",
+            "Estenda sem abrir os cotovelos"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phul_fi",
+      "titulo": "FORÇA INFERIOR",
+      "foco": "Agachamento e terra pesados",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento livre",
+          "imagem": "Barbell_Full_Squat",
+          "series": 4,
+          "reps": "3–5",
+          "rir": "1–2",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa",
+            "Eretores da coluna"
+          ],
+          "porque": "As pernas pesadas da semana.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros",
+            "Desça até a coxa passar do paralelo",
+            "Coluna neutra, joelhos na direção dos pés"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Levantamento terra",
+          "imagem": "Barbell_Deadlift",
+          "series": 3,
+          "reps": "3–5",
+          "rir": "1–2",
+          "descanso": "3–4 min",
+          "primarios": [
+            "Eretores da coluna",
+            "Glúteo",
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Quadríceps",
+            "Trapézio superior",
+            "Meio das costas"
+          ],
+          "porque": "Pesado, sempre com a coluna neutra.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Barra colada nas canelas e coluna neutra",
+            "Empurre o chão com as pernas e estenda o quadril",
+            "Nunca arredonde a lombar para tirar mais uma repetição"
+          ]
+        },
+        {
+          "nome": "Leg press",
+          "imagem": "Leg_Press",
+          "series": 3,
+          "reps": "10–15",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "porque": "Volume para a coxa depois do pesado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Pés na largura dos ombros, no meio da plataforma",
+            "Desça até onde a lombar não sai do encosto",
+            "Não trave os joelhos em cima"
+          ]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 3,
+          "reps": "6–10",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "porque": "Sentado, o posterior trabalha alongado e cresceu mais (Maeo et al., 2021).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Panturrilha em pé",
+          "imagem": "Standing_Calf_Raises",
+          "series": 4,
+          "reps": "6–10",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Gastrocnêmio",
+            "Sóleo"
+          ],
+          "secundarios": [],
+          "porque": "Panturrilha pesada.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Desça até alongar bem o calcanhar",
+            "Pausa de 1–2 s embaixo, sem quicar",
+            "Suba até a ponta dos pés"
+          ],
+          "aquecimento": true
+        }
+      ]
+    },
+    {
+      "id": "phul_hs",
+      "titulo": "HIPERTROFIA SUPERIOR",
+      "foco": "Volume de peito, costas, ombros e braços",
+      "duracao": "~60 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Supino inclinado com barra",
+          "imagem": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "2 min",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior",
+            "Tríceps"
+          ],
+          "porque": "Com carga alta, o inclinado fez a parte de cima do peito crescer mais que o reto (Chaves et al., 2020).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 30–45°",
+            "Barra desce até a parte de cima do peito",
+            "Escápulas presas no banco"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Crucifixo com halteres",
+          "imagem": "Dumbbell_Flyes",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Peitoral maior"
+          ],
+          "secundarios": [
+            "Deltoide anterior"
+          ],
+          "porque": "O peito alongado.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados e fixos",
+            "Abra até sentir o peito alongar",
+            "Feche num arco, sem bater os halteres"
+          ]
+        },
+        {
+          "nome": "Remada sentada no cabo",
+          "imagem": "Seated_Cable_Rows",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Meio das costas",
+            "Dorsal"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "Costas com volume.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Peito alto, coluna neutra",
+            "Puxe o cabo até o abdômen, cotovelos junto ao corpo",
+            "Volte esticando os braços, sem arredondar"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Remada unilateral com halter",
+          "imagem": "One-Arm_Dumbbell_Row",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Dorsal",
+            "Meio das costas"
+          ],
+          "secundarios": [
+            "Bíceps",
+            "Deltoide posterior"
+          ],
+          "porque": "Um lado de cada vez, com amplitude.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Joelho e mão apoiados no banco",
+            "Puxe o halter em direção ao quadril",
+            "Desça até alongar as costas"
+          ]
+        },
+        {
+          "nome": "Elevação lateral com halteres",
+          "imagem": "Side_Lateral_Raise",
+          "series": 3,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Deltoide lateral"
+          ],
+          "secundarios": [
+            "Trapézio superior"
+          ],
+          "porque": "O deltoide lateral quase não trabalha nos supinos.",
+          "evidencia": "ativacao",
+          "dicas": [
+            "Cotovelos levemente dobrados",
+            "Suba até a altura dos ombros, liderando com os cotovelos",
+            "Desça devagar, sem embalo"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Rosca inclinada com halteres",
+          "imagem": "Incline_Dumbbell_Curl",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Bíceps"
+          ],
+          "secundarios": [
+            "Braquial"
+          ],
+          "porque": "Bíceps alongado.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Banco a 45–60°, braços pendurados",
+            "Suba sem tirar o cotovelo da linha do corpo",
+            "Desça até esticar bem"
+          ]
+        },
+        {
+          "nome": "Tríceps acima da cabeça na corda",
+          "imagem": "Triceps_Overhead_Extension_with_Rope",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Tríceps"
+          ],
+          "secundarios": [],
+          "porque": "Com o braço acima da cabeça, o tríceps cresceu cerca de 40% mais (Maeo et al., 2023).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Cotovelos apontando para a frente e fixos",
+            "Estenda até o fim",
+            "Volte até alongar bem o tríceps"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phul_hi",
+      "titulo": "HIPERTROFIA INFERIOR",
+      "foco": "Volume de coxa, glúteo e panturrilha",
+      "duracao": "~55 min",
+      "extras": [],
+      "exercicios": [
+        {
+          "nome": "Agachamento frontal",
+          "imagem": "Front_Barbell_Squat",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1–2",
+          "descanso": "2–3 min",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Eretores da coluna"
+          ],
+          "porque": "Mais quadríceps e menos lombar que o agachamento de costas.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Barra apoiada na frente dos ombros, cotovelos altos",
+            "Desça com o tronco bem reto",
+            "Suba sem deixar os cotovelos caírem"
+          ],
+          "aquecimento": true
+        },
+        {
+          "nome": "Afundo posterior com halteres",
+          "imagem": "Dumbbell_Rear_Lunge",
+          "series": 3,
+          "reps": "8–12",
+          "rir": "1",
+          "descanso": "90 s",
+          "primarios": [
+            "Quadríceps",
+            "Glúteo"
+          ],
+          "secundarios": [
+            "Adutores",
+            "Posteriores de coxa"
+          ],
+          "porque": "Uma perna de cada vez.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Passo para trás, tronco reto",
+            "Desça até o joelho de trás quase tocar o chão",
+            "Suba empurrando com a perna da frente"
+          ]
+        },
+        {
+          "nome": "Cadeira extensora",
+          "imagem": "Leg_Extensions",
+          "series": 3,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Quadríceps"
+          ],
+          "secundarios": [],
+          "porque": "O agachamento não fez o reto femoral crescer (Kubo et al., 2019); a extensora fez (Ema et al., 2013).",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Encosto ajustado: joelho alinhado ao eixo da máquina",
+            "Segure 1 s em cima",
+            "Desça devagar"
+          ]
+        },
+        {
+          "nome": "Mesa flexora sentada",
+          "imagem": "Seated_Leg_Curl",
+          "series": 3,
+          "reps": "10–15",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Posteriores de coxa"
+          ],
+          "secundarios": [
+            "Panturrilha"
+          ],
+          "porque": "Segunda vez na semana para os posteriores.",
+          "evidencia": "crescimento",
+          "dicas": [
+            "Joelho alinhado ao eixo da máquina",
+            "Puxe até o fim e segure 1 s",
+            "Volte devagar, sem deixar o peso bater"
+          ]
+        },
+        {
+          "nome": "Panturrilha sentado",
+          "imagem": "Seated_Calf_Raise",
+          "series": 4,
+          "reps": "8–12",
+          "rir": "0–1",
+          "descanso": "60 s",
+          "primarios": [
+            "Sóleo"
+          ],
+          "secundarios": [
+            "Gastrocnêmio"
+          ],
+          "porque": "Sentado, com o joelho dobrado, trabalha mais o sóleo.",
+          "evidencia": "nao-testado",
+          "dicas": [
+            "Joelhos a 90°, apoio sobre as coxas",
+            "Desça até alongar bem o calcanhar",
+            "Suba até a ponta dos pés e segure 1 s"
+          ],
+          "aquecimento": true
+        }
+      ]
+    }
+  ]
+}

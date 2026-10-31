@@ -28,6 +28,10 @@ const TECNICAS = {
     nome: 'Até a falha (e além)', evidencia: 'crescimento',
     texto: 'Vá até não sair mais nenhuma repetição com boa forma. Para ir além, como o Mentzer: 2 ou 3 repetições forçadas (alguém ajuda a subir) ou negativas (só a descida, em 4 a 5 s). Ir até a falha rendeu crescimento parecido com parar 1 ou 2 repetições antes, com mais cansaço (Refalo et al., 2023).',
   },
+  fst7: {
+    nome: 'FST-7', evidencia: 'nao-testado',
+    texto: '7 séries de 8 a 12 com 30 a 45 s de descanso, alongando o músculo entre elas. O método diz que isso alonga a fáscia e abre espaço para o músculo crescer; nenhum estudo mostrou isso. As séries somam volume, mas com descanso curto cada série rende menos (Schoenfeld et al., 2016).',
+  },
   cluster: {
     nome: 'Cluster', evidencia: 'crescimento',
     texto: 'Cada série é dividida em blocos de 2 repetições, com 20 s de pausa entre eles (botão Mini-pausa). A carga pesada sai mais rápida e com menos cansaço; músculo e força cresceram igual às séries normais (Davies et al., 2021).',

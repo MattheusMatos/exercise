@@ -8,7 +8,7 @@
 | [`programa_iniciante_m.md`](programa_iniciante_m.md), [`programa_iniciante_f.md`](programa_iniciante_f.md) | Corpo inteiro 3x por semana, para começar (com o `.json` de cada um) |
 | [`programa_avancado_m.md`](programa_avancado_m.md), [`programa_avancado_f.md`](programa_avancado_f.md) | Avançados com bi-set, tri-set, cluster, rest-pause e drop-set |
 | [`programa_mobilidade.md`](programa_mobilidade.md) | Duas rotinas de mobilidade, para todos |
-| [`programa_mentzer.md`](programa_mentzer.md), [`metodos/`](metodos/) | Seção Experimente: estilo Mentzer clássico e moderno, com as ilustrações |
+| [`programa_mentzer.md`](programa_mentzer.md), [`programa_outros_metodos.md`](programa_outros_metodos.md), [`metodos/`](metodos/) | Seção Experimente: estilo Mentzer, 5×5, German Volume Training, estilo Arnold, PHUL e estilo FST-7, com as ilustrações (`metodos/gerar_ilustracoes.py`) |
 | [`avaliacao.js`](avaliacao.js) | Avalia o treino montado pela pessoa (volume, frequência, equilíbrio, ordem) e sugere exercícios |
 | [`retrospectiva.js`](retrospectiva.js) | Calcula a retrospectiva do mês ou do ano |
 | [`analise_hipertrofia.md`](analise_hipertrofia.md) | O que a literatura diz sobre volume, frequência e divisão do treino, e o volume de cada programa |
@@ -62,14 +62,19 @@ Cada `.md` explica as escolhas com os estudos; cada exercício tem o motivo e a 
 
 ### Experimente: outros métodos
 
-No fim da lista de programas, métodos conhecidos para experimentar. Tocar num deles abre antes uma folha com uma ilustração original (sem retratar ninguém), a história, como funciona, o que funciona, o que a ciência corrigiu, o veredito e as referências; **Experimentar este treino** troca o programa. Ver [`programa_mentzer.md`](programa_mentzer.md).
+No fim da lista de programas, métodos conhecidos para experimentar. Tocar num deles abre antes uma folha com uma ilustração original (sem retratar ninguém), a história, como funciona, o que funciona, o que a ciência corrigiu, o veredito e as referências; **Experimentar este treino** troca o programa. Ver [`programa_mentzer.md`](programa_mentzer.md) e [`programa_outros_metodos.md`](programa_outros_metodos.md).
 
 | Método | Nível | Dias | Ideia |
 |---|---|---|---|
 | Estilo Mentzer clássico | Avançado | 2 | 1 série até a falha por exercício, pré-exaustão, 3 a 4 dias de descanso |
 | Estilo Mentzer moderno | Intermediário | 3 ou 4 | 2 séries perto da falha, pré-exaustão, superior e inferior 2x por semana |
+| 5×5 clássico | Iniciante | 3 | agachamento sempre, supino ou desenvolvimento, remada ou terra; carga sobe a cada treino |
+| German Volume Training (10×10) | Avançado | 3 | 10 séries de 10 num exercício por músculo, descanso curto |
+| Estilo Arnold (6 dias) | Avançado | 5 ou 6 | peito e costas, ombros e braços, pernas, cada um 2x por semana, muito volume |
+| PHUL (força + hipertrofia) | Intermediário | 4 | superior e inferior, um dia pesado e um de volume para cada |
+| Estilo FST-7 | Intermediário | 4 ou 5 | treino por grupo com 7 séries finais de 30–45 s de descanso |
 
-A pergunta da semana respeita os dias de cada método (o clássico oferece só 2). Duas técnicas novas nos cartões: **pré-exaustão** (isolado e composto sem descanso, como o bi-set) e **até a falha (e além)**. Um método novo entra em `gerar_metodos.py` (com o campo `metodo` e `categoria: "experimente"`), no `ARQUIVOS_PROGRAMA` e no `sw.js`.
+A pergunta da semana respeita os dias de cada método (o clássico oferece só 2). Técnicas novas nos cartões: **pré-exaustão** (isolado e composto sem descanso, como o bi-set), **até a falha (e além)** e **FST-7**. Um método novo entra em `gerar_metodos.py` (com o campo `metodo` e `categoria: "experimente"`), no `ARQUIVOS_PROGRAMA` e no `sw.js`.
 
 ### Meu treino
 
