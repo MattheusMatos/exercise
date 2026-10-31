@@ -22,9 +22,10 @@ const carregarImagem = (src) => new Promise((resolve, reject) => {
 // Card do treino em formato de story (1080 × 1920), para Instagram, WhatsApp e afins.
 // No story, o Instagram e o WhatsApp põem a barra de progresso e o nome por cima do alto da imagem,
 // e o campo de resposta por cima do pé. O conteúdo dos cards é desenhado um pouco menor, dentro da
-// faixa que fica livre; só o fundo vai até as bordas.
-const STORY_TOPO = 150;
-const STORY_BASE = 130;
+// faixa que fica livre; o fundo e a moldura vão quase até as bordas (a moldura começa abaixo do nome).
+const STORY_TOPO = 130;
+const STORY_BASE = 60;
+const STORY_MOLDURA = 165;
 function areaSeguraStory(c, W, H) {
   const s = (H - STORY_TOPO - STORY_BASE) / H;
   c.translate((W - W * s) / 2, STORY_TOPO);
@@ -133,20 +134,21 @@ async function desenharCard(r, treino, estiloId) {
     grad.addColorStop(0, borda.cores[0]);
     grad.addColorStop(0.5, borda.cores[1]);
     grad.addColorStop(1, borda.cores[2]);
+    c.setTransform(1, 0, 0, 1, 0, 0); // a moldura é desenhada em tamanho real, fora da área reduzida
     c.strokeStyle = grad;
     c.lineWidth = 22;
     c.beginPath();
-    c.roundRect(24, 24, W - 48, H - 48, 56);
+    c.roundRect(24, STORY_MOLDURA, W - 48, H - STORY_MOLDURA - 24, 56);
     c.stroke();
     const rotulo = `${borda.nome.toUpperCase()} · ${of.dias} DIAS`;
-    c.font = titulo(800, 38);
+    c.font = titulo(800, 40);
     const lw = c.measureText(rotulo).width + 64;
     c.fillStyle = grad;
     c.beginPath();
-    c.roundRect((W - lw) / 2, 6, lw, 62, 31);
+    c.roundRect((W - lw) / 2, STORY_MOLDURA - 33, lw, 66, 33);
     c.fill();
     c.fillStyle = '#12141a';
-    c.fillText(rotulo, W / 2, 50);
+    c.fillText(rotulo, W / 2, STORY_MOLDURA + 14);
   }
 
   return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
