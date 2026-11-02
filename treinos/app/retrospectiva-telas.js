@@ -20,7 +20,7 @@ function resumoDe(periodo) {
   for (const t of todosOsTreinos()) for (const e of t.exercicios) nomes.set(e.imagem, e.nome);
   if (biblioteca) for (const e of biblioteca.itens) if (!nomes.has(e.id)) nomes.set(e.id, e.nome);
   return R().resumir(estado, periodo, treinos, nomes, {
-    ofensiva: (dia) => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dia, diasProtegidos()),
+    ofensiva: (dia) => window.Ofensiva.calcular(historicoDaOfensiva(), todosOsPlanos(), dia, diasProtegidos()),
     calorias: (x) => (x.minutos ? (x.esforco === 'pesado' || x.esforco === 'limite' ? 6 : 3.5) * estado.peso * (x.minutos / 60) : 0),
     kcalAerobico: (a) => window.Aerobico.calorias(a.tipo, a.minutos, estado.peso),
   });

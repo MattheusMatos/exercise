@@ -127,7 +127,9 @@ Na tela inicial fica o personagem escolhido com a **ofensiva**, os dias seguidos
 
 Cada dia de treino vale **10 pontos**. No fim do treino, o cartão **ADD aeróbico e ganhe + pontos** abre as opções; na tela inicial fica só um atalho discreto, **Aeróbico ou esporte**, para registrar algo em outra hora do dia (uma esteira à noite, um jogo de basquete). São seis aparelhos com foto (caminhada e corrida na esteira, bicicleta, elíptico, escada e remo) e sete esportes (basquete, futebol, vôlei, vôlei de praia, tênis, natação e pedal na rua). Cada opção mostra o impacto nas articulações e as calorias de 30 minutos para o peso da pessoa, e a tela mostra os minutos de aeróbico da semana contra os 150 recomendados pela OMS.
 
-**Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Para o que já foi feito sem cronômetro, **Já fez?** registra os minutos direto. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia de treino.
+**Abrir cronômetro** leva a uma tela cheia em que a pessoa escolhe o tempo (atalhos de 15, 20, 30 e 45 min, ou − e + de 1 em 1 minuto, até 3 horas), começa, pausa e termina quando quiser. O cronômetro continua mesmo se o app for fechado. Para o que já foi feito sem cronômetro, **Já fez?** registra os minutos direto. Ao acabar, apita, vibra e registra os minutos feitos: cada 2 minutos vale 1 ponto, somando até 30 minutos (+15) por dia.
+
+**Dia ativo.** Um dia com 20 minutos ou mais de aeróbico ou esporte, somando as atividades do dia, conta como dia de treino para a ofensiva e para os pontos (+10), mesmo sem musculação; na semana, aparece como feito, com o ícone da atividade.
 
 | Aeróbico | METs | Impacto |
 |---|---|---|

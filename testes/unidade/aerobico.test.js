@@ -12,14 +12,16 @@ test('1 ponto a cada 2 minutos, até 30 minutos', () => {
   assert.deepStrictEqual([0, 1, 2, 15, 30, 45, 180].map(A.pontosDoAerobico), [0, 0, 1, 7, 15, 15, 15]);
 });
 
-test('aeróbico só pontua em dia de treino e soma até 30 min no dia', () => {
+test('pontua o dia de treino e o dia ativo (20 min ou mais), com aeróbico até 30 min no dia', () => {
   const historico = [{ data: '2026-10-26' }, { data: '2026-10-26' }, { data: '2026-10-28' }];
   const aerobicos = [
     { data: '2026-10-26', tipo: 'bicicleta', minutos: 20 },
     { data: '2026-10-26', tipo: 'remo', minutos: 20 }, // passa de 30: conta 30
-    { data: '2026-10-27', tipo: 'corrida', minutos: 30 }, // sem treino: não conta
+    { data: '2026-10-27', tipo: 'basquete', minutos: 60 }, // sem musculação, mas dia ativo
+    { data: '2026-10-29', tipo: 'caminhada', minutos: 10 }, // menos de 20: não é dia ativo
   ];
-  assert.strictEqual(A.pontos(historico, aerobicos), 2 * A.PONTOS_TREINO + 15);
+  assert.deepStrictEqual(A.diasAtivos(aerobicos), ['2026-10-26', '2026-10-27']);
+  assert.strictEqual(A.pontos(historico, aerobicos), 3 * A.PONTOS_TREINO + 15 + 15);
 });
 
 test('esportes têm ícone; aparelhos têm foto', () => {

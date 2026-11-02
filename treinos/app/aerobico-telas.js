@@ -15,14 +15,14 @@ function figuraAerobico(m, extra) {
     : h('span', { class: 'icone-esporte', 'aria-hidden': 'true' }, m.icone);
 }
 
+// Devolve os pontos ganhos: os do aeróbico (até 30 min no dia) e, se o dia virou dia ativo
+// (20 min ou mais sem musculação), também os do dia de treino.
 function registrarAerobico(tipo, minutos) {
   const hoje = dataLocal(new Date());
-  const antes = window.Aerobico.pontosDoAerobico(window.Aerobico.minutosDoDia(estado.aerobicos, hoje));
+  const antes = window.Aerobico.pontos(estado.historico, estado.aerobicos);
   estado.aerobicos = [...estado.aerobicos, { data: hoje, tipo, minutos }].slice(-1500);
   salvar();
-  // Pontos só contam em dia de treino, até 30 min somados no dia.
-  const treinou = estado.historico.some((x) => x.data === hoje);
-  return treinou ? window.Aerobico.pontosDoAerobico(window.Aerobico.minutosDoDia(estado.aerobicos, hoje)) - antes : 0;
+  return window.Aerobico.pontos(estado.historico, estado.aerobicos) - antes;
 }
 
 // No fim do treino: convite para somar aeróbico, ou o aeróbico já feito hoje.
@@ -46,7 +46,7 @@ function cartaoAerobico(convite) {
     return h('button', { class: 'aerobico-atalho', onclick: abrirAerobico },
       h('span', { class: 'aerobico-atalho-mais', 'aria-hidden': 'true' }, '+'),
       h('span', null, h('strong', null, 'Aeróbico ou esporte'),
-        h('span', null, ofensivaAtual().treinouHoje ? `Esteira à noite, basquete, futebol… Hoje vale até +15 pontos.` : 'Esteira, basquete, futebol, natação… Pontua em dia de treino.')));
+        h('span', null, ofensivaAtual().treinouHoje ? `Esteira à noite, basquete, futebol… Hoje vale até +15 pontos.` : `Esteira, basquete, futebol, natação… ${window.Aerobico.MINUTOS_DIA_ATIVO} min ou mais contam na ofensiva.`)));
   }
   return h('button', { class: 'aerobico-cartao convite', onclick: abrirAerobico },
     h('span', { class: 'mais-pontos', 'aria-hidden': 'true' }, '+15'),
@@ -79,7 +79,8 @@ function abrirAerobico() {
       fechar();
       if (tela === 'inicio') renderInicio();
       else render();
-      avisar(`${m.nome}: ${minutos} min registrados${pontos ? ` · +${plural(pontos, 'ponto')}` : ''}`);
+      const conta = window.Aerobico.minutosDoDia(estado.aerobicos, dataLocal(new Date())) >= window.Aerobico.MINUTOS_DIA_ATIVO;
+      avisar(`${m.nome}: ${minutos} min${pontos ? ` · +${plural(pontos, 'ponto')}` : ''}${conta ? ' · conta na ofensiva 🔥' : ''}`);
     };
     entrada.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') registrar();
@@ -126,7 +127,7 @@ function abrirAerobico() {
     ];
     caixa.replaceChildren(
       h('h2', null, 'Aeróbico e esportes'),
-      h('p', null, 'Escolha a atividade e use o cronômetro, ou registre os minutos de algo que já fez. Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo nem de força (Schumann et al., 2022). Pontua em dia de treino, até 30 minutos somados.'),
+      h('p', null, `Escolha a atividade e use o cronômetro, ou registre os minutos de algo que já fez. Feito depois da musculação, o aeróbico não atrapalha o ganho de músculo nem de força (Schumann et al., 2022). ${window.Aerobico.MINUTOS_DIA_ATIVO} minutos ou mais no dia contam na ofensiva, mesmo sem musculação; os pontos vão até 30 minutos somados.`),
       h('div', { class: 'aerobico-semana' },
         h('p', null, h('strong', null, `${semana} de ${meta} min`), ' de aeróbico esta semana'),
         h('span', { class: 'barra-tempo' }, h('i', { style: `width: ${Math.min(100, (semana / meta) * 100)}%` }))),
@@ -208,7 +209,7 @@ function desenharCronometro(fim) {
       h('div', { class: 'crono-personagem' }, imagemDoMomento('comemora')),
       h('p', { class: 'crono-feito' }, h('strong', null, `${fim.minutos} min feitos`),
         h('span', null, `Cerca de ${window.Aerobico.calorias(m.id, fim.minutos, estado.peso)} kcal`
-          + (fim.pontos ? ` · +${plural(fim.pontos, 'ponto')}` : estado.historico.some((x) => x.data === dataLocal(new Date())) ? ' · pontos do dia já no máximo' : ' · pontos só em dia de treino'))),
+          + (fim.pontos ? ` · +${plural(fim.pontos, 'ponto')}` : window.Aerobico.minutosDoDia(estado.aerobicos, dataLocal(new Date())) >= window.Aerobico.MINUTOS_DIA_ATIVO ? ' · pontos do dia já no máximo' : ` · com ${window.Aerobico.MINUTOS_DIA_ATIVO} min no dia, conta na ofensiva`))),
       h('button', {
         class: 'botao primario',
         onclick: () => {

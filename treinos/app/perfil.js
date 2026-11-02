@@ -194,9 +194,10 @@ function fraseDoHumor(of) {
   const dias = of.diasSemTreinar;
   if (of.humor === 'novo') return `${nome} está ${window.Avatar.personagem(estado.perfil.personagem).genero === 'f' ? 'pronta' : 'pronto'} para começar. Termine o primeiro treino para acender a ofensiva.`;
   if (of.risco) return 'Treine hoje para não apagar a ofensiva!';
+  if (of.treinouHoje && !estado.historico.some((x) => x.data === dataLocal(new Date()))) return 'Aeróbico ou esporte de hoje contou na ofensiva!';
   if (of.treinouHoje) return of.dias >= 3 ? 'Treino de hoje feito. A ofensiva está pegando fogo!' : 'Treino de hoje feito!';
   // Último dia ativo foi um bloqueio: a ofensiva seguiu, mas não houve treino.
-  const ultimoTreino = estado.historico.map((x) => x.data).sort().pop() || '';
+  const ultimoTreino = historicoDaOfensiva().map((x) => x.data).sort().pop() || '';
   const hoje = dataLocal(new Date());
   if (diasDeFeriado().includes(hoje) && ultimoTreino !== hoje) return '🗓️ Descanso de feriado: a ofensiva está guardada. Amanhã a gente volta!';
   if (diasDeBloqueio().includes(hoje) && ultimoTreino !== hoje) return '🧊 Hoje está protegido: a ofensiva não apaga. Descanse e volte com tudo.';
@@ -218,7 +219,7 @@ function textoDoNivel(of) {
 // Pontos para gastar: treino e aeróbico, mais os prêmios do armário do dia (pontos e treino em dobro ou
 // triplo no dia), mais as apostas ganhas, menos o que foi gasto na loja.
 function pontosAtuais() {
-  const treinou = new Set(estado.historico.map((x) => x.data));
+  const treinou = new Set(historicoDaOfensiva().map((x) => x.data));
   const dosBaus = estado.baus.reduce((soma, b) => {
     if (b.premio.tipo === 'pontos') return soma + b.premio.valor;
     if (b.premio.tipo === 'multiplicador' && treinou.has(b.data)) return soma + (b.premio.valor - 1) * window.Aerobico.PONTOS_TREINO;
@@ -339,7 +340,7 @@ function cartaoBau() {
   const seguidos = diasSeguidosDeBau();
   if (b) {
     const t = textoDoPremio(b.premio);
-    const treinou = estado.historico.some((x) => x.data === b.data);
+    const treinou = historicoDaOfensiva().some((x) => x.data === b.data);
     if (b.premio.tipo !== 'multiplicador') return null;
     return h('div', { class: 'bau-cartao aberto' },
       h('span', { class: 'bau-icone', 'aria-hidden': 'true' }, iconeDoPremio(b.premio)),

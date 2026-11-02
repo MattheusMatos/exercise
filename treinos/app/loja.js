@@ -10,7 +10,7 @@ const bloqueiosGuardados = () => estado.bloqueios.filter((b) => !b.usado).length
 // Usa os bloqueios guardados nos dias em que a ofensiva apagaria. Roda ao abrir o app e ao voltar para ele.
 function usarBloqueios() {
   if (!estado.bloqueios.some((b) => !b.usado)) return;
-  const { bloqueios, salvos } = window.Ofensiva.aplicarBloqueios(estado.historico, todosOsPlanos(), dataLocal(new Date()), estado.bloqueios, diasDeFeriado());
+  const { bloqueios, salvos } = window.Ofensiva.aplicarBloqueios(historicoDaOfensiva(), todosOsPlanos(), dataLocal(new Date()), estado.bloqueios, diasDeFeriado());
   if (!salvos.length) return;
   estado.bloqueios = bloqueios;
   salvar();
@@ -20,7 +20,7 @@ function usarBloqueios() {
 }
 
 const hojeProtegido = () => diasProtegidos().includes(dataLocal(new Date()));
-const treinouHoje = () => estado.historico.some((x) => x.data === dataLocal(new Date()));
+const treinouHoje = () => historicoDaOfensiva().some((x) => x.data === dataLocal(new Date()));
 
 // Usar na hora: protege o dia de hoje (conta para a meta, sem somar ofensiva).
 function usarBloqueioHoje() {
@@ -76,7 +76,7 @@ function reparoDisponivel() {
   const of = ofensivaAtual();
   const q = of.quebras[of.quebras.length - 1];
   if (!q || diasDesde(q.data) > DIAS_PARA_REPARAR) return null;
-  const dias = window.Ofensiva.diasParaSalvar(estado.historico, todosOsPlanos(), dataLocal(new Date()), diasProtegidos(), q.data, 7);
+  const dias = window.Ofensiva.diasParaSalvar(historicoDaOfensiva(), todosOsPlanos(), dataLocal(new Date()), diasProtegidos(), q.data, 7);
   return dias && dias.length ? { ...q, protegerDias: dias } : null;
 }
 

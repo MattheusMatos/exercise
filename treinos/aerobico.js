@@ -6,7 +6,9 @@
  * Impacto: força no chão a cada passo, em vezes o peso do corpo (caminhada ~1–1,5×,
  * corrida ~2–3×); bicicleta, elíptico e remo não têm a fase de voo.
  *
- * Pontos: 10 por dia de treino e, no mesmo dia, 1 a cada 2 minutos de aeróbico (somando até 30 min).
+ * Dia ativo: um dia com 20 minutos ou mais de aeróbico ou esporte conta como dia de treino para a
+ * ofensiva e para os pontos, mesmo sem musculação.
+ * Pontos: 10 por dia de treino (ou dia ativo) e, no mesmo dia, 1 a cada 2 minutos de aeróbico (somando até 30 min).
  * No navegador fica em window.Aerobico; no Node, em module.exports.
  */
 (function (raiz) {
@@ -73,6 +75,7 @@
   const MINUTOS_MAX = 180;
   const META_SEMANA = 150; // minutos de atividade moderada por semana (OMS, 2020)
   const PONTOS_TREINO = 10;
+  const MINUTOS_DIA_ATIVO = 20;
 
   const porId = new Map(MODALIDADES.map((m) => [m.id, m]));
   const modalidade = (id) => porId.get(id) || null;
@@ -81,16 +84,23 @@
 
   const minutosDoDia = (aerobicos, data) => aerobicos.filter((a) => a.data === data).reduce((soma, a) => soma + a.minutos, 0);
 
+  // Dias com 20 minutos ou mais de aeróbico ou esporte, somando as atividades do dia.
+  function diasAtivos(aerobicos) {
+    const porDia = new Map();
+    for (const a of aerobicos) porDia.set(a.data, (porDia.get(a.data) || 0) + a.minutos);
+    return [...porDia].filter(([, m]) => m >= MINUTOS_DIA_ATIVO).map(([d]) => d).sort();
+  }
+
   // historico: [{ data }] dos treinos; aerobicos: [{ data, tipo, minutos }], pode haver vários no dia.
-  // O aeróbico só pontua no dia em que houve treino, somando até 30 min por dia.
+  // Pontua o dia de treino ou o dia ativo; o aeróbico soma até 30 min por dia.
   function pontos(historico, aerobicos) {
-    const dias = new Set(historico.map((x) => x.data));
+    const dias = new Set([...historico.map((x) => x.data), ...diasAtivos(aerobicos)]);
     let extra = 0;
     for (const data of dias) extra += pontosDoAerobico(minutosDoDia(aerobicos, data));
     return dias.size * PONTOS_TREINO + extra;
   }
 
-  const api = { MODALIDADES, grupoDe, IMPACTOS, MINUTOS, MINUTOS_MAX, META_SEMANA, PONTOS_TREINO, modalidade, calorias, pontosDoAerobico, minutosDoDia, pontos };
+  const api = { MODALIDADES, grupoDe, IMPACTOS, MINUTOS, MINUTOS_MAX, META_SEMANA, PONTOS_TREINO, MINUTOS_DIA_ATIVO, diasAtivos, modalidade, calorias, pontosDoAerobico, minutosDoDia, pontos };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Aerobico = api;
 })(typeof window !== 'undefined' ? window : globalThis);

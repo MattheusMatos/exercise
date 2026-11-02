@@ -15,12 +15,19 @@ function definirPlano(dias) {
 }
 
 const todosOsPlanos = () => (estado.plano ? { ...estado.planos, [estado.plano.semana]: estado.plano.dias } : estado.planos);
+// Para a ofensiva e os pontos, conta o treino de musculação e o dia ativo: 20 minutos ou mais de
+// aeróbico ou esporte, mesmo sem musculação (aerobico.js).
+function historicoDaOfensiva() {
+  const treinos = new Set(estado.historico.map((x) => x.data));
+  const ativos = window.Aerobico.diasAtivos(estado.aerobicos).filter((d) => !treinos.has(d)).map((data) => ({ data, treino: null, atividade: true }));
+  return [...estado.historico, ...ativos];
+}
 const diasDeBloqueio = () => estado.bloqueios.filter((b) => b.usado).map((b) => b.usado);
 // Feriado nacional em dia de treino planejado, sem treino: a academia costuma fechar, e o dia fica
 // protegido como se fosse um bloqueio, sem gastar nenhum (feriados.js).
 function diasDeFeriado() {
   const hoje = dataLocal(new Date());
-  const treinou = new Set(estado.historico.map((x) => x.data));
+  const treinou = new Set(historicoDaOfensiva().map((x) => x.data));
   const saida = [];
   for (const [semana, dias] of Object.entries(todosOsPlanos())) {
     dias.forEach((planejado, d) => {
@@ -31,7 +38,7 @@ function diasDeFeriado() {
   return saida;
 }
 const diasProtegidos = () => [...diasDeBloqueio(), ...diasDeFeriado()];
-const ofensivaAtual = () => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dataLocal(new Date()), diasProtegidos());
+const ofensivaAtual = () => window.Ofensiva.calcular(historicoDaOfensiva(), todosOsPlanos(), dataLocal(new Date()), diasProtegidos());
 
 function planejarSemana(meta) {
   const hoje = new Date().getDay();
@@ -72,15 +79,22 @@ function semanaComTreinos() {
   const hoje = dataLocal(new Date());
   const feitos = new Map();
   for (const x of estado.historico) feitos.set(x.data, x.treino);
+  const ativos = new Set(window.Aerobico.diasAtivos(estado.aerobicos));
   let seguinte = estado.sessao ? estado.sessao.treino : estado.proximo;
   return diasDaSemanaAtual().map((dia, d) => {
     const data = dataLocal(dia);
     const planejado = !!(plano && plano.dias[d]);
     let status = 'descanso';
     let treino = null;
+    let atividade = null;
     if (feitos.has(data)) {
       status = 'feito';
       treino = feitos.get(data);
+    } else if (ativos.has(data)) {
+      status = 'feito';
+      const ultima = estado.aerobicos.filter((a) => a.data === data).pop();
+      const m = window.Aerobico.modalidade(ultima.tipo);
+      atividade = m.icone || '🏃';
     } else if (diasDeFeriado().includes(data)) {
       status = 'feriado';
     } else if (diasProtegidos().includes(data)) {
@@ -92,7 +106,7 @@ function semanaComTreinos() {
       treino = programa.treinos[seguinte].id;
       seguinte = (seguinte + 1) % programa.treinos.length;
     }
-    return { d, data, numero: dia.getDate(), hoje: data === hoje, passado: data < hoje, status, treino };
+    return { d, data, numero: dia.getDate(), hoje: data === hoje, passado: data < hoje, status, treino, atividade };
   });
 }
 
@@ -170,11 +184,11 @@ function cartaoSemana(interativo) {
   const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso', protegido: 'protegido por bloqueio de ofensiva', feriado: 'feriado: protegido sem gastar bloqueio' };
   const tira = h('ol', { class: 'semana' }, dias.map((x) => {
     const podeMudar = interativo && !x.passado && x.status !== 'feito';
-    const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : x.status === 'protegido' ? '🧊' : x.status === 'feriado' ? 'feriado' : '—';
+    const rotulo = x.treino ? tituloDoTreino(x.treino) : x.atividade ? x.atividade : x.status === 'faltou' ? 'faltou' : x.status === 'protegido' ? '🧊' : x.status === 'feriado' ? 'feriado' : '—';
     const nome = `${maiuscula(NOMES_DIAS[x.d])}, dia ${x.numero}${x.hoje ? ' (hoje)' : ''}`;
     return h('li', null, h(podeMudar ? 'button' : 'div', {
       class: `dia ${x.status}${x.hoje ? ' hoje' : ''}`,
-      'aria-label': `${nome}: ${x.treino ? `${tituloDoTreino(x.treino)} ` : ''}${descricoes[x.status]}`,
+      'aria-label': `${nome}: ${x.treino ? `${tituloDoTreino(x.treino)} ` : x.atividade ? 'aeróbico ou esporte ' : ''}${descricoes[x.status]}`,
       onclick: podeMudar ? () => alternarDia(x.d) : null,
     },
       h('span', { class: 'dia-letra', 'aria-hidden': 'true' }, LETRAS_DIAS[x.d]),

@@ -112,3 +112,17 @@ test('tela inicial: em dia sem treino o atalho também aparece', async ({ page }
   await abrir(page, { quando: '2026-10-27T21:00:00' });
   await expect(page.locator('.aerobico-atalho')).toBeVisible();
 });
+
+test('basquete de 20 min ou mais conta na ofensiva, mesmo sem musculação', async ({ page }) => {
+  const historico = ['2026-10-26', '2026-10-28'].map((data) => ({ data, treino: 'push_a' }));
+  await abrir(page, { quando: '2026-10-29T21:00:00', estado: { historico, plano: { semana: '2026-10-25', dias: SEG_QUA_SEX } } });
+  await expect(page.locator('.perfil .ofensiva')).toContainText('2');
+  await page.click('.aerobico-atalho');
+  await page.click('.aerobico-linha:has-text("Basquete")');
+  await page.fill('.ja-fiz input', '60');
+  await page.click('.ja-fiz .botao');
+  await expect(page.locator('.toast')).toContainText('conta na ofensiva');
+  await expect(page.locator('.toast')).toContainText('+25 pontos'); // 10 do dia ativo + 15 do aeróbico
+  await expect(page.locator('.perfil .ofensiva')).toContainText('3');
+  await expect(page.locator('.dia.feito.hoje .dia-treino')).toHaveText('🏀');
+});
