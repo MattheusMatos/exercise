@@ -10,7 +10,7 @@ const bloqueiosGuardados = () => estado.bloqueios.filter((b) => !b.usado).length
 // Usa os bloqueios guardados nos dias em que a ofensiva apagaria. Roda ao abrir o app e ao voltar para ele.
 function usarBloqueios() {
   if (!estado.bloqueios.some((b) => !b.usado)) return;
-  const { bloqueios, salvos } = window.Ofensiva.aplicarBloqueios(estado.historico, todosOsPlanos(), dataLocal(new Date()), estado.bloqueios);
+  const { bloqueios, salvos } = window.Ofensiva.aplicarBloqueios(estado.historico, todosOsPlanos(), dataLocal(new Date()), estado.bloqueios, diasDeFeriado());
   if (!salvos.length) return;
   estado.bloqueios = bloqueios;
   salvar();
@@ -217,7 +217,9 @@ function cartaoBloqueio(redesenhar) {
         Array.from({ length: MAX_BLOQUEIOS }, (_, k) => h('span', { class: k < guardados ? 'cheio' : '' }, '🧊')))),
     estado.bloqueios.some((b) => b.gratis && !b.usado) ? h('p', { class: 'presente' }, '🎁 Você ganhou 2 bloqueios de presente.') : null,
     h('p', null, 'Vai viajar ou não vai conseguir treinar? Use um bloqueio: o dia sem treino conta para a meta da semana e a ofensiva não apaga, mas também não soma dia de ofensiva. Se esquecer, o app usa sozinho no dia em que a ofensiva apagaria.'),
-    hojeProtegido()
+    diasDeFeriado().includes(dataLocal(new Date()))
+      ? h('p', { class: 'aviso' }, `🗓️ Hoje é ${window.Feriados.nome(dataLocal(new Date()))} e era dia de treino: a ofensiva está protegida sem gastar bloqueio.`)
+      : hojeProtegido()
       ? h('div', { class: 'bloqueio-hoje' },
         h('p', null, h('strong', null, '🧊 Hoje está protegido.'), ' A ofensiva não apaga por causa de hoje.'),
         treinouHoje() ? null : h('button', {

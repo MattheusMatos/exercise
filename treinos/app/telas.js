@@ -143,6 +143,7 @@ function renderInicio() {
     cartaoPerfil(),
     cartaoRetroInicio(),
     cartaoBau(),
+    cartaoFeriado(),
     cartaoSemana(true),
     cartaoAerobico(),
     cartaoInstalar(),

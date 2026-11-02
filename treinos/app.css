@@ -1138,6 +1138,8 @@ svg { width: 22px; height: 22px; flex: none; }
 .bloqueio-mini { font-weight: 700; color: var(--azul); }
 .dia.protegido { border-color: var(--azul); }
 .dia.protegido .dia-treino { color: var(--azul); }
+.dia.feriado { border-color: var(--azul); border-style: dashed; }
+.dia.feriado .dia-treino { color: var(--azul); font-size: 10px; text-transform: uppercase; }
 .bloqueio-cartao .presente { color: var(--azul); font-weight: 700; }
 
 /* Compartilhar o treino */
@@ -1341,3 +1343,8 @@ svg { width: 22px; height: 22px; flex: none; }
 .aviso-atencao { color: #ffe1a6; }
 .aviso-dica { color: var(--apagado); }
 .aviso-bom { color: var(--verde); }
+
+/* Aviso de feriado na tela inicial */
+.feriado-cartao { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--azul); border-radius: var(--raio); background: var(--superficie); }
+.feriado-cartao span { font-size: 24px; line-height: 1; }
+.feriado-cartao p { margin: 0; font-size: 15px; line-height: 1.4; color: var(--texto); }

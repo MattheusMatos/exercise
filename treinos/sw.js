@@ -1,6 +1,6 @@
 // Guarda o app no celular para abrir rápido e funcionar sem internet na academia.
 // Ao mudar fotos ou a biblioteca, troque VERSAO para o celular baixar tudo de novo.
-const VERSAO = 'treino-ppl-v16';
+const VERSAO = 'treino-ppl-v17';
 const PROGRAMAS = [
   'programa_ppl.json',
   'programa_feminino.json',
@@ -43,6 +43,7 @@ const ESSENCIAIS = [
   'aerobico.js',
   'retrospectiva.js',
   'avaliacao.js',
+  'feriados.js',
   ...PROGRAMAS,
   'biblioteca/exercicios.json',
   'metodos/mentzer-classico.svg',

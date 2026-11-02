@@ -111,7 +111,8 @@
    * Usa os bloqueios guardados nos dias em que a ofensiva apagaria.
    * bloqueios: [{ comprado: 'AAAA-MM-DD', usado: 'AAAA-MM-DD' | null }]. Um bloqueio só salva uma
    * quebra que aconteceu depois de comprado. Se os bloqueios guardados não bastam para salvar a
-   * semana, nenhum é gasto. Devolve { bloqueios, salvos: [{ data, dias, usados }] }.
+   * semana, nenhum é gasto. fixos: dias protegidos sem bloqueio (feriados).
+   * Devolve { bloqueios, salvos: [{ data, dias, usados }] }.
    */
   /**
    * Dias sem treino da semana da quebra a proteger para que ela não apague mais, no máximo maxDias.
@@ -140,10 +141,11 @@
     return null;
   }
 
-  function aplicarBloqueios(historico, planos, hoje, bloqueios) {
+  function aplicarBloqueios(historico, planos, hoje, bloqueios, fixos = []) {
     let lista = bloqueios.map((b) => ({ ...b }));
     const salvos = [];
-    const usadosEm = (l) => l.filter((b) => b.usado).map((b) => b.usado);
+    // fixos: dias já protegidos sem bloqueio (feriados), que contam antes de gastar algum.
+    const usadosEm = (l) => [...fixos, ...l.filter((b) => b.usado).map((b) => b.usado)];
     for (let volta = 0; volta < 60; volta++) {
       const r = calcular(historico, planos, hoje, usadosEm(lista));
       // A primeira quebra que algum bloqueio guardado pode salvar.

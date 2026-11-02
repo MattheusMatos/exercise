@@ -15,7 +15,22 @@ function definirPlano(dias) {
 }
 
 const todosOsPlanos = () => (estado.plano ? { ...estado.planos, [estado.plano.semana]: estado.plano.dias } : estado.planos);
-const diasProtegidos = () => estado.bloqueios.filter((b) => b.usado).map((b) => b.usado);
+const diasDeBloqueio = () => estado.bloqueios.filter((b) => b.usado).map((b) => b.usado);
+// Feriado nacional em dia de treino planejado, sem treino: a academia costuma fechar, e o dia fica
+// protegido como se fosse um bloqueio, sem gastar nenhum (feriados.js).
+function diasDeFeriado() {
+  const hoje = dataLocal(new Date());
+  const treinou = new Set(estado.historico.map((x) => x.data));
+  const saida = [];
+  for (const [semana, dias] of Object.entries(todosOsPlanos())) {
+    dias.forEach((planejado, d) => {
+      const dia = somarDiasData(semana, d);
+      if (planejado && dia <= hoje && !treinou.has(dia) && window.Feriados.nome(dia)) saida.push(dia);
+    });
+  }
+  return saida;
+}
+const diasProtegidos = () => [...diasDeBloqueio(), ...diasDeFeriado()];
 const ofensivaAtual = () => window.Ofensiva.calcular(estado.historico, todosOsPlanos(), dataLocal(new Date()), diasProtegidos());
 
 function planejarSemana(meta) {
@@ -66,6 +81,8 @@ function semanaComTreinos() {
     if (feitos.has(data)) {
       status = 'feito';
       treino = feitos.get(data);
+    } else if (diasDeFeriado().includes(data)) {
+      status = 'feriado';
     } else if (diasProtegidos().includes(data)) {
       status = 'protegido';
     } else if (planejado && data < hoje) {
@@ -81,6 +98,32 @@ function semanaComTreinos() {
 
 // Dia planejado desta semana que passou sem treino, se depois dele ainda não houve treino e a
 // pessoa ainda não escolheu entre fazer o que faltou ou pular para o seguinte.
+// Aviso de feriado na tela inicial: na véspera e no dia, dizendo o que acontece com a ofensiva.
+function cartaoFeriado() {
+  const hoje = dataLocal(new Date());
+  const amanha = somarDiasData(hoje, 1);
+  const deHoje = window.Feriados.nome(hoje);
+  const deAmanha = window.Feriados.nome(amanha);
+  const plano = todosOsPlanos();
+  const planejado = (dia) => {
+    const semana = new Date(`${dia}T12:00:00`).getDay();
+    const dias = plano[somarDiasData(dia, -semana)];
+    return Boolean(dias && dias[semana]);
+  };
+  let texto = null;
+  if (deHoje && !treinouHoje()) {
+    texto = planejado(hoje)
+      ? `Hoje é ${deHoje}. Academia fechada? Era dia de treino, então a ofensiva está protegida, sem gastar bloqueio. Se der para treinar, conta normal.`
+      : `Hoje é ${deHoje}. Não era dia de treino: a ofensiva não depende de hoje.`;
+  } else if (deAmanha && !deHoje) {
+    texto = planejado(amanha)
+      ? `Amanhã é ${deAmanha} e muitas academias fecham. Se não der para treinar, a ofensiva fica protegida sozinha, sem gastar bloqueio.`
+      : `Amanhã é ${deAmanha} e muitas academias fecham. Amanhã não era dia de treino, então nada muda na ofensiva.`;
+  }
+  if (!texto) return null;
+  return h('div', { class: 'feriado-cartao', role: 'note' }, h('span', { 'aria-hidden': 'true' }, '🗓️'), h('p', null, texto));
+}
+
 function faltaPendente() {
   if (estado.sessao || !programa.treinos.length) return null;
   const dias = semanaComTreinos();
@@ -124,10 +167,10 @@ function cartaoSemana(interativo) {
   if (meta === 1) resumo = `${feitos} de 1 treino feito`;
   else if (meta) resumo = `${feitos} de ${meta} treinos feitos`;
   else if (feitos) resumo = `${feitos} treino${feitos === 1 ? ' feito' : 's feitos'}`;
-  const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso', protegido: 'protegido por bloqueio de ofensiva' };
+  const descricoes = { feito: 'feito', planejado: 'planejado', faltou: 'planejado e não feito', descanso: 'descanso', protegido: 'protegido por bloqueio de ofensiva', feriado: 'feriado: protegido sem gastar bloqueio' };
   const tira = h('ol', { class: 'semana' }, dias.map((x) => {
     const podeMudar = interativo && !x.passado && x.status !== 'feito';
-    const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : x.status === 'protegido' ? '🧊' : '—';
+    const rotulo = x.treino ? tituloDoTreino(x.treino) : x.status === 'faltou' ? 'faltou' : x.status === 'protegido' ? '🧊' : x.status === 'feriado' ? 'feriado' : '—';
     const nome = `${maiuscula(NOMES_DIAS[x.d])}, dia ${x.numero}${x.hoje ? ' (hoje)' : ''}`;
     return h('li', null, h(podeMudar ? 'button' : 'div', {
       class: `dia ${x.status}${x.hoje ? ' hoje' : ''}`,

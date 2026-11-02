@@ -102,7 +102,9 @@ function fraseMotivacional(of) {
   const n = (texto) => (nome ? texto.replace('{nome}', nome) : texto.replace(/,? ?\{nome\},? ?/, '').trim().replace(/^\w/, (c) => c.toUpperCase()));
   const espelho = estado.perfil.sexo === 'f' ? 'Vencendo a garota do espelho, {nome}.' : 'Vencendo o cara do espelho, {nome}.';
   let lista;
-  if (!of.treinouHoje && diasProtegidos().includes(dataLocal(new Date()))) {
+  if (!of.treinouHoje && diasDeFeriado().includes(dataLocal(new Date()))) {
+    lista = [`${window.Feriados.nome(dataLocal(new Date()))} com academia fechada, {nome}? A ofensiva está protegida.`];
+  } else if (!of.treinouHoje && diasProtegidos().includes(dataLocal(new Date()))) {
     lista = ['Folga protegida, {nome}. A ofensiva está guardada.'];
   } else if (of.treinouHoje) {
     lista = ['Missão cumprida, {nome}! Agora é comer bem e descansar.', 'Treino feito, {nome}. O músculo cresce no descanso.', 'Mais um dia na conta, {nome}.'];
@@ -196,8 +198,10 @@ function fraseDoHumor(of) {
   // Último dia ativo foi um bloqueio: a ofensiva seguiu, mas não houve treino.
   const ultimoTreino = estado.historico.map((x) => x.data).sort().pop() || '';
   const hoje = dataLocal(new Date());
-  if (diasProtegidos().includes(hoje) && ultimoTreino !== hoje) return '🧊 Hoje está protegido: a ofensiva não apaga. Descanse e volte com tudo.';
-  if (diasProtegidos().some((x) => x > ultimoTreino && x <= hoje)) return '🧊 O bloqueio segurou a ofensiva enquanto você esteve fora. Bora voltar?';
+  if (diasDeFeriado().includes(hoje) && ultimoTreino !== hoje) return '🗓️ Descanso de feriado: a ofensiva está guardada. Amanhã a gente volta!';
+  if (diasDeBloqueio().includes(hoje) && ultimoTreino !== hoje) return '🧊 Hoje está protegido: a ofensiva não apaga. Descanse e volte com tudo.';
+  if (diasDeBloqueio().some((x) => x > ultimoTreino && x <= hoje)) return '🧊 O bloqueio segurou a ofensiva enquanto você esteve fora. Bora voltar?';
+  if (diasDeFeriado().some((x) => x > ultimoTreino && x <= hoje)) return '🗓️ O feriado não apagou a ofensiva. Bora voltar?';
   if (dias >= 15) return `${dias} dias parado. ${nome} está largado esperando você.`;
   if (dias >= 4) return `${dias} dias sem treinar. ${nome} está com saudade.`;
   if (of.dias === 0) return 'A ofensiva apagou: a meta da semana não fecha mais. O próximo treino acende de novo.';

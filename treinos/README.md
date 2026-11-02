@@ -170,6 +170,10 @@ Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela ini
 
 Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a partir das anotadas no treino) e do peso do corpo (campo **Seu peso** na aba Personagem, que também vale para as calorias).
 
+### Feriados
+
+O app conhece os feriados nacionais ([`feriados.js`](feriados.js)): os fixos (Ano-Novo, Tiradentes, Dia do Trabalho, Independência, Aparecida, Finados, Proclamação da República, Consciência Negra e Natal) e os que dependem da Páscoa (Carnaval, Sexta-feira Santa e Corpus Christi). Num feriado que era dia de treino planejado, se a pessoa não treinou, o dia fica protegido como um bloqueio de ofensiva, mas sem gastar nenhum, e os bloqueios guardados não são usados para cobrir o que o feriado já cobre. Na véspera e no dia, a tela inicial avisa; na semana, o dia aparece como *feriado*. Se der para treinar no feriado, conta normal.
+
 ### Semana
 
 A semana começa no domingo, pela data do celular. Na primeira abertura de cada semana o app pergunta quantos dias a pessoa pretende treinar (3, 4, 5 ou 6) e distribui os treinos da sequência nos dias:
