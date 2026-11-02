@@ -1,6 +1,6 @@
 // Versão de academia (academias/feira-fitness): mesmo app, com logo e cores próprios e dados numa
 // chave separada. O mais importante aqui: não pode encostar nos dados do Treino PPL.
-const { test, expect, PERFIL } = require('./ajuda');
+const { test, expect, PERFIL, terminarTreino } = require('./ajuda');
 
 const PPL = { perfil: PERFIL, historico: [{ data: '2026-10-26', treino: 'push_a' }], versao: 1 };
 
@@ -48,11 +48,7 @@ test('Feira Fitness: card do treino nas cores da academia, com o nome dela', asy
   await page.reload();
   await page.getByText('Começar treino').click();
   await page.getByText('Pular o aquecimento de hoje').click();
-  for (let i = 0; i < 40 && (await page.locator('.cartao.topo').count()); i++) {
-    if (await page.locator('.descanso.cheio').count()) await page.click('.descanso .pular');
-    await page.click('.acao.feito');
-    await page.waitForTimeout(300);
-  }
+  await terminarTreino(page);
   await page.click('.compartilhar');
   await expect(page.locator('.card-previa')).toBeVisible();
   await expect(page.locator('.opcoes-estilo button').first()).toContainText('Feira Fitness');

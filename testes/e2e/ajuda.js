@@ -50,11 +50,12 @@ async function pularDescanso(page) {
   if (await page.locator('.descanso.cheio').count()) await page.click('.descanso .pular');
 }
 
-// Marca "Feito" até acabar o treino.
+// Marca "Feito" até aparecer a tela de fim. Entre um cartão e outro há uma animação, então o laço
+// espera a tela de fim, não a falta de cartão (numa máquina lenta o cartão some por um instante).
 async function terminarTreino(page) {
-  for (let i = 0; i < 40 && (await page.locator('.cartao.topo').count()); i++) {
+  for (let i = 0; i < 60 && !(await page.locator('.fim').count()); i++) {
     await pularDescanso(page);
-    await page.click('.acao.feito');
+    if (await page.locator('.cartao.topo').count()) await page.click('.acao.feito');
     await page.waitForTimeout(350);
   }
   await page.locator('.fim').waitFor();
