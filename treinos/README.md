@@ -172,7 +172,7 @@ Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a pa
 
 ### Feriados
 
-O app conhece os feriados nacionais ([`feriados.js`](feriados.js)): os fixos (Ano-Novo, Tiradentes, Dia do Trabalho, Independência, Aparecida, Finados, Proclamação da República, Consciência Negra e Natal) e os que dependem da Páscoa (Carnaval, Sexta-feira Santa e Corpus Christi). Num feriado que era dia de treino planejado, se a pessoa não treinou, o dia fica protegido como um bloqueio de ofensiva, mas sem gastar nenhum, e os bloqueios guardados não são usados para cobrir o que o feriado já cobre. Na véspera e no dia, a tela inicial avisa; na semana, o dia aparece como *feriado*. Se der para treinar no feriado, conta normal.
+O app conhece os feriados nacionais ([`feriados.js`](feriados.js)): os fixos (Ano-Novo, Tiradentes, Dia do Trabalho, Independência, Aparecida, Finados, Proclamação da República, Consciência Negra e Natal) e a Sexta-feira Santa, que depende da Páscoa. Carnaval e Corpus Christi são ponto facultativo e ficam de fora. Num feriado que era dia de treino planejado, se a pessoa não treinou, o dia fica protegido como um bloqueio de ofensiva, mas sem gastar nenhum, e os bloqueios guardados não são usados para cobrir o que o feriado já cobre. Na véspera e no dia, a tela inicial avisa; na semana, o dia aparece como *feriado*. Se der para treinar no feriado, conta normal.
 
 ### Semana
 

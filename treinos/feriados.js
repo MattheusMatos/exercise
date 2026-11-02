@@ -1,7 +1,8 @@
 /*
- * Feriados nacionais do Brasil, em que muitas academias fecham. Os fixos e os que dependem da
- * Páscoa (Carnaval, Sexta-feira Santa e Corpus Christi, que são ponto facultativo mas costumam
- * fechar academia). Em dia de treino planejado, o app protege a ofensiva sem gastar bloqueio.
+ * Feriados nacionais do Brasil, em que muitas academias fecham: os de data fixa e a Sexta-feira
+ * Santa (Paixão de Cristo), que depende da Páscoa. Carnaval e Corpus Christi são ponto facultativo,
+ * não feriado nacional, e ficam de fora. Em dia de treino planejado, o app protege a ofensiva sem
+ * gastar bloqueio.
  * No navegador fica em window.Feriados; no Node, em module.exports.
  */
 (function (raiz) {
@@ -43,7 +44,7 @@
     const mais = (n) => chave(new Date(p.getFullYear(), p.getMonth(), p.getDate() + n));
     const mapa = new Map([
       ...FIXOS.map(([md, nome]) => [`${ano}-${md}`, nome]),
-      [mais(-48), 'Carnaval'], [mais(-47), 'Carnaval'], [mais(-2), 'Sexta-feira Santa'], [mais(60), 'Corpus Christi'],
+      [mais(-2), 'Sexta-feira Santa'],
     ]);
     cache.set(ano, mapa);
     return mapa;

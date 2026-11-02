@@ -5,12 +5,12 @@ const O = require('../../treinos/ofensiva.js');
 
 const dia = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-test('Páscoa e feriados móveis', () => {
+test('Páscoa e Sexta-feira Santa; Carnaval e Corpus Christi (ponto facultativo) ficam de fora', () => {
   assert.strictEqual(dia(F.pascoa(2026)), '2026-04-05');
   assert.strictEqual(dia(F.pascoa(2027)), '2027-03-28');
-  assert.strictEqual(F.nome('2026-02-17'), 'Carnaval');
   assert.strictEqual(F.nome('2026-04-03'), 'Sexta-feira Santa');
-  assert.strictEqual(F.nome('2026-06-04'), 'Corpus Christi');
+  assert.strictEqual(F.nome('2026-02-17'), null);
+  assert.strictEqual(F.nome('2026-06-04'), null);
 });
 
 test('feriados fixos', () => {
