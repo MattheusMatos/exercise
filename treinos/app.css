@@ -343,6 +343,10 @@ svg { width: 22px; height: 22px; flex: none; }
   display: grid;
   grid-template: 100% / 100%;
   flex: none;
+  /* Largura fixa: com a altura limitada (cartão mais baixo, barra do descanso aberta), o Safari do
+     iPhone encolhia a largura para manter os 3:2, e a foto ficava estreita e encostada à esquerda. */
+  width: 100%;
+  align-self: stretch;
   margin: 0;
   aspect-ratio: 3 / 2;
   max-height: 42%;

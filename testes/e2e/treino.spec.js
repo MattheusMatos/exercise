@@ -124,3 +124,17 @@ test('mobilidade: sem campo de carga e sem troca de exercício', async ({ page }
   await expect(page.locator('.cartao.topo .campo-carga')).toHaveCount(0);
   await expect(page.locator('.cartao.topo .trocar')).toHaveCount(0);
 });
+
+test('com o cartão baixo (tela pequena e descanso aberto), a foto ocupa toda a largura', async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 700 });
+  await abrir(page, { quando: '2026-11-04T09:30:00' });
+  await comecarTreino(page);
+  await page.locator('.cartao.topo .anilha').first().click();
+  await page.click('.minimizar');
+  await page.click('.acao.feito');
+  await page.waitForTimeout(800);
+  const foto = await page.locator('.cartao.topo .foto').boundingBox();
+  const cartao = await page.locator('.cartao.topo').boundingBox();
+  expect(Math.round(foto.width)).toBe(Math.round(cartao.width));
+  expect(await page.locator('.cartao.topo .foto').evaluate((f) => getComputedStyle(f).width === `${f.parentElement.clientWidth}px`)).toBe(true);
+});
