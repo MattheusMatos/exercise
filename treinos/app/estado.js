@@ -82,6 +82,11 @@ function estadoValido(bruto) {
     limpo.baus = e.baus.filter(valido).map((b) => ({ data: b.data, ouro: Boolean(b.ouro), premio: b.premio })).slice(-400);
   }
   // Loja: o que foi gasto, as apostas "dobro ou nada" e os estilos do card de compartilhar.
+  // Códigos de presente já resgatados (loja.js), com os pontos de cada um.
+  limpo.presentes = Array.isArray(e.presentes)
+    ? e.presentes.filter((p) => p && /^[0-9a-f]{16}$/.test(p.codigo) && /^\d{4}-\d{2}-\d{2}$/.test(p.data) && Number.isInteger(p.pontos) && p.pontos >= 0 && p.pontos <= 1000)
+      .map((p) => ({ codigo: p.codigo, data: p.data, pontos: p.pontos })).slice(-50)
+    : [];
   if (Array.isArray(e.compras)) {
     limpo.compras = e.compras.filter((c) => c && /^\d{4}-\d{2}-\d{2}$/.test(c.data) && typeof c.tipo === 'string'
       && Number.isInteger(c.pontos) && c.pontos > 0 && c.pontos <= 1000).map((c) => ({ data: c.data, tipo: c.tipo, pontos: c.pontos })).slice(-400);

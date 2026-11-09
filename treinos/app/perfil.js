@@ -225,7 +225,8 @@ function pontosAtuais() {
     if (b.premio.tipo === 'multiplicador' && treinou.has(b.data)) return soma + (b.premio.valor - 1) * window.Aerobico.PONTOS_TREINO;
     return soma;
   }, 0);
-  const apostas = estado.apostas.filter((a) => a.status === 'ganha').length * PREMIO_APOSTA;
+  const apostas = estado.apostas.filter((a) => a.status === 'ganha').length * PREMIO_APOSTA
+    + estado.presentes.reduce((soma, p) => soma + p.pontos, 0);
   const gastos = estado.compras.reduce((soma, c) => soma + c.pontos, 0);
   return window.Aerobico.pontos(estado.historico, estado.aerobicos) + dosBaus + apostas - gastos
     - estado.bloqueios.filter((b) => !b.gratis).length * PRECO_BLOQUEIO;

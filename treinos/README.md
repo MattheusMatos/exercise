@@ -172,6 +172,10 @@ Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela ini
 
 Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a partir das anotadas no treino) e do peso do corpo (campo **Seu peso** na aba Personagem, que também vale para as calorias).
 
+### Código de presente
+
+Na Loja, **Código de presente** resgata um código dado pelo dono do app: pontos e, se o código prevê, a ofensiva que apagou por último (até 30 dias atrás) de volta, com os dias que faltaram protegidos. Cada código vale uma vez por aparelho. O app guarda só o hash SHA-256 de cada código (`PRESENTES` em `app/loja.js`); para criar um, gere o hash do código em maiúsculas e acrescente-o lá.
+
 ### Feriados
 
 O app conhece os feriados nacionais ([`feriados.js`](feriados.js)): os fixos (Ano-Novo, Tiradentes, Dia do Trabalho, Independência, Aparecida, Finados, Proclamação da República, Consciência Negra e Natal) e a Sexta-feira Santa, que depende da Páscoa. Carnaval e Corpus Christi são ponto facultativo e ficam de fora. Num feriado que era dia de treino planejado, se a pessoa não treinou, o dia fica protegido como um bloqueio de ofensiva, mas sem gastar nenhum, e os bloqueios guardados não são usados para cobrir o que o feriado já cobre. Na véspera e no dia, a tela inicial avisa; na semana, o dia aparece como *feriado*. Se der para treinar no feriado, conta normal.

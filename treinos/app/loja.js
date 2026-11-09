@@ -190,6 +190,61 @@ function opcoesEstilo(aoMudar) {
 }
 
 // Aba Loja: pontos para gastar e o que dá para comprar.
+// ---------- códigos de presente ----------
+
+// Códigos dados pelo dono do app (para quem perdeu a ofensiva testando, por exemplo). Só o hash
+// SHA-256 do código fica aqui, então ler o código-fonte não revela o código. Cada um vale uma vez
+// por aparelho.
+const PRESENTES = {
+  '7e1e2e537bd7d3bedc20992aa9f70239e9f0b37e2fd64513b1b5ba4672ae3768': { pontos: 200, ofensiva: true },
+};
+
+async function hashDoCodigo(texto) {
+  const bytes = new TextEncoder().encode(texto.trim().toUpperCase());
+  const hash = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Devolve a ofensiva que apagou por último (até 30 dias atrás), protegendo os dias que faltaram.
+function devolverOfensiva() {
+  const of = ofensivaAtual();
+  const q = of.quebras[of.quebras.length - 1];
+  if (!q || diasDesde(q.data) > 30) return 0;
+  const dias = window.Ofensiva.diasParaSalvar(historicoDaOfensiva(), todosOsPlanos(), dataLocal(new Date()), diasProtegidos(), q.data, 7);
+  if (!dias || !dias.length) return 0;
+  estado.bloqueios = [...estado.bloqueios, ...dias.map((dia) => ({ comprado: q.data, usado: dia, gratis: true, reparo: true }))];
+  return q.dias;
+}
+
+async function resgatarPresente(texto) {
+  if (!texto.trim()) return 'Escreva o código';
+  if (!window.crypto || !crypto.subtle) return 'Abra o app pelo link publicado para resgatar';
+  const hash = await hashDoCodigo(texto);
+  const presente = PRESENTES[hash];
+  if (!presente) return 'Código inválido';
+  if (estado.presentes.some((p) => p.codigo === hash.slice(0, 16))) return 'Este código já foi usado neste aparelho';
+  const devolvidos = presente.ofensiva ? devolverOfensiva() : 0;
+  estado.presentes = [...estado.presentes, { codigo: hash.slice(0, 16), data: dataLocal(new Date()), pontos: presente.pontos || 0 }];
+  salvar();
+  renderInicio();
+  return `🎁 Presente: +${plural(presente.pontos || 0, 'ponto')}${devolvidos ? ` e a ofensiva de ${plural(devolvidos, 'dia')} de volta` : ''}!`;
+}
+
+function cartaoPresente(redesenhar) {
+  const campo = h('input', { type: 'text', class: 'campo-presente', placeholder: 'Código', autocapitalize: 'characters', autocomplete: 'off', 'aria-label': 'Código de presente', maxlength: '40' });
+  const resgatar = async () => {
+    const msg = await resgatarPresente(campo.value);
+    avisar(msg);
+    if (msg.startsWith('🎁')) redesenhar();
+  };
+  campo.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') resgatar();
+  });
+  return h('div', { class: 'loja-item presente-cartao' },
+    h('div', { class: 'loja-topo' }, h('p', { class: 'rotulo' }, '🎁 Código de presente')),
+    h('div', { class: 'presente-linha' }, campo, h('button', { class: 'botao secundario', onclick: resgatar }, 'Resgatar')));
+}
+
 function abaLoja(redesenhar) {
   return [
     h('p', { class: 'saldo-loja' }, '⭐ ', h('strong', null, plural(pontosAtuais(), 'ponto')), ' para gastar'),
@@ -197,6 +252,7 @@ function abaLoja(redesenhar) {
     cartaoBloqueio(redesenhar),
     cartaoReparo(redesenhar),
     cartaoAposta(redesenhar),
+    cartaoPresente(redesenhar),
   ];
 }
 
