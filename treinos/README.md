@@ -172,6 +172,14 @@ Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela ini
 
 Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a partir das anotadas no treino) e do peso do corpo (campo **Seu peso** na aba Personagem, que também vale para as calorias).
 
+### Personalizar (na Loja)
+
+- **Temas do app** (80 pontos cada): Noite, Neon, Rosa, Dourado e Roxo trocam a cor de destaque e o fundo do app inteiro; o Laranja de sempre é grátis. Na versão de uma academia não aparecem: as cores são as dela.
+- **Títulos** (60 pontos): aparecem abaixo do nome no perfil e no card do story. Cinco são conquistas, liberadas de graça: Primeiro Passo (1º treino), Constante (15 dias de ofensiva), Recordista (subir a carga 10 vezes), Fera do Cardio (300 min de aeróbico ou esporte) e Centenário (100 treinos).
+- **Comemoração do fim do treino** (50 pontos): fogos, chuva de anilhas, pegando fogo ou estrelas no lugar do confete; dá para desligar. Com "reduzir movimento" ligado no celular, não aparece.
+
+O que foi comprado fica nas compras (`tema:noite`, `titulo:lenda-do-supino`…); o que está em uso, em `estado.tema`, `estado.titulo` e `estado.comemoracao` (`app/personalizar.js`).
+
 ### Código de presente
 
 Na Loja, **Código de presente** resgata um código dado pelo dono do app: pontos e, se o código prevê, a ofensiva que apagou por último (até 30 dias atrás) de volta, com os dias que faltaram protegidos. Cada código vale uma vez por aparelho. O app guarda só o hash SHA-256 de cada código (`PRESENTES` em `app/loja.js`); para criar um, gere o hash do código em maiúsculas e acrescente-o lá.

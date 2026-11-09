@@ -96,6 +96,10 @@ function estadoValido(bruto) {
       .map((a) => ({ inicio: a.inicio, status: a.status })).slice(-100);
   }
   if (ESTILOS_CARD[e.estiloCard]) limpo.estiloCard = e.estiloCard;
+  // Personalização (personalizar.js): o que está em uso; o que foi comprado fica nas compras.
+  limpo.tema = TEMAS[e.tema] ? e.tema : 'laranja';
+  limpo.titulo = TITULOS.some((t) => t.id === e.titulo) ? e.titulo : null;
+  limpo.comemoracao = COMEMORACOES[e.comemoracao] ? e.comemoracao : 'confete';
   // Histórico de cargas (uma por exercício por dia) e do peso do corpo, para as retrospectivas.
   const ehDia = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
   if (Array.isArray(e.registroCargas)) {

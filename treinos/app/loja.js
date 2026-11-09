@@ -252,6 +252,9 @@ function abaLoja(redesenhar) {
     cartaoBloqueio(redesenhar),
     cartaoReparo(redesenhar),
     cartaoAposta(redesenhar),
+    cartaoTemas(redesenhar),
+    cartaoTitulos(redesenhar),
+    cartaoComemoracoes(redesenhar),
     cartaoPresente(redesenhar),
   ];
 }

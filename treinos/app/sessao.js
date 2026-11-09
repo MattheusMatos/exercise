@@ -256,6 +256,7 @@ function terminar() {
   soltarTravaTela();
   tela = 'fim';
   render();
+  soltarComemoracao(estado.comemoracao);
 }
 
 // ---------- arrastar ----------

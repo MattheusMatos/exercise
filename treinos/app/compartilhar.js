@@ -140,14 +140,14 @@ async function desenharCard(r, treino, estiloId) {
       c.fill();
       c.drawImage(logo, (W - largo) / 2, 1744, largo, alto);
       c.fillStyle = TINTA;
-      if (estado.perfil.nome) c.fillText(estado.perfil.nome, W / 2, 1900, W - 120);
+      if (estado.perfil.nome) c.fillText(`${estado.perfil.nome}${tituloAtual() ? `, ${tituloAtual()}` : ''}`, W / 2, 1900, W - 120);
       assinou = true;
     } catch (e) {
       // Sem o logo, assina com o nome da academia.
     }
   }
   const assinatura = ACADEMIA ? ACADEMIA.nome : programa.titulo;
-  if (!assinou) c.fillText(estado.perfil.nome ? `${estado.perfil.nome} · ${assinatura}` : assinatura, W / 2, 1810, W - 120);
+  if (!assinou) c.fillText(estado.perfil.nome ? `${estado.perfil.nome}${tituloAtual() ? `, ${tituloAtual()}` : ''} · ${assinatura}` : assinatura, W / 2, 1810, W - 120);
 
   // Borda da ofensiva em volta do card, com o nome dela no alto.
   const borda = bordaDa(of.dias);

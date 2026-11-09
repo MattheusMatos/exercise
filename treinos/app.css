@@ -1357,3 +1357,27 @@ svg { width: 22px; height: 22px; flex: none; }
 .presente-linha { display: flex; gap: 8px; }
 .campo-presente { flex: 1; min-width: 0; min-height: 48px; padding: 0 12px; border: 1px solid var(--linha); border-radius: 12px; background: var(--fundo); color: var(--texto); font: 700 18px/1 var(--fonte-titulo); letter-spacing: 0.08em; text-transform: uppercase; }
 .presente-linha .botao { flex: none; min-height: 48px; }
+
+/* Personalizar: temas, títulos e comemorações na loja */
+.opcoes-loja { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.opcao-loja { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--linha); border-radius: 14px; background: var(--fundo); }
+.opcao-loja.selecionada { border-color: var(--laranja); }
+.opcao-loja > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.opcao-loja strong { font-size: 15px; }
+.opcao-loja > div span { color: var(--apagado); font-size: 12px; line-height: 1.3; }
+.opcao-loja .botao { flex: none; min-height: 38px; padding: 0 14px; font-size: 14px; }
+.opcao-loja .comprar-item { background: transparent; border: 2px solid var(--laranja); color: var(--laranja); }
+.opcao-loja .comprar-item:disabled { border-style: dashed; border-color: var(--linha); color: var(--apagado); }
+.em-uso { flex: none; color: var(--laranja); font-size: 13px; font-weight: 700; }
+.bloqueado { flex: none; font-size: 18px; opacity: 0.6; }
+.amostra-tema, .amostra-icone { flex: none; width: 40px; height: 40px; border-radius: 12px; }
+.amostra-icone { display: grid; place-items: center; background: var(--superficie-2); font-size: 22px; }
+.titulo-usuario { margin: 0; color: var(--laranja); font: 700 14px/1.2 var(--fonte-titulo); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Comemoração do fim do treino */
+.comemoracao { position: fixed; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; }
+.comemoracao .particula { position: absolute; top: -40px; width: 10px; height: 16px; border-radius: 2px; font-size: 28px; line-height: 1; animation: cair 3s cubic-bezier(0.3, 0.6, 0.6, 1) forwards; }
+.comemoracao-anilhas .particula, .comemoracao-fogo .particula, .comemoracao-estrelas .particula { width: auto; height: auto; }
+@keyframes cair { from { transform: translateY(0) rotate(0); opacity: 1; } to { transform: translateY(110vh) rotate(var(--giro, 360deg)); opacity: 0.9; } }
+.comemoracao-fogos .particula { top: auto; width: 11px; height: 11px; border-radius: 50%; opacity: 0; animation: explodir 1.6s ease-out forwards; }
+@keyframes explodir { 0% { transform: translate(0, 0) scale(0.4); opacity: 1; } 70% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }

@@ -397,6 +397,7 @@ function cartaoPerfil() {
     h('button', { class: `personagem-palco fase-${fase}`, 'aria-label': `${p.nome}: toque para trocar de personagem`, onclick: () => abrirPerfil('personagem') },
       imagemDoPersonagem(fase)),
     h('div', { class: 'perfil-texto' },
+      tituloAtual() ? h('p', { class: 'titulo-usuario' }, `🏷️ ${tituloAtual()}`) : null,
       h('p', { class: 'saudacao' }, fraseMotivacional(of)),
       estado.perfil.nome ? null : h('button', { class: 'link', onclick: () => abrirPerfil('personagem') }, 'Como quer ser chamado?'),
       h('p', { class: 'personagem-nome' }, h('strong', null, p.nome), h('span', null, window.Avatar.rotuloDaFase(p.id, fase))),
