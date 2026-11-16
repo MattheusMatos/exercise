@@ -6,9 +6,9 @@ test('treino avançado: aquecimento, carga, mini-pausa, bi-set e fim com avalia�
 
   const topo = page.locator('.cartao.topo');
   await expect(topo.locator('.aquecimento')).toBeVisible();
-  await topo.locator('.campo-carga input').fill('80');
-  await topo.locator('.campo-carga input').press('Enter');
-  await topo.locator('.campo-carga input').blur();
+  await topo.locator('.campo-carga .campo-kg').fill('80');
+  await topo.locator('.campo-carga .campo-kg').press('Enter');
+  await topo.locator('.campo-carga .campo-kg').blur();
   // aquecimento 40% e 80% da carga
   await expect(topo.locator('.aquecimento')).toContainText('32');
   await expect(topo.locator('.aquecimento')).toContainText('64');
@@ -78,8 +78,8 @@ test('desfazer pelo aviso, chips dos próximos e campo de carga sem desfazer', a
   await expect(page.locator('.desfazer-aviso')).toBeVisible();
   // apagar a carga com Backspace não desfaz o exercício
   const segundo = await texto(topo);
-  await page.fill('.cartao.topo .campo-carga input', '30');
-  await page.focus('.cartao.topo .campo-carga input');
+  await page.fill('.cartao.topo .campo-carga .campo-kg', '30');
+  await page.focus('.cartao.topo .campo-carga .campo-kg');
   await page.keyboard.press('Backspace');
   await page.keyboard.press('Backspace');
   expect(await texto(topo)).toBe(segundo);

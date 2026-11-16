@@ -61,14 +61,20 @@ function cargaDoExercicio(i, ex) {
 
 function campoCarga(i, ex) {
   const c = cargaDoExercicio(i, ex);
-  const valor = c.hoje !== null ? c.hoje : c.sugerida !== null ? c.sugerida : c.ultima ? c.ultima.kg : '';
+  // Sugestão pela última sessão registrada (progressão dupla); o ajuste pedido no fim do treino vem antes.
+  const s = c.sugerida === null ? sugestaoDeHoje(ex) : null;
+  const valor = c.hoje !== null ? c.hoje : c.sugerida !== null ? c.sugerida : s ? s.kg : c.ultima ? c.ultima.kg : '';
   const dica = c.sugerida !== null
     ? `Sugestão de hoje: ${textoKg(c.sugerida)} (${c.ajuste > 0 ? '+' : '−'}${Math.abs(c.ajuste)}% da última, ${textoKg(c.ultima.kg)})`
-    : c.ultima ? `Última vez: ${textoKg(c.ultima.kg)}` : 'Anote a carga: fica salva para a próxima vez';
-  return h('label', { class: 'campo-carga' },
+    : s ? `Última vez: ${s.ultima}. ${s.texto}`
+      : c.ultima ? `Última vez: ${textoKg(c.ultima.kg)}. Anote também as repetições.` : 'Anote a carga e as repetições: o app sugere a carga da próxima vez';
+  const feitas = (estado.sessao.series[i] || 0);
+  const temFaixa = Boolean(window.Progressao.faixa(ex.reps));
+  const hoje = textoDasFeitas(i);
+  return h('div', { class: 'campo-carga' },
     h('span', { class: 'rotulo' }, 'Carga'),
     h('input', {
-      type: 'text', inputmode: 'decimal', autocomplete: 'off', value: String(valor).replace('.', ','), placeholder: '0',
+      class: 'campo-kg', type: 'text', inputmode: 'decimal', autocomplete: 'off', value: String(valor).replace('.', ','), placeholder: '0',
       'aria-label': `Carga de ${ex.nome}, em kg`,
       onchange: (e) => {
         const kg = arredondarCarga(Number(String(e.target.value).replace(',', '.')));
@@ -82,7 +88,16 @@ function campoCarga(i, ex) {
       },
     }),
     h('span', { class: 'unidade' }, 'kg'),
-    h('span', { class: 'dica-carga' }, dica));
+    temFaixa ? h('span', { class: 'unidade vezes', 'aria-hidden': 'true' }, '×') : null,
+    temFaixa ? h('input', {
+      class: 'campo-reps', type: 'text', inputmode: 'numeric', autocomplete: 'off', maxlength: '3',
+      value: String(repsParaASerie(i, ex, Math.min(feitas, ex.series - 1))), placeholder: String(ex.reps),
+      'aria-label': `Repetições feitas em ${ex.nome}`,
+    }) : null,
+    temFaixa ? h('span', { class: 'unidade' }, 'reps') : null,
+    h('span', { class: 'dica-carga' }, dica),
+    h('span', { class: 'series-feitas', hidden: !hoje }, hoje ? `Hoje: ${hoje}` : ''),
+    seriesDoExercicio(ex).length ? h('button', { class: 'link ver-evolucao', onclick: () => abrirEvolucao(ex) }, 'Ver evolução') : null);
 }
 
 // Aquecimento (Ribeiro et al., 2021): 6 repetições com 40% e 6 com 80% da carga do treino.

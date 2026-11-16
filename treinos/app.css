@@ -1005,8 +1005,13 @@ svg { width: 22px; height: 22px; flex: none; }
 
 /* Carga, aquecimento e técnica no cartão */
 .carga-e-aquecimento { flex: none; display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 0; border-top: 1px solid var(--linha); }
-.campo-carga { display: grid; grid-template-columns: auto 5.2em auto 1fr; align-items: center; gap: 4px 8px; }
-.campo-carga input { width: 100%; min-height: 40px; padding: 0 8px; border: 1.5px solid var(--linha); border-radius: 10px; background: var(--fundo); color: var(--texto); font: 700 20px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
+.campo-carga { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.campo-carga .campo-kg { width: 4.6em; }
+.campo-carga .campo-reps { width: 3.4em; }
+.campo-carga .dica-carga, .campo-carga .series-feitas { flex-basis: 100%; }
+.series-feitas { color: var(--verde); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.campo-carga .ver-evolucao { font-size: 13px; padding: 0; }
+.campo-carga input { min-height: 40px; padding: 0 8px; border: 1.5px solid var(--linha); border-radius: 10px; background: var(--fundo); color: var(--texto); font: 700 20px/1 var(--fonte-titulo); font-variant-numeric: tabular-nums; }
 .campo-carga input:focus { border-color: var(--laranja); outline: none; }
 .campo-carga .unidade { color: var(--apagado); font-size: 14px; }
 .dica-carga { color: var(--apagado); font-size: 12px; line-height: 1.25; }
@@ -1386,3 +1391,23 @@ svg { width: 22px; height: 22px; flex: none; }
 .oferta-inicio { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; padding: 12px; border: 1px dashed var(--linha); border-radius: 14px; }
 .oferta-inicio p { margin: 0; font-size: 14px; line-height: 1.4; }
 .oferta-inicio .botao { align-self: flex-start; min-height: 42px; }
+
+/* Evolução do exercício: números, gráfico e tabela */
+.evolucao-folha { overflow-y: auto; }
+.evolucao-folha h3 { margin: 8px 0 0; font: 800 17px/1.1 var(--fonte-titulo); text-transform: uppercase; letter-spacing: 0.04em; }
+.evolucao-numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
+.evolucao-numeros > div { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 12px; background: var(--superficie-2); }
+.evolucao-numeros strong { font: 800 22px/1 var(--fonte-titulo); color: var(--texto); }
+.evolucao-numeros span:not(.rotulo) { color: var(--apagado); font-size: 12px; }
+.grafico-caixa { padding: 8px; border-radius: 14px; background: var(--fundo); }
+.grafico-evolucao { display: block; width: 100%; height: auto; }
+.grafico-evolucao .grade { stroke: var(--linha); stroke-width: 1; }
+.grafico-evolucao .eixo { fill: var(--apagado); font: 11px var(--fonte-texto); }
+.grafico-evolucao .linha { fill: none; stroke: var(--laranja); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.grafico-evolucao .ponto { fill: var(--laranja); stroke: var(--fundo); stroke-width: 2; }
+.grafico-evolucao .ponto.ativo { fill: var(--texto); }
+.grafico-evolucao .alvo { fill: transparent; cursor: pointer; outline: none; }
+.grafico-dica { margin: 4px 4px 2px !important; color: var(--texto) !important; font-size: 13px !important; font-variant-numeric: tabular-nums; }
+.evolucao-tabela { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
+.evolucao-tabela th { text-align: left; color: var(--apagado); font-weight: 600; font-size: 12px; padding: 4px 6px; }
+.evolucao-tabela td { padding: 6px; border-top: 1px solid var(--linha); color: var(--texto); }

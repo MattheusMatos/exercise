@@ -19,6 +19,7 @@ function comecar(i, deHoje, ajusteAnterior) {
     extras,
     aquecidos: {},
     cargas: {},
+    feitas: {}, // carga × repetições de cada série marcada, por exercício
     // O ajuste pedido no fim da última vez vale para esta sessão e sai da fila de ajustes.
     ajuste: ajusteAnterior || estado.ajustes[treino.id] || { descanso: 0, carga: 0 },
     aquecer: null, // decidido na tela de aquecimento
@@ -95,9 +96,13 @@ function marcarSerie(i, k) {
   const antes = sessao.series[i] || 0;
   const agora = k < antes ? k : k + 1; // tocar num cronômetro já marcado desmarca dele em diante
   sessao.series[i] = agora;
-  salvar();
-
   const topo = app.querySelector(`.cartao.topo[data-i="${i}"]`);
+  // Guarda carga × repetições das séries marcadas agora; desmarcar apaga o registro delas.
+  if (agora > antes) for (let n = antes; n < agora; n++) registrarSerie(i, ex, n, topo);
+  else apagarSeries(i, ex, agora);
+  salvar();
+  atualizarSeriesNoCartao(i, ex, topo, agora);
+
   if (topo) {
     topo.querySelectorAll('.anilha').forEach((botao, n) => {
       botao.classList.toggle('cheia', n < agora);

@@ -172,6 +172,16 @@ Como as retrospectivas de música: nos 7 primeiros dias de cada mês, a tela ini
 
 Para isso, o app guarda o histórico de cargas (uma por exercício por dia, a partir das anotadas no treino) e do peso do corpo (campo **Seu peso** na aba Personagem, que também vale para as calorias).
 
+### Registro por série, sugestão de carga e evolução
+
+No cartão, ao lado da carga, há o campo de **repetições**. Tocar no cronômetro de uma série guarda a carga × repetições dela (desmarcar apaga), e a linha **Hoje: 60×10 · 60×9** mostra o que já foi feito.
+
+- **Sugestão de carga** (progressão dupla, [`progressao.js`](progressao.js)): pela última sessão do exercício. Bateu o topo da faixa de repetições em todas as séries → sobe a carga (2,5%, no mínimo 1 kg) e volta à base da faixa; dentro da faixa → mesma carga, 1 repetição a mais; abaixo da base → 7,5% menos. A carga e as repetições sugeridas já vêm preenchidas.
+- **Recorde**: um aviso 🏆 quando a série passa da melhor força estimada do exercício (1RM estimado pela fórmula de Epley, kg × (1 + reps/30), contando até 12 repetições).
+- **Ver evolução**: recorde, maior carga, ganho desde o início, o gráfico da força estimada por treino (tocar num ponto mostra as séries do dia) e a tabela dos últimos treinos.
+
+Os dados ficam em `estado.registroSeries` (até 8000 séries).
+
 ### Personalizar (na Loja)
 
 - **Temas do app** (80 pontos cada): Noite, Neon, Rosa, Dourado e Roxo trocam a cor de destaque e o fundo do app inteiro; o Laranja de sempre é grátis. Na versão de uma academia não aparecem: as cores são as dela.

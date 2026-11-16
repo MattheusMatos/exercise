@@ -48,6 +48,7 @@ function sessaoValida(s, prog) {
     extras,
     aquecidos: s.aquecidos && typeof s.aquecidos === 'object' ? s.aquecidos : {},
     cargas: s.cargas && typeof s.cargas === 'object' ? s.cargas : {},
+    feitas: s.feitas && typeof s.feitas === 'object' ? s.feitas : {},
     ajuste: s.ajuste && typeof s.ajuste === 'object' ? { descanso: Number(s.ajuste.descanso) || 0, carga: Number(s.ajuste.carga) || 0 } : { descanso: 0, carga: 0 },
     aquecer: typeof s.aquecer === 'boolean' || s.aquecer === null ? s.aquecer : true,
   };
@@ -106,6 +107,12 @@ function estadoValido(bruto) {
     limpo.registroCargas = e.registroCargas.filter((r) => r && ehDia(r.data) && typeof r.ex === 'string' && Number.isFinite(r.kg) && r.kg >= 0 && r.kg <= 1000)
       .map((r) => ({ data: r.data, ex: r.ex, kg: r.kg })).slice(-5000);
   }
+  // Cada série feita: carga × repetições (series.js), para a sugestão de carga, os recordes e o gráfico.
+  limpo.registroSeries = Array.isArray(e.registroSeries)
+    ? e.registroSeries.filter((r) => r && ehDia(r.data) && typeof r.ex === 'string' && Number.isInteger(r.n) && r.n >= 0 && r.n < 20
+      && Number.isFinite(r.kg) && r.kg >= 0 && r.kg <= 1000 && (r.reps === null || (Number.isInteger(r.reps) && r.reps >= 1 && r.reps <= 200)))
+      .map((r) => ({ data: r.data, ex: r.ex, n: r.n, kg: r.kg, reps: r.reps })).slice(-8000)
+    : [];
   if (Array.isArray(e.pesos)) {
     limpo.pesos = e.pesos.filter((r) => r && ehDia(r.data) && Number.isFinite(r.kg) && r.kg >= 30 && r.kg <= 250).map((r) => ({ data: r.data, kg: r.kg })).slice(-1000);
   }
