@@ -182,7 +182,7 @@ O que foi comprado fica nas compras (`tema:noite`, `titulo:lenda-do-supino`…);
 
 ### Código de presente
 
-Na Loja, **Código de presente** resgata um código dado pelo dono do app: pontos e, se o código prevê, a ofensiva que apagou por último (até 30 dias atrás) de volta, com os dias que faltaram protegidos. Cada código vale uma vez por aparelho. O app guarda só o hash SHA-256 de cada código (`PRESENTES` em `app/loja.js`); para criar um, gere o hash do código em maiúsculas e acrescente-o lá.
+Na Loja, **Código de presente** resgata um código dado pelo dono do app: pontos e, se o código prevê, a ofensiva que apagou por último (até 30 dias atrás) de volta, com os dias que faltaram protegidos. Cada código vale uma vez por aparelho. O app guarda só o hash SHA-256 de cada código (`PRESENTES` em `app/loja.js`), calculado só com as letras e os números em maiúsculas ("volta 8gjjcv" e "VOLTA-8GJJCV" valem o mesmo); para criar um, gere esse hash e acrescente-o lá.
 
 ### Começo da semana
 

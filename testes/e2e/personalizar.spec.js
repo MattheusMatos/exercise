@@ -15,14 +15,14 @@ test('tema comprado muda as cores do app e continua depois de recarregar', async
   await expect(noite).toHaveClass(/selecionada/);
   expect(await saldo()).toBe(antes - 80);
   const cor = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--laranja').trim());
-  expect(await cor()).toBe('#5b8cff');
+  await expect.poll(cor).toBe('#5b8cff');
   if (FOTOS) await page.screenshot({ path: `${FOTOS}/l_temas.png` });
   await page.reload();
-  expect(await cor()).toBe('#5b8cff');
+  await expect.poll(cor).toBe('#5b8cff');
   // voltar ao laranja é grátis, e o Noite continua comprado
   await page.click('.perfil .pontos');
   await page.locator('.opcao-loja:has-text("Laranja") .botao').click();
-  expect(await cor()).toBe('#ff6b35');
+  await expect.poll(cor).toBe('#ff6b35');
   await expect(page.locator('.opcao-loja:has-text("Noite") .botao')).toHaveText('Usar');
 });
 

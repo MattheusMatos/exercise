@@ -29,7 +29,7 @@ test('código de presente dá pontos e devolve a ofensiva, uma vez só', async (
   await expect(page.locator('.perfil .ofensiva')).toContainText('10');
 
   await page.click('.perfil .pontos');
-  await page.fill('.campo-presente', 'TESTE-123');
+  await page.fill('.campo-presente', 'teste 123'); // sem traço e em minúsculas vale o mesmo
   await page.click('.presente-cartao .botao');
   await expect(page.locator('.toast')).toContainText('já foi usado');
   // continua depois de recarregar

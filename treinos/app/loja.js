@@ -193,15 +193,16 @@ function opcoesEstilo(aoMudar) {
 // ---------- códigos de presente ----------
 
 // Códigos dados pelo dono do app (para quem perdeu a ofensiva testando, por exemplo). Só o hash
-// SHA-256 do código fica aqui, então ler o código-fonte não revela o código. Cada um vale uma vez
+// SHA-256 do código (só letras e números, em maiúsculas) fica aqui, então ler o código-fonte não revela o código. Cada um vale uma vez
 // por aparelho.
 const PRESENTES = {
-  '7e1e2e537bd7d3bedc20992aa9f70239e9f0b37e2fd64513b1b5ba4672ae3768': { pontos: 200, ofensiva: true },
-  '688ed581e33fc0740b12bfb03058e29588b66c481943b3781df0793007e927a7': { pontos: 300, ofensiva: true },
+  'd14e61b6d0d5691732715975b5f998e58036d02edebfe8b9bbfda51e5c0f944e': { pontos: 200, ofensiva: true },
+  'fb0285f5a81a836114a575652ea441520f4fc43b7d042736f7ea4bac9a3c3f0f': { pontos: 300, ofensiva: true },
 };
 
 async function hashDoCodigo(texto) {
-  const bytes = new TextEncoder().encode(texto.trim().toUpperCase());
+  // Só letras e números, em maiúsculas: "volta 8gjjcv", "VOLTA-8GJJCV" e "VOLTA8GJJCV" valem o mesmo.
+  const bytes = new TextEncoder().encode(texto.toUpperCase().replace(/[^A-Z0-9]/g, ''));
   const hash = await crypto.subtle.digest('SHA-256', bytes);
   return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
@@ -222,7 +223,7 @@ async function resgatarPresente(texto) {
   if (!window.crypto || !crypto.subtle) return 'Abra o app pelo link publicado para resgatar';
   const hash = await hashDoCodigo(texto);
   const presente = PRESENTES[hash];
-  if (!presente) return 'Código inválido';
+  if (!presente) return 'Código inválido. Confira as letras e os números; se acabou de receber, feche e abra o app para atualizar.';
   if (estado.presentes.some((p) => p.codigo === hash.slice(0, 16))) return 'Este código já foi usado neste aparelho';
   const devolvidos = presente.ofensiva ? devolverOfensiva() : 0;
   estado.presentes = [...estado.presentes, { codigo: hash.slice(0, 16), data: dataLocal(new Date()), pontos: presente.pontos || 0 }];
