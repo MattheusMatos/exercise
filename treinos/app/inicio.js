@@ -65,6 +65,7 @@ Promise.all(Object.entries(ARQUIVOS_PROGRAMA).map(([nome, arquivo]) => fetch(arq
     }
     estado = carregarLocal();
     aplicarTema();
+    medir('abrir');
     salvar(); // grava o que a validação acrescentou, como os bloqueios de presente
     programa = programas[estado.perfil.programa];
     selecionado = estado.sessao ? estado.sessao.treino : estado.proximo;

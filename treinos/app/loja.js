@@ -68,6 +68,7 @@ const diasDesde = (dia) => Math.round((new Date(`${dataLocal(new Date())}T12:00:
 function gastar(tipo, pontos) {
   if (pontosAtuais() < pontos) return false;
   estado.compras = [...estado.compras, { data: dataLocal(new Date()), tipo, pontos }].slice(-400);
+  medir('compra');
   return true;
 }
 

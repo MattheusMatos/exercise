@@ -114,6 +114,18 @@ function estadoValido(bruto) {
       .map((r) => ({ data: r.data, ex: r.ex, n: r.n, kg: r.kg, reps: r.reps })).slice(-8000)
     : [];
   const ehSemana = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
+  // Medição de uso (backup.js): contadores por dia, só neste aparelho.
+  limpo.uso = {};
+  if (e.uso && typeof e.uso === 'object') {
+    for (const [dia, eventos] of Object.entries(e.uso).sort().slice(-120)) {
+      if (!ehDia(dia) || !eventos || typeof eventos !== 'object') continue;
+      const validos = Object.entries(eventos).filter(([nome, q]) => EVENTOS_DE_USO[nome] && Number.isInteger(q) && q > 0 && q < 10000);
+      if (validos.length) limpo.uso[dia] = Object.fromEntries(validos);
+    }
+  }
+  limpo.ultimoBackup = ehDia(e.ultimoBackup) ? e.ultimoBackup : null;
+  limpo.backupAdiado = ehDia(e.backupAdiado) ? e.backupAdiado : null;
+  limpo.horaDoTreino = typeof e.horaDoTreino === 'string' && /^\d{2}:\d{2}$/.test(e.horaDoTreino) ? e.horaDoTreino : null;
   limpo.semanaLeve = ehSemana(e.semanaLeve) ? e.semanaLeve : null;
   limpo.semanaLeveRecusada = ehSemana(e.semanaLeveRecusada) ? e.semanaLeveRecusada : null;
   if (Array.isArray(e.pesos)) {

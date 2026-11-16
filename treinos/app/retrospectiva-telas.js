@@ -217,6 +217,8 @@ async function desenharRetro(r) {
 }
 
 function abrirRetrospectiva(periodo) {
+  medir('retrospectiva');
+  salvar();
   const r = resumoDe(periodo);
   const ant = resumoDe(R().anterior(periodo));
   const telas = telasDaRetrospectiva(r, ant);

@@ -197,6 +197,8 @@ function graficoDeEvolucao(lista) {
 }
 
 function abrirEvolucao(ex) {
+  medir('evolucao');
+  salvar();
   const todas = seriesDoExercicio(ex);
   const comForca = todas.filter((s) => s.melhor > 0).slice(-20);
   const fechar = () => modal.remove();

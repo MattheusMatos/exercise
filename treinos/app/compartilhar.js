@@ -177,6 +177,8 @@ async function desenharCard(r, treino, estiloId) {
 }
 
 async function abrirCompartilhar(r, treino) {
+  medir('compartilhar');
+  salvar();
   let url = null;
   const fechar = () => {
     if (url) URL.revokeObjectURL(url);

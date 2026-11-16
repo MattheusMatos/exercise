@@ -206,7 +206,7 @@ function perguntaSemana() {
     ofertaDeInicio(),
     h('div', { class: 'semana-rodape' },
       h('button', { class: 'link', onclick: pularSemana }, 'Agora não'),
-      h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo')));
+      h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembretes na agenda')));
 }
 
 function cartaoSemana(interativo) {
@@ -245,7 +245,7 @@ function cartaoSemana(interativo) {
         h('span', { class: 'dica-semana' }, 'Toque num dia para trocar entre treino e descanso.'),
         h('button', { class: 'link', onclick: mudarMeta }, 'Mudar meta'))
       : null,
-    interativo ? h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo') : null);
+    interativo ? h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembretes na agenda') : null);
 }
 
 // Sem servidor, o site não manda notificação sozinho; a agenda do celular avisa todo domingo.
@@ -263,21 +263,102 @@ function urlGoogleAgenda() {
   return `https://calendar.google.com/calendar/render?${parametros}`;
 }
 
+// ---------- lembretes na agenda ----------
+
+const DIAS_ICS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+// Dias de treino da semana planejada (ou segunda, quarta e sexta, sem plano).
+function diasDoLembrete() {
+  const plano = planoDaSemana();
+  const dias = plano ? plano.dias.map((x, d) => (x ? d : -1)).filter((d) => d >= 0) : [];
+  return dias.length ? dias : [1, 3, 5];
+}
+
+// A próxima data (a partir de amanhã) que cai num dos dias, como AAAAMMDD.
+function proximoDiaDeTreino(dias) {
+  const hoje = new Date();
+  for (let k = 1; k <= 7; k++) {
+    const d = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + k);
+    if (dias.includes(d.getDay())) return `${d.getFullYear()}${doisDigitos(d.getMonth() + 1)}${doisDigitos(d.getDate())}`;
+  }
+  return null;
+}
+
+// hora: 'HH:MM'. Um evento de 1 hora que se repete toda semana nos dias de treino.
+function eventoDosTreinos(hora) {
+  const dias = diasDoLembrete();
+  const dia = proximoDiaDeTreino(dias);
+  const [hh, mm] = hora.split(':').map(Number);
+  const inicio = `${dia}T${doisDigitos(hh)}${doisDigitos(mm)}00`;
+  const fim = `${dia}T${doisDigitos((hh + 1) % 24)}${doisDigitos(mm)}00`;
+  const nome = ACADEMIA ? ACADEMIA.nome : 'Treino PPL';
+  return { dias, inicio, fim, regra: `RRULE:FREQ=WEEKLY;BYDAY=${dias.map((d) => DIAS_ICS[d]).join(',')}`, titulo: `${nome}: dia de treino`, endereco: location.href.split('#')[0] };
+}
+
+function urlGoogleDosTreinos(hora) {
+  const e = eventoDosTreinos(hora);
+  const parametros = new URLSearchParams({
+    action: 'TEMPLATE', text: e.titulo, details: `Hora do treino. Abra o app: ${e.endereco}`,
+    dates: `${e.inicio}/${e.fim}`, recur: e.regra,
+  });
+  return `https://calendar.google.com/calendar/render?${parametros}`;
+}
+
+function icsDosTreinos(hora) {
+  const e = eventoDosTreinos(hora);
+  const carimbo = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Treino PPL//PT-BR', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT',
+    `UID:treinos-${e.inicio}@treino-ppl`, `DTSTAMP:${carimbo}`, `DTSTART:${e.inicio}`, `DTEND:${e.fim}`, e.regra,
+    `SUMMARY:${e.titulo}`, `DESCRIPTION:Hora do treino. Abra o app: ${e.endereco}`, `URL:${e.endereco}`,
+    'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Hora do treino!', 'TRIGGER:-PT30M', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+}
+
 function abrirLembrete() {
   const fechar = () => modal.remove();
+  let hora = estado.horaDoTreino || '18:00';
+  const dias = diasDoLembrete();
+  const nomes = dias.map((d) => NOMES_DIAS[d]).join(', ').replace(/, ([^,]+)$/, ' e $1');
+  const google = h('a', { class: 'botao primario', href: urlGoogleDosTreinos(hora), target: '_blank', rel: 'noopener' }, 'Google Agenda (Android)');
+  const iphone = h('a', { class: 'botao secundario', download: 'treinos.ics' }, 'Calendário do iPhone');
+  const atualizar = () => {
+    google.href = urlGoogleDosTreinos(hora);
+    if (iphone.href) URL.revokeObjectURL(iphone.href);
+    iphone.href = URL.createObjectURL(new Blob([icsDosTreinos(hora)], { type: 'text/calendar' }));
+  };
+  atualizar();
   const modal = h('div', {
     class: 'modal',
     role: 'dialog',
     'aria-modal': 'true',
-    'aria-label': 'Lembrete todo domingo',
+    'aria-label': 'Lembretes',
     onclick: (e) => {
       if (e.target === modal) fechar();
     },
-  }, h('div', { class: 'modal-caixa folha' },
-    h('h2', null, 'Lembrete todo domingo'),
-    h('p', null, 'Um site não consegue mandar notificação sozinho, sem um servidor. Por isso o lembrete fica na agenda do celular: todo domingo às 9h ela avisa para você planejar a semana. Dá para mudar o horário depois, na própria agenda.'),
-    h('a', { class: 'botao primario', href: urlGoogleAgenda(), target: '_blank', rel: 'noopener' }, 'Google Agenda (Android)'),
-    h('a', { class: 'botao secundario', href: 'lembrete-domingo.ics' }, 'Calendário do iPhone'),
+  }, h('div', { class: 'modal-caixa folha lembrete-folha' },
+    h('h2', null, 'Lembretes'),
+    h('p', null, 'Um site não consegue mandar notificação sozinho, sem um servidor. Por isso os lembretes ficam na agenda do celular, que avisa mesmo com o app fechado.'),
+    h('section', { class: 'lembrete-treinos' },
+      h('h3', null, 'Dias de treino'),
+      h('p', null, `Toda semana: ${nomes}. A agenda avisa 30 minutos antes.`),
+      h('label', { class: 'campo-hora' }, 'Horário do treino',
+        h('input', {
+          type: 'time', value: hora,
+          onchange: (e) => {
+            if (!/^\d{2}:\d{2}$/.test(e.target.value)) return;
+            hora = e.target.value;
+            estado.horaDoTreino = hora;
+            salvar();
+            atualizar();
+          },
+        })),
+      google, iphone,
+      h('p', { class: 'aviso' }, 'Marcar antes o dia e a hora aumenta a chance de treinar: em estudos, quem planejou quando e onde ia se exercitar praticou mais atividade física (Bélanger-Gravel et al., 2013). Mudou os dias da semana? Crie o lembrete de novo e apague o antigo na agenda.')),
+    h('section', { class: 'lembrete-domingo' },
+      h('h3', null, 'Planejar a semana'),
+      h('p', null, 'Todo domingo às 9h, para escolher os dias da semana.'),
+      h('a', { class: 'botao secundario', href: urlGoogleAgenda(), target: '_blank', rel: 'noopener' }, 'Google Agenda (Android)'),
+      h('a', { class: 'botao secundario', href: 'lembrete-domingo.ics' }, 'Calendário do iPhone')),
     h('button', { class: 'link', onclick: fechar }, 'Fechar')));
   document.body.append(modal);
   modal.querySelector('.botao').focus();

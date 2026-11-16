@@ -15,7 +15,17 @@ test('domingo: escolhe quantos dias, liga um dia e cria lembrete', async ({ page
   expect((await tira(page)).filter((d) => d.status === 'planejado').length).toBe(5);
 
   await page.click('.semana-cartao .link:has-text("Lembrete")');
-  const url = new URL(await page.getAttribute('.folha a.botao.primario', 'href'));
+  // lembrete dos dias de treino: os 5 dias planejados, na hora escolhida
+  await page.fill('.campo-hora input', '06:30');
+  const treinos = new URL(await page.getAttribute('.lembrete-treinos a.botao.primario', 'href'));
+  expect(treinos.searchParams.get('recur')).toBe('RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR');
+  expect(treinos.searchParams.get('dates')).toBe('20261026T063000/20261026T073000');
+  const arquivo = await page.evaluate(async () => (await fetch(document.querySelector('.lembrete-treinos a[download]').href)).text());
+  expect(arquivo).toContain('RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR');
+  expect(arquivo).toContain('DTSTART:20261026T063000');
+  expect(arquivo).toContain('TRIGGER:-PT30M');
+  // lembrete de domingo, para planejar a semana
+  const url = new URL(await page.getAttribute('.lembrete-domingo a.botao', 'href'));
   expect(url.hostname).toBe('calendar.google.com');
   expect(url.searchParams.get('recur')).toContain('WEEKLY');
   const ics = await page.evaluate(async () => (await (await fetch('lembrete-domingo.ics')).text()).includes('RRULE:FREQ=WEEKLY;BYDAY=SU'));

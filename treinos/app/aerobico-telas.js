@@ -21,6 +21,7 @@ function registrarAerobico(tipo, minutos) {
   const hoje = dataLocal(new Date());
   const antes = window.Aerobico.pontos(estado.historico, estado.aerobicos);
   estado.aerobicos = [...estado.aerobicos, { data: hoje, tipo, minutos }].slice(-1500);
+  medir('aerobico');
   salvar();
   return window.Aerobico.pontos(estado.historico, estado.aerobicos) - antes;
 }

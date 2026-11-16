@@ -82,7 +82,7 @@ let biblioteca = null; // { itens, porId }
 let estado = {
   proximo: 0, proximos: {}, sessao: null, trocas: {}, plano: null, planos: {}, historico: [], extras: {},
   aerobicos: [], cronoAerobico: null, peso: 70, cargas: {}, ajustes: {}, extrasProximo: {}, bloqueios: [], baus: [],
-  compras: [], apostas: [], presentes: [], registroSeries: [], semanaLeve: null, semanaLeveRecusada: null, tema: 'laranja', titulo: null, comemoracao: 'confete', estiloCard: 'laranja', registroCargas: [], pesos: [],
+  compras: [], apostas: [], presentes: [], registroSeries: [], uso: {}, ultimoBackup: null, backupAdiado: null, horaDoTreino: null, semanaLeve: null, semanaLeveRecusada: null, tema: 'laranja', titulo: null, comemoracao: 'confete', estiloCard: 'laranja', registroCargas: [], pesos: [],
   perfil: { personagem: 'brutus', programa: 'masculino', sexo: null, nome: '', configurado: false }, atualizado: 0,
 };
 let tela = 'inicio';

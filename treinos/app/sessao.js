@@ -5,6 +5,7 @@
 
 // deHoje e ajuste: ao recomeçar, os extras só de hoje e o ajuste de carga e descanso continuam.
 function comecar(i, deHoje, ajusteAnterior) {
+  medir('treino_iniciado');
   const treino = programa.treinos[i];
   // Extras fixos do treino e os que valem só para esta vez.
   const extras = [...(estado.extras[treino.id] || []), ...(estado.extrasProximo[treino.id] || []), ...(deHoje || [])].map((x) => ({ ...x, removido: undefined }));
@@ -255,6 +256,7 @@ function terminar() {
     nivelAntes: ofensivaAtual().nivel,
     pontosAntes: pontosAtuais(),
   };
+  medir('treino_feito');
   // Marca o dia na semana e soma na ofensiva.
   estado.historico = [...estado.historico, { data: dataLocal(new Date()), treino: treino.id, minutos: resumoFinal.minutos, series: resumoFinal.series }].slice(-1500);
   estado.proximo = (sessao.treino + 1) % programa.treinos.length;

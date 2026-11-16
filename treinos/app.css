@@ -1435,3 +1435,26 @@ svg { width: 22px; height: 22px; flex: none; }
 .recomendado p { margin: 0; color: var(--apagado); font-size: 15px; line-height: 1.4; }
 .recomendado .dias-programa { color: var(--texto); font-weight: 600; }
 .ver-todos { align-self: center; }
+
+/* Lembretes na agenda */
+.lembrete-folha { overflow-y: auto; }
+.lembrete-folha section { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; background: var(--superficie-2); }
+.lembrete-folha h3 { margin: 0; font: 800 19px/1.1 var(--fonte-titulo); text-transform: uppercase; letter-spacing: 0.04em; }
+.campo-hora { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 15px; }
+.campo-hora input { min-height: 44px; padding: 0 10px; border: 1px solid var(--linha); border-radius: 12px; background: var(--fundo); color: var(--texto); font: 700 18px/1 var(--fonte-titulo); color-scheme: dark; }
+
+/* Backup e dados */
+.dados-folha { overflow-y: auto; }
+.dados-folha section { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 14px; background: var(--superficie-2); }
+.dados-folha h3 { margin: 0; font: 800 19px/1.1 var(--fonte-titulo); text-transform: uppercase; letter-spacing: 0.04em; }
+.campo-arquivo { color: var(--apagado); font: inherit; font-size: 14px; }
+.confirmar-importar { display: flex; flex-direction: column; gap: 8px; padding: 10px; border: 1px solid var(--laranja); border-radius: 12px; }
+.confirmar-importar p { color: var(--texto) !important; }
+.lista-uso { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.lista-uso li { display: flex; justify-content: space-between; gap: 12px; color: var(--apagado); }
+.lista-uso strong { color: var(--texto); font-variant-numeric: tabular-nums; }
+.abrir-dados { align-self: flex-start; min-height: 42px; }
+.backup-cartao { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid var(--linha); border-radius: var(--raio); background: var(--superficie); }
+.backup-cartao p { margin: 0; font-size: 15px; line-height: 1.4; }
+.backup-cartao > div { display: flex; align-items: center; gap: 16px; }
+.backup-cartao .botao { min-height: 42px; }

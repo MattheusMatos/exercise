@@ -186,6 +186,12 @@ No cartão, ao lado da carga, há o campo de **repetições**. Tocar no cronôme
 
 Os dados ficam em `estado.registroSeries` (até 8000 séries).
 
+### Lembretes, backup e uso
+
+- **Lembretes na agenda** (no cartão da semana): um evento que se repete toda semana nos dias de treino planejados, no horário escolhido, com aviso 30 minutos antes, para o Google Agenda ou o calendário do iPhone; e o lembrete de domingo para planejar a semana. Ficam na agenda porque um site não manda notificação com o app fechado sem um servidor. Planejar antes quando e onde treinar aumenta a prática de atividade física (Bélanger-Gravel et al., 2013).
+- **Backup e dados** (aba Personagem): **Baixar backup** salva tudo num arquivo `.json`; **Trazer um backup** substitui os dados do aparelho pelos do arquivo, depois de confirmar, e guarda os anteriores em `ppl:estado:antes-de-importar`. Com 10 treinos e nenhum backup (ou 30 dias desde o último), a tela inicial lembra.
+- **Uso** (`app/backup.js`): `medir(evento)` conta por dia abrir o app, treinos começados e terminados, aeróbicos, compras, cards, retrospectivas e evoluções, só no aparelho (últimos 120 dias). Nada é enviado; a pessoa vê o resumo de 30 dias e pode compartilhá-lo. Com um servidor, `medir()` é o único lugar a mudar.
+
 ### Personalizar (na Loja)
 
 - **Temas do app** (80 pontos cada): Noite, Neon, Rosa, Dourado e Roxo trocam a cor de destaque e o fundo do app inteiro; o Laranja de sempre é grátis. Na versão de uma academia não aparecem: as cores são as dela.
@@ -261,6 +267,8 @@ O app não tem build: são arquivos estáticos. O código fica em [`app/`](app/)
 | `aerobico-telas.js` | Aeróbico e o cronômetro em tela cheia |
 | `sessao.js` | Ações durante o treino: séries, Feito/Depois, desfazer, arrastar |
 | `descanso.js` | Descanso, som, vibração, tela ligada e vídeo |
+| `series.js` | Registro por série no cartão, plano do dia, semana leve e evolução |
+| `backup.js` | Backup (exportar e importar) e a medição de uso |
 | `montador.js` | Meu treino: o montador, as sugestões e o programa montado |
 | `inicio.js` | Instalar como app e o começo: carrega os programas e desenha a primeira tela |
 

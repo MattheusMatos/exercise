@@ -110,6 +110,7 @@ function abrirMontador() {
     }
     const emUso = estado.perfil.programa === 'meu';
     estado.meuTreino = copiaMeu(rascunho);
+    medir('montador');
     // As trocas e extras do Meu treino antigo apontam para lugares que podem ter mudado.
     for (const chave of ['trocas', 'extras', 'extrasProximo', 'ajustes']) {
       estado[chave] = Object.fromEntries(Object.entries(estado[chave]).filter(([id]) => !id.startsWith('meu_')));

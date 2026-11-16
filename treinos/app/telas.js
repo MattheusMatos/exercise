@@ -194,6 +194,7 @@ function renderInicio() {
     // e o resto aparecem depois que a pessoa já usou o app uma vez.
     ...(novato ? [heroTreino(selecionado), cartaoSemana(true), cartaoFeriado()] : [
       cartaoRetroInicio(),
+      cartaoBackup(),
       cartaoBau(),
       cartaoFeriado(),
       cartaoSemana(true),

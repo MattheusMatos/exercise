@@ -528,6 +528,13 @@ function abrirPerfil(aba) {
     return [
       campoNome(),
       campoPeso(),
+      h('button', {
+        class: 'botao secundario abrir-dados',
+        onclick: () => {
+          fechar();
+          abrirDados();
+        },
+      }, 'Backup e dados'),
       cartaoRetrospectivas(),
       linhaOfensiva(of, estadoDaChama(of)),
       h('p', null, `Recorde: ${plural(of.recorde, 'dia')}. ${textoDoNivel(of)}.`),
