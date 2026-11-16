@@ -184,6 +184,10 @@ O que foi comprado fica nas compras (`tema:noite`, `titulo:lenda-do-supino`…);
 
 Na Loja, **Código de presente** resgata um código dado pelo dono do app: pontos e, se o código prevê, a ofensiva que apagou por último (até 30 dias atrás) de volta, com os dias que faltaram protegidos. Cada código vale uma vez por aparelho. O app guarda só o hash SHA-256 de cada código (`PRESENTES` em `app/loja.js`); para criar um, gere o hash do código em maiúsculas e acrescente-o lá.
 
+### Começo da semana
+
+A sequência dos treinos continua de uma semana para a outra (no PPL, Push A, Pull A, Legs A, Push B, Pull B, Legs B), para nenhum treino ficar sempre de fora. Quando a semana cairia no meio do ciclo, a pergunta da semana e o cartão da semana (enquanto nada foi feito) oferecem **Começar com Push** (ou o treino que abre o ciclo do programa), avisando quais ficam para a próxima volta.
+
 ### Feriados
 
 O app conhece os feriados nacionais ([`feriados.js`](feriados.js)): os fixos (Ano-Novo, Tiradentes, Dia do Trabalho, Independência, Aparecida, Finados, Proclamação da República, Consciência Negra e Natal) e a Sexta-feira Santa, que depende da Páscoa. Carnaval e Corpus Christi são ponto facultativo e ficam de fora. Num feriado que era dia de treino planejado, se a pessoa não treinou, o dia fica protegido como um bloqueio de ofensiva, mas sem gastar nenhum, e os bloqueios guardados não são usados para cobrir o que o feriado já cobre. Na véspera e no dia, a tela inicial avisa; na semana, o dia aparece como *feriado*. Se der para treinar no feriado, conta normal.

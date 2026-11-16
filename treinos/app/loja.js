@@ -197,6 +197,7 @@ function opcoesEstilo(aoMudar) {
 // por aparelho.
 const PRESENTES = {
   '7e1e2e537bd7d3bedc20992aa9f70239e9f0b37e2fd64513b1b5ba4672ae3768': { pontos: 200, ofensiva: true },
+  '688ed581e33fc0740b12bfb03058e29588b66c481943b3781df0793007e927a7': { pontos: 300, ofensiva: true },
 };
 
 async function hashDoCodigo(texto) {

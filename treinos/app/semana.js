@@ -154,6 +154,43 @@ function quandoEOProximo() {
   return dia.hoje ? 'hoje' : NOMES_DIAS[dia.d];
 }
 
+// A sequência dos treinos continua de uma semana para a outra. Se o próximo não é o que abre o ciclo
+// (o Push no PPL, o Superior no superior e inferior), oferece começar a semana por ele: o índice do
+// próximo treino com o mesmo começo de nome do primeiro, ou null se já é ele (ou o programa não tem
+// tipos de treino, como Treino A, B e C).
+function inicioDoCiclo() {
+  const treinos = programa.treinos;
+  const tipo = (t) => t.titulo.split(/[\s:]/)[0];
+  const atual = estado.proximo;
+  if (tipo(treinos[atual]) === tipo(treinos[0])) return null;
+  for (let k = 1; k < treinos.length; k++) {
+    const i = (atual + k) % treinos.length;
+    if (tipo(treinos[i]) === tipo(treinos[0])) return i;
+  }
+  return null;
+}
+
+function ofertaDeInicio() {
+  if (estado.sessao) return null;
+  const i = inicioDoCiclo();
+  if (i === null) return null;
+  const pulados = [];
+  for (let k = estado.proximo; k !== i; k = (k + 1) % programa.treinos.length) pulados.push(nomeDoTreino(programa.treinos[k].titulo));
+  return h('div', { class: 'oferta-inicio' },
+    h('p', null, `A sequência continua da semana passada, então esta começa com ${nomeDoTreino(programa.treinos[estado.proximo].titulo)}.`),
+    h('button', {
+      class: 'botao secundario',
+      onclick: () => {
+        estado.proximo = i;
+        selecionado = i;
+        salvar();
+        renderInicio();
+        avisar(`Semana começando com ${nomeDoTreino(programa.treinos[i].titulo)}`);
+      },
+    }, `Começar com ${nomeDoTreino(programa.treinos[i].titulo)}`),
+    h('p', { class: 'aviso' }, `${pulados.join(' e ')} ${pulados.length === 1 ? 'fica' : 'ficam'} para a próxima volta da sequência.`));
+}
+
 function perguntaSemana() {
   return h('section', { class: 'semana-cartao' },
     h('p', { class: 'etiqueta' }, new Date().getDay() === 0 ? 'Nova semana' : 'Esta semana'),
@@ -166,6 +203,7 @@ function perguntaSemana() {
       onclick: () => planejarSemana(n),
     }, h('strong', null, n), h('span', null, 'dias')))),
     h('p', { class: 'aviso' }, `Os treinos seguem a sequência ${programa.treinos.map((t) => nomeDoTreino(t.titulo)).join(', ').replace(/, ([^,]+)$/, ' e $1')}. Dá para ajustar os dias depois.`),
+    ofertaDeInicio(),
     h('div', { class: 'semana-rodape' },
       h('button', { class: 'link', onclick: pularSemana }, 'Agora não'),
       h('button', { class: 'link', icone: 'sino', onclick: abrirLembrete }, 'Lembrete todo domingo')));
@@ -200,6 +238,8 @@ function cartaoSemana(interativo) {
       h('p', { class: 'etiqueta' }, 'Esta semana'),
       h('span', { class: 'semana-resumo' }, resumo)),
     tira,
+    // Semana planejada e nada feito ainda: dá para escolher começar pelo início do ciclo.
+    interativo && plano && !dias.some((x) => x.status === 'feito') ? ofertaDeInicio() : null,
     interativo
       ? h('div', { class: 'semana-rodape' },
         h('span', { class: 'dica-semana' }, 'Toque num dia para trocar entre treino e descanso.'),

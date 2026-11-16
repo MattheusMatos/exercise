@@ -24,6 +24,7 @@ test('domingo: escolhe quantos dias, liga um dia e cria lembrete', async ({ page
 
 test('extra fixo no próximo treino e extra só de hoje', async ({ page }) => {
   await abrir(page, { quando: '2026-10-26T18:00:00', estado: { plano: { semana: '2026-10-25', dias: SEG_QUA_SEX } } });
+  await expect(page.locator('.exercicios-treino .ex-nome').first()).toBeVisible();
   const antes = await page.locator('.exercicios-treino .ex-nome').count();
   await page.click('.hero .botao:has-text("Adicionar exercício")');
   await expect(page.locator('.recomendacao').first()).toBeVisible();
@@ -57,4 +58,24 @@ test('dia que faltou: escolher fazer o que faltou ou pular', async ({ page }) =>
   await abrir(page, { estado });
   await page.click('.falta-aviso .botao.primario');
   await expect(page.locator('.aquecimento-tela')).toBeVisible();
+});
+
+test('semana que começa no meio da sequência: dá para começar pelo Push', async ({ page }) => {
+  // a semana passada terminou no Pull B: a sequência seguiria com o Legs B
+  await abrir(page, { quando: '2026-11-15T10:00:00', estado: { proximo: 5, historico: [{ data: '2026-11-13', treino: 'pull_b' }] } });
+  await expect(page.locator('.oferta-inicio')).toContainText('começa com Legs B');
+  await page.click('.opcao-dia:has-text("3")');
+  await expect(page.locator('.oferta-inicio')).toBeVisible();
+  await page.click('.oferta-inicio .botao');
+  expect((await lerEstado(page)).proximo).toBe(0);
+  await expect(page.locator('.oferta-inicio')).toHaveCount(0);
+  const dias = await tira(page);
+  expect(dias.find((d) => d.numero === '16').status).toBe('planejado');
+  await expect(page.locator('.dia:has(.dia-numero:text-is("16")) .dia-treino')).toHaveText('PUSH A');
+});
+
+test('quem já começa pelo Push não vê a oferta', async ({ page }) => {
+  await abrir(page, { quando: '2026-11-15T10:00:00', estado: { proximo: 3 } });
+  await expect(page.locator('.pergunta-texto')).toBeVisible();
+  await expect(page.locator('.oferta-inicio')).toHaveCount(0);
 });
