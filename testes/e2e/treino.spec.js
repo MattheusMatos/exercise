@@ -46,15 +46,24 @@ test('treino avançado: aquecimento, carga, mini-pausa, bi-set e fim com avalia�
   expect(e.registroCargas).toEqual([expect.objectContaining({ data: '2026-10-26', kg: 80 })]);
 });
 
-test('ao marcar Feito com o descanso rodando, o descanso some', async ({ page }) => {
+test('ao marcar Feito com o descanso rodando, o descanso continua até o próximo exercício', async ({ page }) => {
   await abrir(page, { quando: '2026-10-26T18:00:00' });
   await comecarTreino(page);
   await page.locator('.cartao.topo .anilha').first().click();
   await expect(page.locator('.descanso.cheio')).toBeVisible();
   await page.click('.minimizar');
+  await page.clock.runFor(20000);
+  const antes = await texto(page.locator('.descanso .relogio'));
   await page.click('.acao.feito');
   await page.waitForTimeout(400);
-  await expect(page.locator('.descanso:not([hidden])')).toHaveCount(0);
+  // continua rodando, minimizado, mostrando o próximo exercício
+  await expect(page.locator('.descanso:not([hidden])')).toHaveCount(1);
+  const proximo = await texto(page.locator('.cartao.topo h2'));
+  await expect(page.locator('.descanso')).toContainText(proximo);
+  expect(await texto(page.locator('.descanso .relogio'))).toBe(antes);
+  // a primeira série do próximo começa um descanso novo
+  await page.locator('.cartao.topo .anilha').first().click();
+  await expect(page.locator('.descanso')).toContainText('série 2');
 });
 
 test('desfazer pelo aviso, chips dos próximos e campo de carga sem desfazer', async ({ page }) => {

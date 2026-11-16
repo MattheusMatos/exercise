@@ -169,11 +169,15 @@ function voar(el, direcao) {
 function concluir(direcao) {
   const sessao = estado.sessao;
   const i = sessao.fila.shift();
-  if (direcao === 'feito') {
-    sessao.feitos.push(i);
-    pararDescanso(); // exercício feito: o descanso dele não faz mais sentido
-  }
+  if (direcao === 'feito') sessao.feitos.push(i);
   else sessao.fila.push(i);
+  // O descanso continua: a pessoa ainda está descansando para o próximo exercício. Ele acaba quando
+  // o tempo termina ou quando ela marca a primeira série do próximo (que começa um descanso novo).
+  if (descanso && sessao.fila.length) {
+    descanso.proxima = exercicioDaSessao(sessao.fila[0]).nome;
+    if (!descansoMinimizado) alternarDescanso();
+    tique();
+  }
   sessao.historico.push({ tipo: direcao, i });
   salvar();
   if (!sessao.fila.length) {
