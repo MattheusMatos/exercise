@@ -58,7 +58,7 @@ test('loja: reparar a ofensiva e apostar dobro ou nada', async ({ page }) => {
 });
 
 test('armário do dia: abre uma vez por dia e o 7º dia é VIP', async ({ page }) => {
-  await abrir(page, { quando: '2026-10-29T10:00:00', estado: { bloqueiosPresente: true } });
+  await abrir(page, { quando: '2026-10-29T10:00:00', estado: { bloqueiosPresente: true, historico: [{ data: '2026-10-20', treino: 'push_a' }] } });
   await page.evaluate(() => { Math.random = () => 0.1; });
   await page.click('.bau-cartao');
   await expect(page.locator('.bau-folha')).toBeVisible();

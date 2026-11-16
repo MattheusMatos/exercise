@@ -18,6 +18,7 @@ test('Feira Fitness: primeira abertura com o logo, dados separados e sem service
   await page.press('.campo-nome', 'Enter');
   await page.click('.opcao-sexo:has-text("Mulher")');
   await page.click('.botao.fixo');
+  await page.click('[data-nivel="iniciante"]');
   await page.click('[data-programa="iniciante_f"]');
   await expect(page.locator('.marca-academia img')).toBeVisible();
   await expect.poll(() => page.locator('.marca-academia img').evaluate((img) => img.naturalWidth)).toBeGreaterThan(0);

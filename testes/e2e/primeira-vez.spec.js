@@ -9,7 +9,14 @@ test('primeira abertura: nome, sexo, personagem e programa', async ({ page }) =>
   await page.click('.opcao-personagem:has-text("Bia")');
   await page.click('.botao.fixo');
 
-  // recomendados para mulher primeiro, depois mobilidade, depois os outros
+  // pergunta o nível e recomenda um treino só; "voltar" desfaz a resposta
+  await page.click('[data-nivel="iniciante"]');
+  await expect(page.locator('.recomendado h2')).toContainText('Corpo Inteiro');
+  await page.click('.boas-vindas > .link:has-text("Voltar")');
+  await page.click('[data-nivel="avancado"]');
+  await expect(page.locator('.recomendado [data-programa="avancado_f"]')).toBeVisible();
+  await page.click('.ver-todos');
+  // na lista completa: recomendados para mulher primeiro, depois mobilidade, depois os outros
   const grupos = await page.locator('.grupo-programas').evaluateAll((gs) => gs.map((g) => [...g.querySelectorAll('[data-programa]')].map((b) => b.dataset.programa)));
   expect(grupos[0]).toEqual(expect.arrayContaining(['feminino', 'iniciante_f', 'avancado_f']));
   expect(grupos.flat()).toContain('mobilidade');
@@ -25,6 +32,15 @@ test('primeira abertura: nome, sexo, personagem e programa', async ({ page }) =>
   await expect(page.locator('.perfil')).toBeVisible();
   expect((await lerEstado(page)).bloqueios).toHaveLength(2);
   expect(await texto(page.locator('.hero h2'))).not.toBe('');
+});
+
+test('antes do primeiro treino, a tela inicial mostra só o essencial, com o treino primeiro', async ({ page }) => {
+  await abrir(page, { quando: '2026-10-26T18:00:00' });
+  await expect(page.locator('.hero')).toBeVisible();
+  await expect(page.locator('.bau-cartao, .aerobico-atalho')).toHaveCount(0);
+  // o treino do dia vem antes da semana
+  const ordem = await page.locator('.inicio > .hero, .inicio > .semana-cartao').evaluateAll((els) => els.map((e) => e.className.split(' ')[0]));
+  expect(ordem[0]).toBe('hero');
 });
 
 test('nome: frase do dia muda e o nome pode ser editado', async ({ page }) => {

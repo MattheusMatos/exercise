@@ -9,7 +9,85 @@ const seriesDoExercicio = (ex) => window.Progressao.sessoes(estado.registroSerie
 // A sugestão de hoje pela última sessão registrada antes de hoje (null sem histórico com repetições).
 function sugestaoDeHoje(ex) {
   const hoje = dataLocal(new Date());
-  return window.Progressao.sugestao(estado.registroSeries.filter((r) => r.data < hoje), ex.imagem, ex.reps, ex.series);
+  return window.Progressao.sugestao(estado.registroSeries.filter((r) => r.data < hoje), ex.imagem, ex.reps, ex.series, { semanaLeve: emSemanaLeve() });
+}
+
+// ---------- plano do dia, estagnação e semana leve ----------
+
+const ROTULOS_PLANO = {
+  subir: ['↑', 'Subir a carga'], manter: ['＝', 'Mesma carga, mais repetições'], baixar: ['↓', 'Baixar a carga'],
+  destravar: ['⟳', 'Recomeçar: estagnou'], leve: ['☾', 'Semana leve'],
+};
+
+const emSemanaLeve = () => estado.semanaLeve === semanaAtual();
+
+// Exercícios do programa que estão estagnados (3 sessões sem evoluir).
+function exerciciosEstagnados() {
+  const ids = new Set(programa.treinos.flatMap((t, i) => t.exercicios.map((_, slot) => exercicio(i, slot).imagem)));
+  return [...ids].filter((id) => window.Progressao.estagnado(estado.registroSeries, id));
+}
+
+// Selo ao lado de cada exercício na lista do treino: o que fazer hoje com a carga.
+function seloDoPlano(ex) {
+  const s = sugestaoDeHoje(ex);
+  if (!s) return null;
+  const [icone, rotulo] = ROTULOS_PLANO[s.tipo];
+  return h('span', { class: `selo-plano plano-${s.tipo}`, title: s.texto, 'aria-label': rotulo }, icone, ' ', s.tipo === 'manter' ? `${textoKg(s.kg)}` : textoKg(s.kg));
+}
+
+// Resumo do plano do treino: quantos sobem, mantêm e baixam.
+function resumoDoPlano(treinoIdx) {
+  const tipos = programa.treinos[treinoIdx].exercicios.map((_, slot) => sugestaoDeHoje(exercicio(treinoIdx, slot))).filter(Boolean).map((s) => s.tipo);
+  if (!tipos.length) return null;
+  const n = (t) => tipos.filter((x) => x === t).length;
+  const partes = [
+    n('subir') ? `↑ subir a carga em ${n('subir')}` : null,
+    n('manter') ? `＝ manter em ${n('manter')}` : null,
+    n('baixar') ? `↓ baixar em ${n('baixar')}` : null,
+    n('destravar') ? `⟳ recomeçar em ${n('destravar')}` : null,
+    n('leve') ? `☾ semana leve em ${n('leve')}` : null,
+  ].filter(Boolean);
+  return h('p', { class: 'plano-do-dia' }, h('strong', null, 'Plano de hoje: '), partes.join(' · '), '. Pela última vez que você fez cada exercício.');
+}
+
+// Semana leve: oferecida quando 3 ou mais exercícios do programa estagnaram.
+function cartaoSemanaLeve() {
+  if (emSemanaLeve()) {
+    return h('div', { class: 'semana-leve-cartao ativa', role: 'note' },
+      h('strong', null, '☾ Semana leve'),
+      h('p', null, 'Nesta semana as cargas sugeridas vêm 10% menores. Pare 3 a 4 repetições antes da falha; se quiser, faça 1 série a menos. Na próxima, volte ao normal.'),
+      h('button', {
+        class: 'link',
+        onclick: () => {
+          estado.semanaLeve = null;
+          salvar();
+          renderInicio();
+        },
+      }, 'Cancelar a semana leve'));
+  }
+  const travados = exerciciosEstagnados();
+  if (travados.length < 3 || estado.semanaLeveRecusada === semanaAtual()) return null;
+  return h('div', { class: 'semana-leve-cartao', role: 'note' },
+    h('strong', null, `${travados.length} exercícios sem evoluir há 3 treinos`),
+    h('p', null, 'Pode ser cansaço acumulado. Uma semana leve (10% menos carga, longe da falha) ajuda a recuperar. Os estudos sobre isso ainda são poucos: parar de vez por uma semana não ajudou (Coleman et al., 2024), por isso a sugestão é reduzir, não parar.'),
+    h('div', { class: 'semana-leve-botoes' },
+      h('button', {
+        class: 'botao primario',
+        onclick: () => {
+          estado.semanaLeve = semanaAtual();
+          salvar();
+          renderInicio();
+          avisar('☾ Semana leve ligada: as cargas sugeridas vêm 10% menores');
+        },
+      }, 'Fazer semana leve'),
+      h('button', {
+        class: 'link',
+        onclick: () => {
+          estado.semanaLeveRecusada = semanaAtual();
+          salvar();
+          renderInicio();
+        },
+      }, 'Agora não')));
 }
 
 // Repetições para preencher o campo na série k: as já feitas hoje nela, senão o alvo da sugestão.

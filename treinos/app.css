@@ -1411,3 +1411,27 @@ svg { width: 22px; height: 22px; flex: none; }
 .evolucao-tabela { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; }
 .evolucao-tabela th { text-align: left; color: var(--apagado); font-weight: 600; font-size: 12px; padding: 4px 6px; }
 .evolucao-tabela td { padding: 6px; border-top: 1px solid var(--linha); color: var(--texto); }
+
+/* Plano do dia: o que fazer com a carga de cada exercício, e a semana leve */
+.selo-plano { flex: none; align-self: center; padding: 3px 8px; border-radius: 999px; background: var(--superficie-2); color: var(--texto); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.plano-subir { box-shadow: inset 0 0 0 1.5px var(--verde); }
+.plano-baixar, .plano-destravar { box-shadow: inset 0 0 0 1.5px var(--azul); }
+.plano-leve { box-shadow: inset 0 0 0 1.5px var(--linha); }
+.plano-do-dia { margin: 0; color: var(--apagado); font-size: 14px; line-height: 1.4; }
+.plano-do-dia strong { color: var(--texto); }
+.semana-leve-cartao { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border: 1px solid var(--azul); border-radius: var(--raio); background: var(--superficie); }
+.semana-leve-cartao strong { font: 800 20px/1.1 var(--fonte-titulo); }
+.semana-leve-cartao p { margin: 0; color: var(--apagado); font-size: 14px; line-height: 1.4; }
+.semana-leve-botoes { display: flex; align-items: center; gap: 16px; }
+.semana-leve-botoes .botao { min-height: 44px; }
+
+/* Primeira abertura: há quanto tempo treina e o treino recomendado */
+.opcoes-nivel { display: grid; gap: 10px; }
+.opcao-nivel { display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 2px solid var(--linha); border-radius: 16px; background: var(--superficie); color: var(--texto); text-align: left; cursor: pointer; }
+.opcao-nivel strong { font: 800 24px/1 var(--fonte-titulo); }
+.opcao-nivel span { color: var(--apagado); font-size: 14px; }
+.recomendado { display: flex; flex-direction: column; gap: 8px; padding: 18px; border: 2px solid var(--laranja); border-radius: var(--raio); background: var(--superficie); }
+.recomendado h2 { margin: 0; font: 800 32px/1 var(--fonte-titulo); }
+.recomendado p { margin: 0; color: var(--apagado); font-size: 15px; line-height: 1.4; }
+.recomendado .dias-programa { color: var(--texto); font-weight: 600; }
+.ver-todos { align-self: center; }

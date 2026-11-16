@@ -11,7 +11,10 @@ function renderBoasVindas() {
   const voltar = passo > 1 ? h('button', {
     class: 'link',
     onclick: () => {
-      boasVindas.passo -= 1;
+      // No passo do treino, voltar desfaz primeiro a lista completa e a resposta do nível.
+      if (boasVindas.todos) boasVindas.todos = false;
+      else if (passo === 4 && boasVindas.nivel) boasVindas.nivel = null;
+      else boasVindas.passo -= 1;
       renderBoasVindas();
     },
   }, 'Voltar') : null;
@@ -81,21 +84,66 @@ function renderBoasVindas() {
       }, `Continuar com ${p.nome}`),
     ];
   } else {
-    corpo = [
-      h('h1', null, 'Escolha seu treino'),
-      h('p', { class: 'grupo-descricao' }, 'Os primeiros são os recomendados para você. Cada exercício mostra o estudo que justifica a escolha.'),
-      listaDeProgramas(boasVindas.sexo, (id) => {
-        estado.perfil = { personagem: boasVindas.personagem, programa: id, sexo: boasVindas.sexo, nome: boasVindas.nome || '', configurado: true };
-        programa = programas[id];
-        estado.proximo = estado.proximos[id] || 0;
-        selecionado = estado.proximo;
-        salvar();
-        tela = 'inicio';
-        render();
-        window.scrollTo(0, 0);
-        avisar(`${window.Avatar.personagem(boasVindas.personagem).nome} e ${programa.titulo}: bora!`);
-      }),
+    // Em vez da lista inteira, uma pergunta e uma recomendação; a lista fica a um toque.
+    const escolher = (id) => {
+      estado.perfil = { personagem: boasVindas.personagem, programa: id, sexo: boasVindas.sexo, nome: boasVindas.nome || '', configurado: true };
+      programa = programas[id];
+      estado.proximo = estado.proximos[id] || 0;
+      selecionado = estado.proximo;
+      salvar();
+      tela = 'inicio';
+      render();
+      window.scrollTo(0, 0);
+      avisar(`${window.Avatar.personagem(boasVindas.personagem).nome} e ${programa.titulo}: bora!`);
+    };
+    const NIVEIS_BV = [
+      ['iniciante', 'Estou começando', 'Menos de 6 meses, ou voltando depois de muito tempo'],
+      ['intermediario', 'Já treino', 'De 6 meses a 2 anos, com regularidade'],
+      ['avancado', 'Treino há anos', 'Mais de 2 anos e quero técnicas avançadas'],
     ];
+    const RECOMENDADO = {
+      m: { iniciante: 'iniciante_m', intermediario: 'masculino', avancado: 'avancado_m' },
+      f: { iniciante: 'iniciante_f', intermediario: 'feminino', avancado: 'avancado_f' },
+    };
+    if (boasVindas.todos) {
+      corpo = [
+        h('h1', null, 'Escolha seu treino'),
+        h('p', { class: 'grupo-descricao' }, 'Os primeiros são os recomendados para você. Dá para trocar depois, quando quiser.'),
+        listaDeProgramas(boasVindas.sexo, escolher),
+      ];
+    } else if (!boasVindas.nivel) {
+      corpo = [
+        h('h1', null, 'Há quanto tempo você treina?'),
+        h('p', { class: 'grupo-descricao' }, 'Para sugerir o treino certo. Dá para trocar depois.'),
+        h('div', { class: 'opcoes-nivel' }, NIVEIS_BV.map(([id, titulo, detalhe]) => h('button', {
+          class: 'opcao-nivel', 'data-nivel': id,
+          onclick: () => {
+            boasVindas.nivel = id;
+            renderBoasVindas();
+          },
+        }, h('strong', null, titulo), h('span', null, detalhe)))),
+      ];
+    } else {
+      const id = RECOMENDADO[boasVindas.sexo === 'f' ? 'f' : 'm'][boasVindas.nivel];
+      const p = programas[id];
+      corpo = [
+        h('h1', null, 'Seu treino'),
+        h('div', { class: 'recomendado' },
+          h('p', { class: 'etiqueta' }, 'Recomendado para você'),
+          h('h2', null, p.titulo),
+          h('p', { class: 'dias-programa' }, `${p.dias} · ${p.treinos.length} treinos · ${p.nivel}`),
+          h('p', null, p.resumo),
+          h('button', { class: 'botao primario', 'data-programa': id, onclick: () => escolher(id) }, 'Começar com este')),
+        h('button', {
+          class: 'link ver-todos',
+          onclick: () => {
+            boasVindas.todos = true;
+            renderBoasVindas();
+          },
+        }, 'Ver todos os treinos'),
+        h('p', { class: 'aviso' }, 'Cada exercício mostra o estudo que justifica a escolha. Você pode trocar de treino a qualquer momento.'),
+      ];
+    }
   }
   app.replaceChildren(h('section', { class: 'boas-vindas' }, topo, corpo, voltar));
 }
@@ -117,6 +165,7 @@ function renderInicio() {
     renderBoasVindas();
     return;
   }
+  const novato = !estado.historico.length && !estado.aerobicos.length && !estado.sessao;
   const lista = h('ul', { class: 'lista' }, programa.treinos.map((treino, i) => {
     let tag = null;
     if (estado.sessao && estado.sessao.treino === i) tag = h('span', { class: 'tag andamento' }, 'Em andamento');
@@ -141,13 +190,18 @@ function renderInicio() {
         h('span', null, ACADEMIA.subtitulo || programa.titulo, h('br'), programa.marca))
       : h('header', { class: 'marca' }, h('h1', null, programa.titulo), h('span', null, programa.marca)),
     cartaoPerfil(),
-    cartaoRetroInicio(),
-    cartaoBau(),
-    cartaoFeriado(),
-    cartaoSemana(true),
-    cartaoAerobico(),
-    cartaoInstalar(),
-    heroTreino(selecionado),
+    // Antes do primeiro treino, só o essencial: o treino do dia vem primeiro, e o armário, o aeróbico
+    // e o resto aparecem depois que a pessoa já usou o app uma vez.
+    ...(novato ? [heroTreino(selecionado), cartaoSemana(true), cartaoFeriado()] : [
+      cartaoRetroInicio(),
+      cartaoBau(),
+      cartaoFeriado(),
+      cartaoSemana(true),
+      cartaoSemanaLeve(),
+      cartaoAerobico(),
+      cartaoInstalar(),
+      heroTreino(selecionado),
+    ]),
     h('p', { class: 'como-usar' },
       h('strong', null, 'Como usar: '),
       'terminou a série? Toque no cronômetro dela e o descanso começa sozinho. Acabou o exercício? ',
@@ -208,6 +262,7 @@ function heroTreino(i) {
           ? `${ex.series} × ${ex.reps} · trocado, ${ex.semelhanca}% semelhante`
           : `${ex.series} × ${ex.reps}${ex.trocado ? ' · trocado' : ''}`,
         ex.tecnica && TECNICAS[ex.tecnica.tipo] ? h('span', { class: 'tag-tecnica' }, `${TECNICAS[ex.tecnica.tipo].nome.replace(' na última série', '')}${ex.tecnica.grupo ? ` ${ex.tecnica.grupo}` : ''}`) : null)),
+      programa.mobilidade ? null : seloDoPlano(ex),
       biblioteca && !programa.mobilidade
         ? h('button', { class: 'trocar-linha', 'aria-label': `Trocar ${ex.nome}`, onclick: () => abrirBiblioteca(i, slot) }, 'Trocar')
         : null);
@@ -259,6 +314,7 @@ function heroTreino(i) {
     extras,
     h('p', { class: 'rotulo' }, 'Exercícios'),
     h('p', { class: 'dica-semana' }, 'Toque num exercício para ver como fazer e o vídeo dele.'),
+    programa.mobilidade ? null : resumoDoPlano(i),
     exercicios,
     biblioteca ? h('button', { class: 'botao secundario', icone: 'mais', onclick: () => abrirAdicionar(i, false) }, 'Adicionar exercício') : null);
 }

@@ -109,7 +109,7 @@ test('tela inicial: atalho discreto para aeróbico ou esporte, e "Já fez?" regi
 });
 
 test('tela inicial: em dia sem treino o atalho também aparece', async ({ page }) => {
-  await abrir(page, { quando: '2026-10-27T21:00:00' });
+  await abrir(page, { quando: '2026-10-27T21:00:00', estado: { historico: [{ data: '2026-10-20', treino: 'push_a' }] } });
   await expect(page.locator('.aerobico-atalho')).toBeVisible();
 });
 

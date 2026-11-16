@@ -49,7 +49,15 @@
    *   'manter' mesma carga, tentando 1 repetição a mais;
    *   'baixar' ficou abaixo da base da faixa em alguma série → 5 a 10% menos.
    */
-  function sugestao(registro, ex, reps, series) {
+  // Estagnado: 3 sessões seguidas sem passar da melhor força estimada de antes delas.
+  function estagnado(registro, ex) {
+    const s = sessoes(registro, ex).filter((x) => x.melhor > 0);
+    if (s.length < 4) return false;
+    const antes = Math.max(...s.slice(0, -3).map((x) => x.melhor));
+    return Math.max(...s.slice(-3).map((x) => x.melhor)) <= antes;
+  }
+
+  function sugestao(registro, ex, reps, series, opcoes = {}) {
     const f = faixa(reps);
     const ultima = sessoes(registro, ex).filter((s) => s.series.some((x) => x.reps > 0 && x.kg > 0)).pop();
     if (!f || !ultima) return null;
@@ -57,6 +65,17 @@
     const kg = Math.max(...feitas.map((x) => x.kg));
     const naCarga = feitas.filter((x) => x.kg === kg);
     const resumo = `${String(kg).replace('.', ',')} kg × ${naCarga.map((x) => x.reps).join(', ')}`;
+    const txt = (n) => String(n).replace('.', ',');
+    // Semana leve: 10% menos carga, longe da falha, para recuperar e voltar a subir.
+    if (opcoes.semanaLeve) {
+      const nova = arredondar(kg * 0.9);
+      return { tipo: 'leve', kg: nova, reps: f.min, ultima: resumo, texto: `Semana leve: ${txt(nova)} kg, parando 3 a 4 repetições antes da falha.` };
+    }
+    // Estagnou: recomeço. Baixa 10%, capricha na execução e volta subindo.
+    if (estagnado(registro, ex)) {
+      const nova = arredondar(kg * 0.9);
+      return { tipo: 'destravar', kg: nova, reps: f.max, ultima: resumo, texto: `3 treinos sem evoluir: baixe para ${txt(nova)} kg, faça ${f.max} repetições caprichadas e volte a subir. Se travar de novo, troque o exercício por uma variação.` };
+    }
     if (naCarga.length >= Math.min(series, 2) && naCarga.every((x) => x.reps >= f.max)) {
       const nova = proximaCarga(kg);
       return { tipo: 'subir', kg: nova, reps: f.min, ultima: resumo, texto: `Bateu o topo da faixa em todas as séries: suba para ${String(nova).replace('.', ',')} kg.` };
@@ -76,7 +95,7 @@
     return melhor > 0 && forca(kg, reps) > melhor;
   }
 
-  const api = { faixa, forca, sessoes, sugestao, ehRecorde, proximaCarga };
+  const api = { faixa, forca, sessoes, sugestao, estagnado, ehRecorde, proximaCarga };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else raiz.Progressao = api;
 })(typeof window !== 'undefined' ? window : globalThis);

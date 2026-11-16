@@ -46,7 +46,7 @@ Cada exercício é um cartão com as fotos animadas, séries, RIR, descanso e di
 
 ### Primeira abertura e programas
 
-Na primeira vez, o app pergunta como a pessoa quer ser chamada, se é homem ou mulher (só para ordenar as sugestões), depois o personagem, com a descrição de cada um, e por fim o treino. A lista mostra primeiro os recomendados, depois a mobilidade e por fim os do outro sexo, que qualquer pessoa pode escolher:
+Na primeira vez, o app pergunta como a pessoa quer ser chamada, se é homem ou mulher (só para ordenar as sugestões), depois o personagem e, por fim, há quanto tempo ela treina: com isso recomenda um treino só (**Começar com este**), e a lista completa fica em **Ver todos os treinos**. Antes do primeiro treino, a tela inicial mostra só o essencial, com o treino do dia primeiro; o armário, o aeróbico e o resto aparecem depois. A lista mostra primeiro os recomendados, depois a mobilidade e por fim os do outro sexo, que qualquer pessoa pode escolher:
 
 | Programa | Público sugerido | Nível | Dias |
 |---|---|---|---|
@@ -179,6 +179,10 @@ No cartão, ao lado da carga, há o campo de **repetições**. Tocar no cronôme
 - **Sugestão de carga** (progressão dupla, [`progressao.js`](progressao.js)): pela última sessão do exercício. Bateu o topo da faixa de repetições em todas as séries → sobe a carga (2,5%, no mínimo 1 kg) e volta à base da faixa; dentro da faixa → mesma carga, 1 repetição a mais; abaixo da base → 7,5% menos. A carga e as repetições sugeridas já vêm preenchidas.
 - **Recorde**: um aviso 🏆 quando a série passa da melhor força estimada do exercício (1RM estimado pela fórmula de Epley, kg × (1 + reps/30), contando até 12 repetições).
 - **Ver evolução**: recorde, maior carga, ganho desde o início, o gráfico da força estimada por treino (tocar num ponto mostra as séries do dia) e a tabela dos últimos treinos.
+
+- **Plano de hoje**: na lista do treino, cada exercício com histórico ganha um selo (↑ subir, ＝ manter, ↓ baixar, ⟳ recomeçar) com a carga sugerida, e um resumo acima da lista.
+- **Estagnação**: 3 sessões seguidas sem passar da melhor força estimada → a sugestão vira um recomeço (10% menos carga, topo da faixa de repetições) e, se travar de novo, trocar por uma variação.
+- **Semana leve**: quando 3 ou mais exercícios do programa estagnam, a tela inicial oferece uma semana com as cargas sugeridas 10% menores e longe da falha. O app diz que a evidência é pouca: parar de vez por uma semana não ajudou (Coleman et al., 2024), por isso reduz em vez de parar.
 
 Os dados ficam em `estado.registroSeries` (até 8000 séries).
 

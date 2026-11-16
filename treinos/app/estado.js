@@ -113,6 +113,9 @@ function estadoValido(bruto) {
       && Number.isFinite(r.kg) && r.kg >= 0 && r.kg <= 1000 && (r.reps === null || (Number.isInteger(r.reps) && r.reps >= 1 && r.reps <= 200)))
       .map((r) => ({ data: r.data, ex: r.ex, n: r.n, kg: r.kg, reps: r.reps })).slice(-8000)
     : [];
+  const ehSemana = (x) => typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x);
+  limpo.semanaLeve = ehSemana(e.semanaLeve) ? e.semanaLeve : null;
+  limpo.semanaLeveRecusada = ehSemana(e.semanaLeveRecusada) ? e.semanaLeveRecusada : null;
   if (Array.isArray(e.pesos)) {
     limpo.pesos = e.pesos.filter((r) => r && ehDia(r.data) && Number.isFinite(r.kg) && r.kg >= 30 && r.kg <= 250).map((r) => ({ data: r.data, kg: r.kg })).slice(-1000);
   }
