@@ -1,4 +1,4 @@
-"""Gera vídeos verticais (1080x1920) dos treinos do programa PPL.
+"""Gera vídeos verticais (720x1280) dos treinos do programa PPL.
 
 Cada exercício aparece com as fotos do free-exercise-db (domínio público)
 alternando entre a posição inicial e a final, mais séries, RIR, descanso,
@@ -345,7 +345,10 @@ def gerar(programa, indice, pasta_fotos, saida):
             "ffmpeg", "-y", "-loglevel", "error",
             "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
             "-i", "-",
-            "-c:v", "libx264", "-preset", "slow", "-crf", "28",
+            # Desenha em 1080x1920 e grava em 720x1280: no app o vídeo aparece pequeno, e o arquivo
+            # fica com menos da metade do tamanho.
+            "-vf", "scale=720:1280",
+            "-c:v", "libx264", "-preset", "slow", "-crf", "30",
             "-pix_fmt", "yuv420p", "-movflags", "+faststart",
             str(destino),
         ],

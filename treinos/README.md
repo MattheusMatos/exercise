@@ -20,7 +20,7 @@
 | [`manifest.webmanifest`](manifest.webmanifest), [`sw.js`](sw.js), [`icones/`](icones/) | Deixam o app instalável no celular e funcionando sem internet |
 | [`fotos/`](fotos/) | Fotos dos exercícios do programa, usadas pelo app |
 | [`biblioteca/`](biblioteca/) | 619 exercícios para trocar no app: dados em português e fotos em folhas |
-| [`videos/`](videos/) | Um vídeo vertical por treino (1080×1920, ~1 min); o app mostra só o trecho de cada exercício |
+| [`videos/`](videos/) | Um vídeo vertical por treino (720×1280, ~1 min); o app mostra só o trecho de cada exercício |
 | [`gerar_videos.py`](gerar_videos.py) | Gera os vídeos |
 | [`copiar_fotos.py`](copiar_fotos.py) | Copia e reduz as fotos do programa para o app |
 | [`gerar_biblioteca.py`](gerar_biblioteca.py) | Monta a biblioteca do app |
